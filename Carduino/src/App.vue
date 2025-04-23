@@ -13,6 +13,8 @@ import { RouterLink, RouterView } from 'vue-router'
       <nav>
         <RouterLink to="/">Home</RouterLink>
         <RouterLink to="/about">About</RouterLink>
+        <RouterLink to= "/controlview"> Control </RouterLink>
+        <RouterLink to= "/statisticsview">Statistics</RouterLink>
       </nav>
     </div>
   </header>
@@ -22,64 +24,40 @@ import { RouterLink, RouterView } from 'vue-router'
 
 <style scoped>
 header {
-  line-height: 1.5;
-  max-height: 100vh;
-}
-
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
+  width: 100%;
+  background-color: #D32F2F; /* Dark background color for the navigation bar */
+  position: fixed; /* Fixes the header at the top */
+  top: 0; /* Aligns it to the top of the page */
+  left: 0;
+  z-index: 1000; /* Ensures the header stays above other content */
+  padding: 5px 0; /* Adjust the padding for spacing */
 }
 
 nav {
+  display: flex;
   width: 100%;
-  font-size: 12px;
+  justify-content: center; /* Centers the navigation items */
+  align-items: center; /* Centers the items vertically */
   text-align: center;
-  margin-top: 2rem;
-}
-
-nav a.router-link-exact-active {
-  color: var(--color-text);
-}
-
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
 }
 
 nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
+  color: black; /* Text color for the links */
+  text-decoration: none; /* Removes underline from links */
+  margin: 0 20px; /* Spacing between the navigation items */
+  font-size: 22px; /* Adjust font size */
+  
 }
 
-nav a:first-of-type {
-  border: 0;
+nav a:hover {
+  color: #ffcc00; /* Change color on hover */
 }
 
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-
-  nav {
-    text-align: left;
-    margin-left: -1rem;
-    font-size: 1rem;
-
-    padding: 1rem 0;
-    margin-top: 1rem;
-  }
+/* Optional: Add some space at the top of the page to prevent the nav from covering content */
+body {
+  margin-top: 60px; /* Adjust this value based on the header height */
 }
+
+
+
 </style>
