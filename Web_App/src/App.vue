@@ -10,7 +10,7 @@ import { RouterLink, RouterView } from 'vue-router'
     <div class="wrapper">
       <HelloWorld msg="You did it!" />
 
-      <nav>
+      <nav >
         <RouterLink to="/">Home</RouterLink>
         <RouterLink to="/about">About</RouterLink>
         <RouterLink to= "/controlview"> Control </RouterLink>
@@ -25,7 +25,7 @@ import { RouterLink, RouterView } from 'vue-router'
 <style scoped>
 header {
   width: 100%;
-  background-color: #D32F2F; /* Dark background color for the navigation bar */
+  background-color:#1d1d1b; /* Dark background color for the navigation bar */
   position: fixed; /* Fixes the header at the top */
   top: 0; /* Aligns it to the top of the page */
   left: 0;
@@ -42,7 +42,7 @@ nav {
 }
 
 nav a {
-  color: black; /* Text color for the links */
+  color: rgb(217, 217, 217); /* Text color for the links */
   text-decoration: none; /* Removes underline from links */
   margin: 0 20px; /* Spacing between the navigation items */
   font-size: 22px; /* Adjust font size */

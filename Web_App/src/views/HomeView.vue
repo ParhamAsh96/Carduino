@@ -1,3 +1,4 @@
+@import '../assets/main.css';
 <script setup>
 
 </script>
@@ -7,3 +8,8 @@
     <TheWelcome />
   </main>
 </template>
+
+
+<style scoped>
+  
+</style>
