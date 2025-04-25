@@ -10,6 +10,7 @@ import { RouterLink, RouterView } from "vue-router";
       <nav>
         <RouterLink to="/">Home</RouterLink>
         <RouterLink to="/controlview"> Control </RouterLink>
+        <RouterLink to="/linetrackingview"> Line-Tracking </RouterLink>
         <RouterLink to="/statisticsview">Statistics</RouterLink>
         <RouterLink to="/musicview">Music</RouterLink>
         <RouterLink to="/guideview">Guide</RouterLink>

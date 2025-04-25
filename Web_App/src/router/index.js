@@ -19,6 +19,11 @@ const router = createRouter({
       component: () => import("../views/controlview.vue"),
     },
     {
+      path: "/linetrackingview",
+      name: "linetracking",
+      component: () => import("../views/linetrackingview.vue"),
+    },
+    {
       path: "/statisticsview",
       name: "statistics",
       component: () => import("../views/statisticsview.vue"),
