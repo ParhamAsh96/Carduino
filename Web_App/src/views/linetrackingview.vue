@@ -1,3 +1,4 @@
+@import '../assets/main.css';
 <template>
   <h1 class="text">Here user can activate Line-Tracking</h1>
 </template>
