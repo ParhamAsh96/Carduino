@@ -5,13 +5,11 @@ import { RouterLink, RouterView } from "vue-router";
 <template>
   <header>
     <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-
+      
       <nav>
         <RouterLink to="/">Home</RouterLink>
         <RouterLink to="/controlview"> Control </RouterLink>
-        <RouterLink to="/linetrackingview"> Line-Tracking </RouterLink>
-        <RouterLink to="/statisticsview">Statistics</RouterLink>
+        <RouterLink to="/linetrackingview"> Line-Tracker </RouterLink>
         <RouterLink to="/diagnosticsview">Diagnostics</RouterLink>
         <RouterLink to="/musicview">Music</RouterLink>
         <RouterLink to="/guideview">Guide</RouterLink>
@@ -36,20 +34,36 @@ header {
 
 nav {
   display: flex;
-  width: 100%;
+  flex-wrap: wrap;
+  width: 100%; /* Allow links to wrap onto new lines */
   justify-content: center; /* Centers the navigation items */
   align-items: center; /* Centers the items vertically */
   text-align: center;
 }
 
+
 nav a {
   color: rgb(217, 217, 217); /* Text color for the links */
   text-decoration: none; /* Removes underline from links */
-  margin: 0 20px; /* Spacing between the navigation items */
+  font-weight: bold;
   font-size: 22px; /* Adjust font size */
+  flex: 0 0 14.285%; /* 12.5% = 7 items per row normally */
+  box-sizing: border-box; /* So padding/margin don't break layout */
+  
+  /* Border */
+  border: 1px solid rgb(8, 233, 254);
+  padding: 10px; /* Add padding so text isn't cramped inside the border */
+  transition: border-color 0.3s, color 0.3s; /* Smooth hover effect */
+  min-height: 75px
 }
+
 
 nav a:hover {
   color: #ffcc00; /* Change color on hover */
+  border-color: #ffcc00; /* make border change color on hover */
 }
+
+
+
+
 </style>
