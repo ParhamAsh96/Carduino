@@ -1,16 +1,14 @@
-#include <TFT_eSPI.h>
+#include <TFT_eSPI.h> // LCD Display
 #include <rpcWiFi.h>
 #include <PubSubClient.h>
-#include"LIS3DHTR.h"
-LIS3DHTR<TwoWire> lis;
+#include"LIS3DHTR.h" // Timer
+LIS3DHTR<TwoWire> lis; // Timer
 
 // Update these with values suitable for your network:
 const char *ssid = "iPhoneiee♨️";      // network SSID (Wifi)
 const char *password = "14444444"; // your network password
 
 const char *ID = "Wio-Terminal-Client-meep";  // Name of our device, must be unique
-const char *pubTOPIC = "my/test/topic";  // Topic to publish to
-const char *subTopic = "my/test/topic";  // Topic to subcribe to
 const char *server = "172.20.10.3"; // Address of brocker (URL or IP)
 
 // For Update Frequency
@@ -19,49 +17,24 @@ double previousTime = millis();
 double updateIntervalMs = 1000;
 double deltaTime = 0;
 
+TFT_eSPI lcd; // WIO LCD Display
 
-TFT_eSPI lcd;
+#define BUZZER_PIN WIO_BUZZER // WIO Buzzer
 
 WiFiClient wifiClient;
 PubSubClient client(wifiClient);
-
-void reconnect() {
-  
-  while (!client.connected()) // Loop until we reconnected
-  {
-    Serial.print("Attempting MQTT connection...");
-    // Attempt to connect:
-    if (client.connect(ID)) {
-      Serial.println("connected");
-      // Once connected, publish an announcement...
-      client.publish(pubTOPIC, "{\"message\": \"Wio Terminal is connected!\"}");
-      Serial.println("Published connection message successfully!");
-      // ... and resubscribe
-      client.subscribe(subTopic);
-      Serial.print("Subcribed to: ");
-      Serial.println(subTopic);
-    }
-    else {
-      Serial.print("failed, rc=");
-      Serial.print(client.state());
-      Serial.println(" try again in 5 seconds");
-      delay(5000);
-    }
-  }
- 
-}
 
 // setup() and loop() are the main methods for the Arduino
 // setup() runs once
 void setup()
 { 
-
-  // accelerometerSetup();
-
-  // to turn on WIO LCD
+  // turn on WIO LCD
   lcd.begin();
   lcd.setRotation(3);
   lcd.fillScreen(TFT_BLACK);
+
+  // turn on Buzzer
+  pinMode(WIO_BUZZER, OUTPUT);
 
   Serial.begin(115200);
   while (!Serial); // Wait for Serial to be ready
@@ -76,53 +49,105 @@ void setup()
     WiFi.begin(ssid, password);
     delay(1000); // wait 1 second for re-trying
   }
-  
   Serial.print("Connected to ");
   Serial.println(ssid);
   delay(500);
 
+  // Set MQTT client server connection
   client.setServer(server, 1883);
-  client.setCallback(callback);
+  client.setCallback(callback); // set callback function for recieving messages MQTT_sub
 }
 
 // loop() runs forever
 void loop()
 {
+  // reconnect if connection failed
   if (!client.connected()) {
     reconnect();
   }
 
-
+  // Timer functionality
   systemTime = millis();
-
   deltaTime += (systemTime - previousTime) / updateIntervalMs;
   previousTime = systemTime;
-
-
   // MQTT Updates should be done using a timer to avoid publishing to the different topics too often.
   if (deltaTime >= 1){
     deltaTime--;
     
   }
-
+  
+  // MQTT client loop to recieve messages 
   client.loop();
 }
 
-// The callback function must be provided in the constructor. (if we subscribe)
+void reconnect() {
+  while (!client.connected()) // Loop until we reconnected
+  {
+    Serial.print("Attempting MQTT connection...");
+    // Connect:
+    if (client.connect(ID)) {
+      Serial.println("connected");
+      // Publish
+      client.publish("my/test/topic", "{\"message\": \"Wio Terminal is connected!\"}");
+      Serial.println("Published connection message successfully!");
+      // Subscribe
+      client.subscribe("carduino/directions/live-control");
+      client.subscribe("my/test/topic");
+      client.subscribe("carduino/buzzer/honk");
+      Serial.println("Subcribed ");
+    }
+    else {
+      Serial.print("failed, rc=");
+      Serial.print(client.state());
+      Serial.println(" try again in 5 seconds");
+      delay(5000);
+    }
+  }
+}
+
+// The callback function must be provided for PubSubClient (if we subscribe).
 // This function is called when new messages arrive at the client. 
 void callback(char* topic, byte* payload, unsigned int length) {
   Serial.print("Message arrived [");
   Serial.print(topic);
   Serial.print("] ");
-  // prints the recieved payload (message):
-  String cString = "";
+  // Assign recieved payload to a String (message): 
+  String message = "";
   for (int i=0;i<length;i++) { 
     Serial.print((char)payload[i]);
-    cString.concat((char)payload[i]);
+    message.concat((char)payload[i]);
   }
   Serial.println();
+
+  reciever_actions(topic, message);
+}
+
+void reciever_actions(String topic, String message){
+  // Honk
+  if (topic == "carduino/buzzer/honk"){
+    honk();
+  }
+
   // Print to WIO screen
+  if (topic == "my/test/topic"){
+      String text = "";
+      text.concat(topic);
+      text.concat(" ");
+      text.concat(message);
+      print_to_WIO(text);
+  }
+}
+
+void print_to_WIO(String message){
   lcd.fillScreen(TFT_BLACK);
   lcd.setTextSize(2);
-  lcd.drawString(cString, 0, 10);
+  lcd.drawString(message, 0, 10);
 }
+
+void honk(){
+  analogWrite(WIO_BUZZER, 128);
+  delay(1000);
+  analogWrite(WIO_BUZZER, 0);
+  delay(1000);
+}
+
