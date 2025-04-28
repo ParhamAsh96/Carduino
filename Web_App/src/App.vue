@@ -1,6 +1,7 @@
 <script>
 import { RouterLink, RouterView } from "vue-router";
 import mqtt from 'mqtt';
+import MusicView from './views/musicview.vue';
 
 export default {
   name: 'App',
@@ -9,10 +10,10 @@ export default {
       
 //ws://broker.hivemq.com:8000/mqtt
 //use this for test
-      
+      //ws://172.20.10.3:9001
       client: null,
       // topic: 'adruino/buzzer/control',
-      brokerUrl: 'ws://172.20.10.3:9001', // Your broker URL
+      brokerUrl: 'ws://broker.hivemq.com:8000/mqtt', // Your broker URL
     };
   },
   methods: {
@@ -29,9 +30,9 @@ export default {
       this.client.on('connect', () => {
 
         console.log('Connected to MQTT broker');
-        this.client.subscribe(adruino/buzzer/control, (err) => {
+        this.client.subscribe(adruino/buzzer/honk, (err) => {
 
-          this.client.publish(adruino/buzzer/control, 'hell');
+          this.client.publish(adruino/buzzer/honk, 'hell');
           // if (!err) {
           //   console.log('Subscribed to', this.topic);
           //   this.client.publish(adruino/buzzer/control, 'hell');
