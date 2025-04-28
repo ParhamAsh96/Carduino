@@ -5,13 +5,13 @@
 LIS3DHTR<TwoWire> lis;
 
 // Update these with values suitable for your network:
-const char *ssid = "Test";      // network SSID (Wifi)
-const char *password = "abcdefghi"; // your network password
+const char *ssid = "iPhoneiee♨️";      // network SSID (Wifi)
+const char *password = "14444444"; // your network password
 
 const char *ID = "Wio-Terminal-Client-meep";  // Name of our device, must be unique
 const char *pubTOPIC = "my/test/topic";  // Topic to publish to
 const char *subTopic = "my/test/topic";  // Topic to subcribe to
-const char *server = "192.168.189.16"; // Address of brocker (URL or IP)
+const char *server = "172.20.10.3"; // Address of brocker (URL or IP)
 
 // For Update Frequency
 double systemTime;
@@ -56,7 +56,7 @@ void reconnect() {
 void setup()
 { 
 
-  accelerometerSetup();
+  // accelerometerSetup();
 
   // to turn on WIO LCD
   lcd.begin();
@@ -99,15 +99,13 @@ void loop()
   previousTime = systemTime;
 
 
-  // MQTT Updates should be done inside this if statement to avoid publishing to the different topics too often.
+  // MQTT Updates should be done using a timer to avoid publishing to the different topics too often.
   if (deltaTime >= 1){
     deltaTime--;
-  
+    
   }
 
-
   client.loop();
-
 }
 
 // The callback function must be provided in the constructor. (if we subscribe)
