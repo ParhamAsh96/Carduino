@@ -1,5 +1,9 @@
 #include <rpcWiFi.h>
 #include <PubSubClient.h>
+#include "LIS3DHTR.h"
+#include "accelerometer.h"
+
+LIS3DHTR<TwoWire> lis;
 #include"LIS3DHTR.h" // Timer
 
 // Update these with values suitable for your network:
@@ -42,6 +46,29 @@ LIS3DHTR<TwoWire> lis; // Timer
 
 WiFiClient wifiClient;
 PubSubClient client(wifiClient);
+AccelerometerSensor accelerometer(client,accelerometerTopic);
+
+void reconnect() {
+  
+  while (!client.connected()) // Loop until we reconnected
+  {
+    Serial.print("Attempting MQTT connection...");
+    // Attempt to connect:
+    if (client.connect(ID)) {
+      Serial.println("connected");
+      client.publish(accelerometerTopic, "{\"message\": \"Wio Terminal is connected!\"}");
+      Serial.println("Published connection message successfully!");
+      
+    }
+    else {
+      Serial.print("failed, rc=");
+      Serial.print(client.state());
+      Serial.println(" try again in 5 seconds");
+      delay(5000);
+    }
+  }
+ 
+}
 
 // setup() and loop() are the main methods for the Arduino
 // setup() runs once
@@ -73,6 +100,9 @@ void setup()
   Serial.println(ssid);
   delay(500);
 
+  client.setServer(server, 1883);
+  client.setCallback(callback);
+  accelerometer.setup();
   // Set MQTT client server connection
   client.setServer(server, port);
   client.setCallback(callback); // set callback function for recieving messages MQTT_sub
@@ -93,7 +123,12 @@ void loop()
   previousTime = systemTime;
   // MQTT Updates should be done using a timer to avoid publishing to the different topics too often.
   if (deltaTime >= 1){
+
     deltaTime--;
+
+    accelerometer.publishMQTT("Hello!");
+    Serial.println(accelerometer.getSensorValue());
+    
     
   }
   
