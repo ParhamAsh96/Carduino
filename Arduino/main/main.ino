@@ -1,9 +1,10 @@
 #include <TFT_eSPI.h>
 #include <rpcWiFi.h>
 #include <PubSubClient.h>
-#include"LIS3DHTR.h"
-LIS3DHTR<TwoWire> lis;
+#include "LIS3DHTR.h"
+#include "accelerometer.h"
 
+LIS3DHTR<TwoWire> lis;
 // Update these with values suitable for your network:
 const char *ssid = "Test";      // network SSID (Wifi)
 const char *password = "abcdefghi"; // your network password
@@ -11,7 +12,8 @@ const char *password = "abcdefghi"; // your network password
 const char *ID = "Wio-Terminal-Client-meep";  // Name of our device, must be unique
 const char *pubTOPIC = "my/test/topic";  // Topic to publish to
 const char *subTopic = "my/test/topic";  // Topic to subcribe to
-const char *server = "192.168.189.16"; // Address of brocker (URL or IP)
+const char *accelerometerTopic = "carduino/acceleration";
+const char *server = "test.mosquitto.org"; // Address of brocker (URL or IP)
 
 // For Update Frequency
 double systemTime;
@@ -24,6 +26,7 @@ TFT_eSPI lcd;
 
 WiFiClient wifiClient;
 PubSubClient client(wifiClient);
+AccelerometerSensor accelerometer(client,accelerometerTopic);
 
 void reconnect() {
   
@@ -33,13 +36,9 @@ void reconnect() {
     // Attempt to connect:
     if (client.connect(ID)) {
       Serial.println("connected");
-      // Once connected, publish an announcement...
-      client.publish(pubTOPIC, "{\"message\": \"Wio Terminal is connected!\"}");
+      client.publish(accelerometerTopic, "{\"message\": \"Wio Terminal is connected!\"}");
       Serial.println("Published connection message successfully!");
-      // ... and resubscribe
-      client.subscribe(subTopic);
-      Serial.print("Subcribed to: ");
-      Serial.println(subTopic);
+      
     }
     else {
       Serial.print("failed, rc=");
@@ -55,13 +54,13 @@ void reconnect() {
 // setup() runs once
 void setup()
 { 
-
-  accelerometerSetup();
-
+  
   // to turn on WIO LCD
   lcd.begin();
   lcd.setRotation(3);
   lcd.fillScreen(TFT_BLACK);
+
+  
 
   Serial.begin(115200);
   while (!Serial); // Wait for Serial to be ready
@@ -83,6 +82,7 @@ void setup()
 
   client.setServer(server, 1883);
   client.setCallback(callback);
+  accelerometer.setup();
 }
 
 // loop() runs forever
@@ -101,8 +101,12 @@ void loop()
 
   // MQTT Updates should be done inside this if statement to avoid publishing to the different topics too often.
   if (deltaTime >= 1){
+
     deltaTime--;
-  
+
+    accelerometer.publishMQTT("Hello!");
+    Serial.println(accelerometer.getSensorValue());
+    
   }
 
 
