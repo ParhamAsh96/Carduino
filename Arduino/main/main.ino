@@ -2,14 +2,25 @@
 #include <rpcWiFi.h>
 #include <PubSubClient.h>
 #include"LIS3DHTR.h" // Timer
-LIS3DHTR<TwoWire> lis; // Timer
 
 // Update these with values suitable for your network:
 const char *ssid = "iPhoneiee♨️";      // network SSID (Wifi)
 const char *password = "14444444"; // your network password
 
 const char *ID = "Wio-Terminal-Client-meep";  // Name of our device, must be unique
-const char *server = "172.20.10.3"; // Address of brocker (URL or IP)
+// const char *server = "172.20.10.3"; // Address of brocker (URL or IP)
+const char *server = "test.mosquitto.org"; // ONLINE SERVER
+const uint16_t port = 1883;
+
+String sub_topics[4] = { 
+  "carduino/lcd/print",
+  "carduino/buzzer",
+  "carduino/directions/live-control",
+  "carduino/power/off"
+};
+
+// For turning off
+bool running = true;
 
 // For Update Frequency
 double systemTime;
@@ -18,8 +29,10 @@ double updateIntervalMs = 1000;
 double deltaTime = 0;
 
 TFT_eSPI lcd; // WIO LCD Display
+LIS3DHTR<TwoWire> lis; // Timer
 
 #define BUZZER_PIN WIO_BUZZER // WIO Buzzer
+#define LCD_BACKLIGHT (72Ul) // Control Pin of LCD
 
 WiFiClient wifiClient;
 PubSubClient client(wifiClient);
@@ -54,13 +67,14 @@ void setup()
   delay(500);
 
   // Set MQTT client server connection
-  client.setServer(server, 1883);
+  client.setServer(server, port);
   client.setCallback(callback); // set callback function for recieving messages MQTT_sub
 }
 
 // loop() runs forever
 void loop()
 {
+
   // reconnect if connection failed
   if (!client.connected()) {
     reconnect();
@@ -88,13 +102,17 @@ void reconnect() {
     if (client.connect(ID)) {
       Serial.println("connected");
       // Publish
-      client.publish("my/test/topic", "{\"message\": \"Wio Terminal is connected!\"}");
+      // client.publish("", "{\"message\": \"Wio Terminal is connected!\"}");
       Serial.println("Published connection message successfully!");
       // Subscribe
-      client.subscribe("carduino/directions/live-control");
-      client.subscribe("my/test/topic");
-      client.subscribe("carduino/buzzer/honk");
-      Serial.println("Subcribed ");
+      for(String topic : sub_topics){
+         client.subscribe(topic.c_str());
+      }
+      // client.subscribe("carduino/lcd/print");
+      // client.subscribe("carduino/buzzer/honk");
+      // client.subscribe("carduino/directions/live-control");
+      // client.subscribe("carduino/power/off");
+      Serial.println("Subcribed to all topics");
     }
     else {
       Serial.print("failed, rc=");
@@ -124,19 +142,35 @@ void callback(char* topic, byte* payload, unsigned int length) {
 
 void reciever_actions(String topic, String message){
   // Honk
-  if (topic == "carduino/buzzer/honk"){
-    honk();
+  if (topic == "carduino/buzzer"){
+    if (message == "honk") honk(); //pass message as option
+    if (message == "tune") tune(); //pass message as option
+    if (message == "anthem") anthem(); //pass message as option
   }
 
   // Print to WIO screen
-  if (topic == "my/test/topic"){
+  if (topic == "carduino/lcd/print"){
       String text = "";
-      text.concat(topic);
-      text.concat(" ");
+      // text.concat(topic);
+      // text.concat(" ");
       text.concat(message);
       print_to_WIO(text);
   }
+
+  if (topic == "carduino/directions/live-control"){
+    
+    //draw arrows
+    
+  }
+
+  if (topic == "carduino/power/off"){
+    
+    if (message == "12345678Sivert") running = false;
+
+  }
 }
+
+/* Methods for WIO Terminal */
 
 void print_to_WIO(String message){
   lcd.fillScreen(TFT_BLACK);
@@ -149,5 +183,13 @@ void honk(){
   delay(1000);
   analogWrite(WIO_BUZZER, 0);
   delay(1000);
+}
+
+void tune(){
+
+}
+
+void anthem(){
+
 }
 
