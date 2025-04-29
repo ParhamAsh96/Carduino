@@ -27,7 +27,7 @@ export default {
   <header>
     <div id="app">
       
-    <router-view></router-view> 
+     
   </div>
 
       <nav>
@@ -41,10 +41,10 @@ export default {
         <RouterLink to="/about">About</RouterLink>
       </nav>
       
-
+      
     
   </header>
-
+  <router-view></router-view>
   
 </template>
 

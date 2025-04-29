@@ -53,8 +53,8 @@ export default {
     
     honk() {
       this.publishToTopic({
-        topic: 'adruino/buzzer/honk',
-        message: 'hell',  
+        topic: 'carduino/buzzer/honk',
+        message: 'honk',  
       });
     },
   },

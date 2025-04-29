@@ -1,5 +1,5 @@
 import { createStore } from 'vuex';
-import mqtt from 'mqtt';  // Import mqtt library
+import mqtt from 'mqtt';  
 
 const store = createStore({
   state() {
