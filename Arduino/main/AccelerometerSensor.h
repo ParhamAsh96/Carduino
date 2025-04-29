@@ -1,4 +1,4 @@
-#include "arduinoSensor.h"
+#include "ArduinoSensor.h"
 #include "PubSubClient.h"
 
 class AccelerometerSensor : public ArduinoSensor{

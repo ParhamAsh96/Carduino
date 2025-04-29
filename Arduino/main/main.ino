@@ -2,7 +2,8 @@
 #include <rpcWiFi.h>
 #include <PubSubClient.h>
 #include "LIS3DHTR.h"
-#include "accelerometer.h"
+#include "AccelerometerSensor.h"
+#include "TemperatureSensor.h"
 
 LIS3DHTR<TwoWire> lis;
 // Update these with values suitable for your network:
@@ -13,6 +14,7 @@ const char *ID = "Wio-Terminal-Client-meep";  // Name of our device, must be uni
 const char *pubTOPIC = "my/test/topic";  // Topic to publish to
 const char *subTopic = "my/test/topic";  // Topic to subcribe to
 const char *accelerometerTopic = "carduino/acceleration";
+const char *temperatureTopic = "carduino/temperature";
 const char *server = "test.mosquitto.org"; // Address of brocker (URL or IP)
 
 // For Update Frequency
@@ -21,12 +23,12 @@ double previousTime = millis();
 double updateIntervalMs = 1000;
 double deltaTime = 0;
 
-
 TFT_eSPI lcd;
 
 WiFiClient wifiClient;
 PubSubClient client(wifiClient);
 AccelerometerSensor accelerometer(client,accelerometerTopic);
+TemperatureSensor temperatureSensor(client,temperatureTopic);
 
 void reconnect() {
   
@@ -60,7 +62,6 @@ void setup()
   lcd.setRotation(3);
   lcd.fillScreen(TFT_BLACK);
 
-  
 
   Serial.begin(115200);
   while (!Serial); // Wait for Serial to be ready
@@ -83,6 +84,7 @@ void setup()
   client.setServer(server, 1883);
   client.setCallback(callback);
   accelerometer.setup();
+  temperatureSensor.setup();
 }
 
 // loop() runs forever
@@ -98,6 +100,7 @@ void loop()
   deltaTime += (systemTime - previousTime) / updateIntervalMs;
   previousTime = systemTime;
 
+  
 
   // MQTT Updates should be done inside this if statement to avoid publishing to the different topics too often.
   if (deltaTime >= 1){
@@ -105,7 +108,10 @@ void loop()
     deltaTime--;
 
     accelerometer.publishMQTT(accelerometer.getSensorValue());
+    temperatureSensor.publishMQTT(temperatureSensor.getSensorValue());
   }
+
+  
 
 
   client.loop();
