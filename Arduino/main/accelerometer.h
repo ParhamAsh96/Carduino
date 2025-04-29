@@ -31,7 +31,7 @@ public:
 
     void setup();
 
-    void publishMQTT(const char* message) override;
+    void publishMQTT(float sensorValue) override;
     
     
     float getSensorValue() override;
