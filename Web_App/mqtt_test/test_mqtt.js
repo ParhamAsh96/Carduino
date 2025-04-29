@@ -2,7 +2,8 @@
 // uses mqtt from "https://unpkg.com/mqtt/dist/mqtt.min.js"
 // mqtt is imported in the html <script src=...>
 
-const brokerUrl = 'ws://192.168.0.138:9001'; // change IP (and port if needed)  
+// const brokerUrl = 'ws://192.168.0.138:8883'; // change IP (and port if needed) 
+const brokerUrl = 'wss://test.mosquitto.org:8081'; 
 const clientId = 'mqtt_web_' + Math.random().toString(16).substr(2, 8); // Name that you connect with
 
 // client.on('condition', func()); - will run func() when condition is true
@@ -13,7 +14,7 @@ const client = mqtt.connect(brokerUrl, {
   reconnectPeriod: 1000,
 });
 
-topic = 'my/test/topic';
+topic = 'carduino/urmom';
 
 client.on('connect', () => {
   console.log('Connected to MQTT broker');

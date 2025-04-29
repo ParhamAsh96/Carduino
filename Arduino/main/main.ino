@@ -14,7 +14,7 @@ const uint16_t port = 1883;
 
 String sub_topics[4] = { 
   "carduino/lcd/print",
-  "carduino/buzzer/honk",
+  "carduino/buzzer",
   "carduino/directions/live-control",
   "carduino/power/off"
 };
@@ -74,12 +74,6 @@ void setup()
 // loop() runs forever
 void loop()
 {
-  // turn off the car
-  if(!running){
-    digitalWrite(LCD_BACKLIGHT, LOW);
-    return;
-  }
-
 
   // reconnect if connection failed
   if (!client.connected()) {
@@ -148,8 +142,10 @@ void callback(char* topic, byte* payload, unsigned int length) {
 
 void reciever_actions(String topic, String message){
   // Honk
-  if (topic == "carduino/buzzer/honk"){
-    honk(); //pass message as option
+  if (topic == "carduino/buzzer"){
+    if (message == "honk") honk(); //pass message as option
+    if (message == "tune") tune(); //pass message as option
+    if (message == "anthem") anthem(); //pass message as option
   }
 
   // Print to WIO screen
@@ -187,5 +183,13 @@ void honk(){
   delay(1000);
   analogWrite(WIO_BUZZER, 0);
   delay(1000);
+}
+
+void tune(){
+
+}
+
+void anthem(){
+
 }
 
