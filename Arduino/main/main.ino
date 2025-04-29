@@ -1,7 +1,8 @@
 #include <rpcWiFi.h>
 #include <PubSubClient.h>
 #include "LIS3DHTR.h"
-#include "accelerometer.h"
+#include "AccelerometerSensor.h"
+#include "TemperatureSensor.h"
 
 LIS3DHTR<TwoWire> lis;
 #include"LIS3DHTR.h" // Timer
@@ -47,6 +48,7 @@ LIS3DHTR<TwoWire> lis; // Timer
 WiFiClient wifiClient;
 PubSubClient client(wifiClient);
 AccelerometerSensor accelerometer(client,accelerometerTopic);
+TemperatureSensor temperatureSensor(client,temperatureTopic);
 
 void reconnect() {
   
@@ -100,12 +102,10 @@ void setup()
   Serial.println(ssid);
   delay(500);
 
-  client.setServer(server, 1883);
+  client.setServer(server, port);
   client.setCallback(callback);
   accelerometer.setup();
-  // Set MQTT client server connection
-  client.setServer(server, port);
-  client.setCallback(callback); // set callback function for recieving messages MQTT_sub
+  temperatureSensor.setup();
 }
 
 // loop() runs forever
@@ -121,12 +121,16 @@ void loop()
   systemTime = millis();
   deltaTime += (systemTime - previousTime) / updateIntervalMs;
   previousTime = systemTime;
-  // MQTT Updates should be done using a timer to avoid publishing to the different topics too often.
+
+  
+
+  // MQTT Updates should be done inside this if statement to avoid publishing to the different topics too often.
   if (deltaTime >= 1){
 
     deltaTime--;
 
     accelerometer.publishMQTT(accelerometer.getSensorValue());
+    temperatureSensor.publishMQTT(temperatureSensor.getSensorValue());
   }
   
   // MQTT client loop to recieve messages 

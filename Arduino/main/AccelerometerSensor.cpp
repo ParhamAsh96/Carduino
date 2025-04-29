@@ -2,7 +2,7 @@
 #include "LIS3DHTR.h"
 #include "PubSubClient.h"
 #include "ArduinoSensor.h"
-#include "accelerometer.h"
+#include "AccelerometerSensor.h"
 #include <sstream>
 
 AccelerometerSensor::AccelerometerSensor(PubSubClient& client, const char* topic)
