@@ -5,7 +5,7 @@
 
 class ArduinoSensor {
 public:
-    virtual void publishMQTT(const char* message) = 0;
+    virtual void publishMQTT(float sensorValue) = 0;
     virtual float getSensorValue() = 0;
     virtual void setup() = 0;
     virtual ~ArduinoSensor() = default;

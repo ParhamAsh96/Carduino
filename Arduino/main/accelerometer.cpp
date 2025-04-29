@@ -20,8 +20,11 @@ void AccelerometerSensor::setup() {
 
 }
 
-void AccelerometerSensor::publishMQTT(const char* message) {
-    client.publish(topic, message);
+void AccelerometerSensor::publishMQTT(float sensorValue) {
+    char returnMessage[5];
+    dtostrf(sensorValue, 0, 2, returnMessage);
+
+    client.publish(topic, returnMessage);
 }
 
 float AccelerometerSensor::getSensorValue() {
@@ -29,7 +32,10 @@ float AccelerometerSensor::getSensorValue() {
 
     xValue = lis.getAccelerationX();
     yValue = lis.getAccelerationY();
-    // zValue has some noise and shows 1 less than the actual acceleration. (-1 when standing still)
+    /* 
+    zValue has some noise and shows 1 less than the actual acceleration. (-1 when standing still) 
+    This depends on how the Arduino is positioned and has to be accounted for when placing the arduino in the chassis.
+    */
     zValue = lis.getAccelerationZ() + 1;
 
     
