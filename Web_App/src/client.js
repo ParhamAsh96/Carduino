@@ -16,7 +16,7 @@ const store = createStore({
     //ws://broker.hivemq.com:8000/mqtt
 //use this for test
     initializeMqttClient({ commit }) {
-      const mqttClient = mqtt.connect('ws://broker.hivemq.com:8000/mqtt');  
+      const mqttClient = mqtt.connect('ws://test.mosquitto.org:8081');  
       mqttClient.on('connect', () => {
         console.log('Connected to MQTT broker');
       });
@@ -36,7 +36,7 @@ const store = createStore({
           if (err) {
             console.error(`Error publishing message to ${topic}:`, err);
           } else {
-            console.log(`Message sent to ${topic}`);
+            console.log(`Message \"${message}\" sent to ${topic}`);
           }
         });
       } else {
