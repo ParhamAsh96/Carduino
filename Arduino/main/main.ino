@@ -104,9 +104,7 @@ void loop()
 
     deltaTime--;
 
-    accelerometer.publishMQTT("Hello!");
-    Serial.println(accelerometer.getSensorValue());
-    
+    accelerometer.publishMQTT(accelerometer.getSensorValue());
   }
 
 
