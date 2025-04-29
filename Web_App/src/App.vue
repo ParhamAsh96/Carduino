@@ -1,82 +1,34 @@
 <script>
 import { RouterLink, RouterView } from "vue-router";
-import mqtt from 'mqtt';
-import MusicView from './views/musicview.vue';
+
+import { mapActions } from 'vuex';
 
 export default {
   name: 'App',
-  data() {
-    return {
+  created() {
+    // create client when app is created
+    this.initializeMqttClient(); 
+  },
+  
+    
       
-//ws://broker.hivemq.com:8000/mqtt
-//use this for test
-      //ws://172.20.10.3:9001
-      client: null,
-      // topic: 'adruino/buzzer/control',
-      brokerUrl: 'ws://broker.hivemq.com:8000/mqtt', // Your broker URL
-    };
-  },
-  methods: {
-    connectMQTT() {
-      const clientId = 'mqtt_web_' + Math.random().toString(16).substr(2, 8);
 
-      this.client = mqtt.connect(this.brokerUrl, {
-        clientId: clientId,
-        clean: true,
-        connectTimeout: 4000,
-        reconnectPeriod: 1000,
-      });
+   
+    methods: {
+    ...mapActions(['initializeMqttClient'])  // Map the initializeMqttClient action to a method
+  }
+  
+  }
+  
 
-      this.client.on('connect', () => {
-
-        console.log('Connected to MQTT broker');
-        this.client.subscribe(adruino/buzzer/honk, (err) => {
-
-          this.client.publish(adruino/buzzer/honk, 'hell');
-          // if (!err) {
-          //   console.log('Subscribed to', this.topic);
-          //   this.client.publish(adruino/buzzer/control, 'hell');
-          // }
-        });
-      });
-
-      this.client.on('message', (topic, message) => {
-
-        console.log(`📬 Message received on '${topic}': ${message.toString()}`);
-        this.displayMessage(message.toString());
-      });
-
-      this.client.on('error', (err) => {
-        console.error('Connection error:', err);
-      });
-
-      this.client.on('reconnect', () => {
-        console.log('Reconnecting...');
-      });
-    },
-
-    // displayMessage(message) {
-    //   const msgDiv = document.getElementById('messages');
-    //   const msg = document.createElement('p');
-    //   msg.textContent = `📬 on ${this.topic}: ${message}`;
-    //   msgDiv.appendChild(msg);
-    // },
-  },
-  mounted() {
-    this.connectMQTT();
-  },
-  beforeDestroy() {
-    if (this.client) {
-      this.client.end();
-    }
-  },
-};
 </script>
 
 <template>
   <header>
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
+    <div id="app">
+      
+    <router-view></router-view> 
+  </div>
 
       <nav>
         <RouterLink to="/">Home</RouterLink>
@@ -88,7 +40,8 @@ export default {
         <RouterLink to="/guideview">Guide</RouterLink>
         <RouterLink to="/about">About</RouterLink>
       </nav>
-    </div>
+      
+
     
   </header>
 
@@ -96,6 +49,8 @@ export default {
 </template>
 
 <style scoped>
+
+
 header {
   width: 100%;
   background-color: #1d1d1b; /* Dark background color for the navigation bar */
@@ -124,4 +79,5 @@ nav a {
 nav a:hover {
   color: #ffcc00; /* Change color on hover */
 }
+
 </style>
