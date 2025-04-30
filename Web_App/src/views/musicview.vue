@@ -89,7 +89,7 @@ export default {
     },
     anthem(){
       this.publishToTopic({
-        topic : 'carduino/buzzer/',
+        topic : 'carduino/buzzer',
         message : 'anthem'
       })
     }
