@@ -1,4 +1,3 @@
-@import '../assets/main.css';
 <template>
   <h1 class="text">Here user can play music</h1>
 </template>
