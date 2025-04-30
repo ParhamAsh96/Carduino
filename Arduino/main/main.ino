@@ -47,7 +47,7 @@ void setup()
   lcd.fillScreen(TFT_BLACK);
 
   // turn on Buzzer
-  pinMode(WIO_BUZZER, OUTPUT);
+  pinMode(BUZZER_PIN, OUTPUT);
 
   Serial.begin(115200);
   while (!Serial); // Wait for Serial to be ready
@@ -103,7 +103,7 @@ void reconnect() {
       Serial.println("connected");
       // Publish
       // client.publish("", "{\"message\": \"Wio Terminal is connected!\"}");
-      Serial.println("Published connection message successfully!");
+      // Serial.println("Published connection message successfully!");
       // Subscribe
       for(String topic : sub_topics){
          client.subscribe(topic.c_str());
@@ -151,8 +151,6 @@ void reciever_actions(String topic, String message){
   // Print to WIO screen
   if (topic == "carduino/lcd/print"){
       String text = "";
-      // text.concat(topic);
-      // text.concat(" ");
       text.concat(message);
       print_to_WIO(text);
   }
@@ -182,25 +180,20 @@ char notes_tune[] = "ccggaagffeeddc ";
 int beats_tune[] = { 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 2, 4 };
 char notes_anthem[] = "ggecg edc ggecg fed ";
 int beats_anthem[] = {2,2,2,1,1,4, 2,2,4, 2,2,2,1,1,4, 2,2,4, 4};
-int tempo = 300;
+int tempo = 200;
 
 void honk(int option){
   switch(option){
-    case 0:{ // honk
-      analogWrite(BUZZER_PIN, 128);
-      delay(1000);
-      analogWrite(BUZZER_PIN, 0);
-      delay(1000);
+    case 0: // honk
+      playTone(1519,1000);
       break;
-    }
-    case 1:{ // tune
+    case 1: // tune
       readMusicSheet(notes_tune, beats_tune, 15);
       break;
-    }
-    case 2:{ // anthem
+    case 2: // anthem
       readMusicSheet(notes_anthem, beats_anthem, 19);
       break;
-    }
+    default: Serial.println("waa");
   }
 }
 
@@ -213,15 +206,7 @@ void readMusicSheet(char notes[], int beats[], int length) {
     }
     delay(tempo / 2); //delay between notes 
   }
-}
-
-void playTone(int tone, int duration) {
-  for (long i = 0; i < duration * 1000L; i += tone * 2) {
-    digitalWrite(BUZZER_PIN, HIGH);
-    delayMicroseconds(tone);
-    digitalWrite(BUZZER_PIN, LOW);
-    delayMicroseconds(tone);
-  }
+  return;
 }
 
 void playNote(char note, int duration) {
@@ -231,8 +216,17 @@ void playNote(char note, int duration) {
   // play the tone corresponding to the note name
   for (int i = 0; i < 8; i++) {
     if (names[i] == note) {
-        playTone(tones[i], duration);
+      playTone(tones[i], duration);
     }
+  }
+}
+
+void playTone(int tone, int duration) {
+  for (long i = 0; i < duration * 1000L; i += tone * 2) {
+    digitalWrite(BUZZER_PIN, HIGH);
+    delayMicroseconds(tone);
+    digitalWrite(BUZZER_PIN, LOW);
+    delayMicroseconds(tone);
   }
 }
 
