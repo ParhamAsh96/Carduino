@@ -12,11 +12,17 @@ void AccelerometerSensor::setup() {
     lis.begin(Wire1); 
     lis.setOutputDataRate(LIS3DHTR_DATARATE_25HZ); 
     lis.setFullScaleRange(LIS3DHTR_RANGE_2G);
+
     previousSpeed = 0;
     arduinoSpeed = 0;
+
     msRatio = 1000;
 
-    previousTime = millis();
+    distanceTravelled = 0; 
+
+    previousAccelerationTime = millis();
+
+    previousSpeedTime = millis();
 
 }
 
@@ -25,6 +31,13 @@ void AccelerometerSensor::publishMQTT(float sensorValue) {
     dtostrf(sensorValue, 0, 2, returnMessage);
 
     client.publish(topic, returnMessage);
+}
+
+void AccelerometerSensor::publishMQTT(const char* subTopic,float sensorValue) {
+    char returnMessage[12];
+    dtostrf(sensorValue, 0, 2, returnMessage);
+
+    client.publish(subTopic, returnMessage);
 }
 
 float AccelerometerSensor::getSensorValue() {
@@ -38,16 +51,42 @@ float AccelerometerSensor::getSensorValue() {
     */
     zValue = lis.getAccelerationZ() + 1;
 
-    
-    totalAcceleration = sqrt((xValue * xValue) + (yValue * yValue) + (zValue * zValue));
 
-    currentTime = millis();
+    // Account for drift in values.
+    xValue = (abs(xValue) < 0.07) ? 0 : xValue;
+    yValue = (abs(yValue) < 0.07) ? 0 : yValue;
+    
+    totalAcceleration = sqrt((xValue * xValue) + (yValue * yValue));
+
+
+    if ((xValue * yValue) < 0 ){
+        totalAcceleration = totalAcceleration * -1;
+    }
+
+    currentAccelerationTime = millis();
+    currentSpeedTime = millis();
 
     // Assuming constant acceleration in the timeframe.
-    arduinoSpeed = previousSpeed + totalAcceleration * (currentTime - previousTime) / msRatio;
-    previousTime = currentTime;
+    arduinoSpeed = previousSpeed + totalAcceleration * (currentAccelerationTime - previousAccelerationTime) / msRatio;
     
+
+    // Distance travelled also needs to be updated in here so we can get the proper speed.
+    distanceTravelled += abs(((arduinoSpeed + previousSpeed) / 2) * ((currentSpeedTime - previousSpeedTime) / msRatio));
+
+    previousAccelerationTime = currentSpeedTime;
+    previousSpeedTime = currentSpeedTime;
+    previousSpeed = arduinoSpeed;
+
     return arduinoSpeed;
+}
+
+float AccelerometerSensor::getTravelledDistance(){
+
+    // Make sure everything is fully updated.
+    getSensorValue();
+
+    return distanceTravelled;
+    
 }
 
 AccelerometerSensor::~AccelerometerSensor() {}

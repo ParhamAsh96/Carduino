@@ -13,7 +13,8 @@ const char *password = "abcdefghi"; // your network password
 const char *ID = "Wio-Terminal-Client-meep";  // Name of our device, must be unique
 const char *pubTOPIC = "my/test/topic";  // Topic to publish to
 const char *subTopic = "my/test/topic";  // Topic to subcribe to
-const char *accelerometerTopic = "carduino/acceleration";
+const char *accelerometerTopic = "carduino/accelerometer";
+const char *accelerometerSubTopic = "carduino/accelerometer/distance";
 const char *temperatureTopic = "carduino/temperature";
 const char *server = "test.mosquitto.org"; // Address of brocker (URL or IP)
 
@@ -105,10 +106,13 @@ void loop()
   // MQTT Updates should be done inside this if statement to avoid publishing to the different topics too often.
   if (deltaTime >= 1){
 
-    deltaTime--;
+    deltaTime --;
 
     accelerometer.publishMQTT(accelerometer.getSensorValue());
     temperatureSensor.publishMQTT(temperatureSensor.getSensorValue());
+
+    // Need to add a function to check if the car is moving or not to restart the speed since it only accumulates...
+    accelerometer.publishMQTT(accelerometerSubTopic,accelerometer.getTravelledDistance());
   }
 
   
