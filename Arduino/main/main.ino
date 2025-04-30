@@ -127,10 +127,13 @@ void loop()
   // MQTT Updates should be done inside this if statement to avoid publishing to the different topics too often.
   if (deltaTime >= 1){
 
-    deltaTime--;
+    deltaTime --;
 
     accelerometer.publishMQTT(accelerometer.getSensorValue());
     temperatureSensor.publishMQTT(temperatureSensor.getSensorValue());
+
+    // Need to add a function to check if the car is moving or not to restart the speed since it only accumulates...
+    accelerometer.publishMQTT(accelerometerSubTopic,accelerometer.getTravelledDistance());
   }
   
   // MQTT client loop to recieve messages 

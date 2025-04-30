@@ -4,19 +4,6 @@
 class TemperatureSensor : public ArduinoSensor{
     public: 
     
-    
-        // For sensor values
-        float temperature;
-        int betaCoefficient;              
-        int baseResistance;       
-        int pinTempSensor;
-    
-    
-        // Pointer to PubSubClient from main and topic
-        PubSubClient& client;
-        const char *topic;
-    
-    
         // Class functions
     
         TemperatureSensor(PubSubClient& client, const char* topic);
@@ -29,6 +16,20 @@ class TemperatureSensor : public ArduinoSensor{
         float getSensorValue() override;
     
         ~TemperatureSensor();
+
+private:
+
+    // For sensor values and and converting from sensor values to temperature
     
+    float temperature;
+    int betaCoefficient;              
+    int baseResistance;       
+    int pinTempSensor;
+
+
+    // Pointer to PubSubClient from main and topic
+    PubSubClient& client;
+    const char *topic;
+
     };
     
