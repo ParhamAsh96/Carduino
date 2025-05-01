@@ -10,7 +10,7 @@
     -->
     <div id="guide">
       <ul>
-        <li><img src="../pictures/test.png" alt="test" /></li>
+        <li><img src="/public/test.png" alt="test" /></li>
         <li>
           <p>
             Lorem, ipsum dolor sit amet consectetur adipisicing elit. Sed
@@ -21,7 +21,7 @@
         </li>
       </ul>
       <ul>
-        <li><img src="../pictures/test.png" alt="test" /></li>
+        <li><img src="/public/favicon.ico" alt="test" /></li>
         <li>
           <p>
             Lorem, ipsum dolor sit amet consectetur adipisicing elit. Sed
@@ -32,7 +32,7 @@
         </li>
       </ul>
       <ul>
-        <li><img src="../pictures/test.png" alt="test" /></li>
+        <li><img src="/public/test.png" alt="test" /></li>
         <li>
           <p>
             Lorem, ipsum dolor sit amet consectetur adipisicing elit. Sed
