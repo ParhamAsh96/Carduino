@@ -4,15 +4,21 @@
 <template>
   <main>
     <!--
-    <div id="name">
+    <div class="fixed">
       <h1>Carduino</h1>
     </div>
     -->
-    <div id="guide">
-      <ul>
-        <li><img src="/public/test.png" alt="test" /></li>
-        <li>
-          <p>
+    <div class="container mt-50 mx-auto px-[20vw] box-border text-[#d9d9d9]">
+      <ul class="flex items-stretch my-[2vh] p-0 gap-4 h-[20vh] list-none">
+        <li class="box-border flex-[0_0_25vw]">
+          <img
+            src="/test.png"
+            alt="test"
+            class="block w-full h-full object-contain"
+          />
+        </li>
+        <li class="box-border flex-[0_0_25vw]">
+          <p class="m-0 wrap-break-word">
             Lorem, ipsum dolor sit amet consectetur adipisicing elit. Sed
             eligendi explicabo saepe quidem assumenda corrupti culpa recusandae
             aliquam ut aspernatur, sit nisi! Ullam accusantium dolorum
@@ -20,10 +26,16 @@
           </p>
         </li>
       </ul>
-      <ul>
-        <li><img src="/public/favicon.ico" alt="test" /></li>
-        <li>
-          <p>
+      <ul class="flex items-stretch my-[2vh] p-0 gap-4 h-[20vh] list-none">
+        <li class="box-border flex-[0_0_25vw]">
+          <img
+            src="/test.png"
+            alt="test"
+            class="block w-full h-full object-contain"
+          />
+        </li>
+        <li class="box-border flex-[0_0_25vw]">
+          <p class="m-0 wrap-break-word">
             Lorem, ipsum dolor sit amet consectetur adipisicing elit. Sed
             eligendi explicabo saepe quidem assumenda corrupti culpa recusandae
             aliquam ut aspernatur, sit nisi! Ullam accusantium dolorum
@@ -31,10 +43,16 @@
           </p>
         </li>
       </ul>
-      <ul>
-        <li><img src="/public/test.png" alt="test" /></li>
-        <li>
-          <p>
+      <ul class="flex items-stretch my-[2vh] p-0 gap-4 h-[20vh] list-none">
+        <li class="box-border flex-[0_0_25vw]">
+          <img
+            src="/test.png"
+            alt="test"
+            class="block w-full h-full object-contain"
+          />
+        </li>
+        <li class="box-border flex-[0_0_25vw]">
+          <p class="m-0 wrap-break-word">
             Lorem, ipsum dolor sit amet consectetur adipisicing elit. Sed
             eligendi explicabo saepe quidem assumenda corrupti culpa recusandae
             aliquam ut aspernatur, sit nisi! Ullam accusantium dolorum
@@ -59,38 +77,4 @@
   color: #ffcc00;
 }
 */
-
-#guide {
-  margin-top: 20vh;
-  color: rgb(217, 217, 217);
-  padding: 0 20vw;
-  box-sizing: border-box;
-}
-
-#guide ul {
-  display: flex;
-  align-items: stretch;
-  list-style: none;
-  margin: 2vh 0;
-  padding: 0;
-  gap: 1rem;
-  height: 20vh;
-}
-
-#guide li {
-  flex: 0 0 25vw;
-  box-sizing: border-box;
-}
-
-#guide li:first-child img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
-
-#guide li:nth-child(2) p {
-  margin: 0;
-  overflow-wrap: break-word;
-}
 </style>
