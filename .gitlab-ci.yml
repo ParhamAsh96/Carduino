@@ -5,7 +5,8 @@ build_app:
   stage: build
   image: node:16
   script:
-    - echo "Building..."
+    - node -v
+    - npm -v
     - npm install
     - npm run build
 
