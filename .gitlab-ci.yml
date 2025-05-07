@@ -2,12 +2,11 @@ stages:
   - build
 
 build_app:
-  stage: build
   image: node:18
-  services:
-    - docker:19.03.12-dind  # Use Docker-in-Docker service
+  stage: build
+  tags:
+    - docker
   script:
-    - docker info  # Check if Docker is accessible
     - node -v
     - npm -v
     - npm install
