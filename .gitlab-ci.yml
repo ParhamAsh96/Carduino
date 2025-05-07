@@ -1,0 +1,15 @@
+stages:
+  - build
+
+build_app:
+  stage: build
+  image: node:16
+  script:
+    - echo "Building..."
+    - npm install
+    - npm run build
+
+
+
+
+  
