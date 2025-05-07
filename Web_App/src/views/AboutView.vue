@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-wrap justify-evenly pt-5 gap-10">
-    <!-- Item 1 -->
+    <!-- Makan Ajdadi -->
     <div class="flex items-center space-x-2">
       <img
         src="/About_page/Mikey.png"
@@ -33,7 +33,7 @@
       </div>
     </div>
 
-    <!-- Item 2 -->
+    <!-- Sivert Bronebakk -->
     <div class="flex items-center space-x-2">
       <img
         src="/About_page/Sivert.png"
@@ -60,7 +60,7 @@
       </div>
     </div>
 
-    <!-- Item 3 -->
+    <!-- Mobin Salehi -->
     <div class="flex items-center space-x-2">
       <img
         src="/About_page/Mobin.png"
@@ -87,7 +87,7 @@
       </div>
     </div>
 
-    <!-- Item 4 -->
+    <!-- Parham Ashrafzadeh -->
     <div class="flex items-center space-x-2">
       <img
         src="/About_page/Parham.png"
@@ -120,7 +120,7 @@
       </div>
     </div>
 
-    <!-- Item 5 -->
+    <!-- Dorin Calmis -->
     <div class="flex items-center space-x-2">
       <img
         src="/About_page/Dorin.png"
