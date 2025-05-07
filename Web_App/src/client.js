@@ -13,10 +13,12 @@ const store = createStore({
     },
   },
   actions: {
-    //ws://broker.hivemq.com:8000/mqtt
-//use this for test
+    // Some teammates had issues connecting to a broker from the web app. Try one of the first 2 brokers. 3rd is a local broker:
+    // ws://broker.hivemq.com:8000/mqtt
+    // ws://test.mosquitto.org:8081
+    // ws://172.20.10.3:1883
     initializeMqttClient({ commit }) {
-      const mqttClient = mqtt.connect('ws://test.mosquitto.org:8081');  
+      const mqttClient = mqtt.connect('ws://broker.hivemq.com:8000/mqtt');  
       mqttClient.on('connect', () => {
         console.log('Connected to MQTT broker');
       });

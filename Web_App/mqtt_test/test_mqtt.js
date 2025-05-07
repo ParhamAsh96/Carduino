@@ -2,7 +2,7 @@
 // uses mqtt from "https://unpkg.com/mqtt/dist/mqtt.min.js"
 // mqtt is imported in the html <script src=...>
 
-// const brokerUrl = 'ws://192.168.0.138:8883'; // change IP (and port if needed) 
+// const brokerUrl = 'ws://192.168.0.138:1883'; // change IP (and port if needed) 
 const brokerUrl = 'wss://test.mosquitto.org:8081'; 
 const clientId = 'mqtt_web_' + Math.random().toString(16).substr(2, 8); // Name that you connect with
 
