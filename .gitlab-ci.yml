@@ -3,14 +3,15 @@ stages:
 
 build_app:
   stage: build
-  image: node:18 
+  image: node:18
+  services:
+    - docker:19.03.12-dind  # Use Docker-in-Docker service
   script:
-    - docker pull node:18  # Force pulling the latest Node 18 image
-    - node -v  # Confirm Node version
-    - npm -v   # Confirm npm is installed
-    - npm install  # Install dependencies
-    - npm run build  # Build the app
-
+    - docker info  # Check if Docker is accessible
+    - node -v
+    - npm -v
+    - npm install
+    - npm run build
 
 
 
