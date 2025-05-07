@@ -21,7 +21,7 @@ arduino-cli core install Seeeduino:samd --config-file .arduino-cli.yaml
 
 arduino-cli lib install "PubSubClient@2.8.0"
 arduino-cli lib install "Seeed Arduino rpcWiFi@1.1.0"
-arduino-cli lib install --git-url https://github.com/Seeed-Studio/Seeed_Arduino_LIS3DHTR.git
+arduino-cli lib install "Seeed_Arduino_LIS3DHTR@1.2.4"
 
 cd - # Return to previous working directory
 
