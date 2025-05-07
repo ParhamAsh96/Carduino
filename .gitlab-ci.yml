@@ -28,6 +28,7 @@ build_hardware_component:
     - export PATH=$PATH:/root/bin
     - pwd
     - cd Arduino
+    - cd main
     - arduino-cli compile --fqbn Seeeduino:samd:seeed_wio_terminal
 
     
