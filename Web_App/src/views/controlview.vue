@@ -63,7 +63,7 @@
   <div class="fixed bottom-6 right-6 flex flex-col items-center space-y-4">
     <!-- Up Arrow -->
     <button
-      @click="UpArrow"
+      @click="onArrow('up')"
       class="flex items-center justify-center size-20 bg-blue-500 text-white rounded-full shadow-lg hover:bg-blue-600 hover:text-[#ffcc00] active:scale-90 active:bg-red-900 transition-transform"
       aria-label="Arrow Up"
     >
@@ -111,15 +111,7 @@
 </template>
 
 <script>
-  import { mapActions } from 'vuex';  
-
-  export default {
-    methods: {
-      ...mapActions(['publishToTopic']),  // Map the publishToTopic action to a method
-
-  
-
-
+export default {
   data() {
     return {
       autoBrake: false,
@@ -127,17 +119,6 @@
     };
   },
   methods: {
-
-    UpArrow()
-    {
-      this.publishToTopic({
-        topic: 'carduino/movement',
-        message: 'upArrow',  
-      });
-
-    }
-
-
     toggle(feature) {
       this[feature] = !this[feature];
       console.log(`${feature} toggled: ${this[feature]}`);
@@ -146,5 +127,6 @@
       console.log(`${direction} arrow clicked`);
       // Add logic for handling arrow clicks here
     }
-  };
+  }
+};
 </script>
