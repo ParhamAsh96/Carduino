@@ -52,12 +52,6 @@ button:hover {
   gap: 10px; /* Space between buttons */
   align-items: center; /* Center buttons horizontally */
   margin-bottom: 20px; /* Optional: gives space from the bottom */
-  position: absolute;
-      top: 0;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      margin: auto;
 }
 
 
