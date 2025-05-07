@@ -1,4 +1,3 @@
-@import '../assets/main.css';
 <template>
   <h1 class="text">This is where the diagnostics are</h1>
 </template>
