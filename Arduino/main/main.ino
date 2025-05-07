@@ -2,20 +2,23 @@
 #include <PubSubClient.h>
 #include"LIS3DHTR.h" // Timer
 
+#define BUZZER_PIN WIO_BUZZER // WIO Buzzer
+#define RESET_TURN_OFF 300
+
 // Update these with values suitable for your network:
 const char *ssid = "iPhoneiee♨️";      // network SSID (Wifi)
 const char *password = "14444444"; // your network password
 
 const char *ID = "Wio-Terminal-Client-meep";  // Name of our device, must be unique
-// c172.20.10.3 - local brocker
+// 172.20.10.3 - local brocker
 // broker.hivemq.com
 // test.mosquitto.org
-const char *server = "broker.hivemq.com"; // ONLINE SERVER
+const char *server = "broker.hivemq.com";
 const uint16_t port = 1883;
 
 // For turning off
 bool running = true;
-double turnoffTime = 300;
+double turnOffTimer = RESET_TURN_OFF;
 
 const int leftForward = D0;
 const int leftBackward = D1;
@@ -29,21 +32,13 @@ String sub_topics[4] = {
   "carduino/power/off"
 };
 
-// For turning off
-bool running = true;
-
 // For Update Frequency
 double systemTime;
 double previousTime = millis();
 double updateIntervalMs = 1000;
 double deltaTime = 0;
 
-// TFT_eSPI lcd; // WIO LCD Display
 LIS3DHTR<TwoWire> lis; // Timer
-
-#define BUZZER_PIN WIO_BUZZER // WIO Buzzer
-#define LCD_BACKLIGHT (72Ul) // Control Pin of LCD
-
 WiFiClient wifiClient;
 PubSubClient client(wifiClient);
 
@@ -51,12 +46,6 @@ PubSubClient client(wifiClient);
 // setup() runs once
 void setup()
 { 
-
-  // turn on WIO LCD
-  // lcd.begin();
-  // lcd.setRotation(3);
-  // lcd.fillScreen(TFT_BLACK);
-
   // turn on Buzzer
   pinMode(BUZZER_PIN, OUTPUT);
 
@@ -86,8 +75,8 @@ void setup()
 void loop()
 {
   // turn off the car
-  if(!running || turnoffTime <= 1){
-    digitalWrite(LCD_BACKLIGHT, LOW);
+  if(!running || turnOffTimer <= 1){
+    /* here set all pins to low */
     return;
   }
   
@@ -100,10 +89,10 @@ void loop()
   systemTime = millis();
   deltaTime += (systemTime - previousTime) / updateIntervalMs;
   previousTime = systemTime;
-  // MQTT Updates should be done using a timer to avoid publishing to the different topics too often.
+  /* this if-statememnt runs every 1000 ms */
   if (deltaTime >= 1){
     deltaTime--;
-    turnoffTime--;
+    turnOffTimer--;
   }
   
   // MQTT client loop to recieve messages 
@@ -114,7 +103,7 @@ void reconnect() {
   while (!client.connected()) // Loop until we reconnected
   {
     Serial.print("Attempting MQTT connection...");
-    // Connect:
+    // Connect
     if (client.connect(ID)) {
       Serial.println("connected");
       // Publish
@@ -139,10 +128,10 @@ void reconnect() {
   }
 }
 
-// The callback function must be provided for PubSubClient (if we subscribe).
+// The callback function is set with "client.setCallback(callback);" .
 // This function is called when new messages arrive at the client. 
 void callback(char* topic, byte* payload, unsigned int length) {
-  turnoffTime = 300;
+  turnOffTimer = RESET_TURN_OFF; // Auto-Turn-Off timer resets each time we recieve a message
   Serial.print("Message arrived [");
   Serial.print(topic);
   Serial.print("] ");
@@ -167,14 +156,14 @@ void reciever_actions(String topic, String message){
 
   // Print to WIO screen
   if (topic == "carduino/lcd/print"){
-      // String text = "";
-      // text.concat(message);
-      // print_to_WIO(text);
+
+    // currently not used
+
   }
 
   if (topic == "carduino/directions/live-control"){
     
-    //draw arrows
+    //method for turning the wheels
     
   }
 
@@ -185,13 +174,7 @@ void reciever_actions(String topic, String message){
   }
 }
 
-/* Methods for WIO Terminal */
-
-void print_to_WIO(String message){
-  // lcd.fillScreen(TFT_BLACK);
-  // lcd.setTextSize(2);
-  // lcd.drawString(message, 0, 10);
-}
+/* Methods for WIO Terminal hardware */
 
 char notes_tune[] = "ccggaagffeeddc ";
 int beats_tune[] = { 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 2, 4 };
@@ -210,7 +193,7 @@ void honk(int option){
     case 2: // anthem
       readMusicSheet(notes_anthem, beats_anthem, 19);
       break;
-    default: Serial.println("waa");
+    default: Serial.println("tune not found");
   }
 }
 
@@ -246,5 +229,3 @@ void playTone(int tone, int duration) {
     delayMicroseconds(tone);
   }
 }
-
-
