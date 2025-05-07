@@ -111,22 +111,56 @@
 </template>
 
 <script>
-export default {
-  data() {
-    return {
-      autoBrake: false,
-      frontLights: false
-    };
-  },
-  methods: {
-    toggle(feature) {
-      this[feature] = !this[feature];
-      console.log(`${feature} toggled: ${this[feature]}`);
-    },
-    onArrow(direction) {
-      console.log(`${direction} arrow clicked`);
-      // Add logic for handling arrow clicks here
+    import { mapActions } from 'vuex';
+    export default {
+      
+      data() {
+        return {
+          autoBrake: false,
+          frontLights: false
+        };
+      },
+      methods: {
+          ...mapActions(['publishToTopic']),  // Map the publishToTopic action to a method
+        toggle(feature) {
+          this[feature] = !this[feature];
+          console.log(`${feature} toggled: ${this[feature]}`);
+        },
+        onArrow(direction) {
+          switch(direction) {
+            case "up":
+              this.publishToTopic({
+                topic: 'carduino/movement',
+                message: 'arrowUp',  
+              });
+                break;
+            
+            case "right":
+              this.publishToTopic({
+                topic: 'carduino/movement',
+                message: 'arrowRight',  
+            });
+            break;
+              
+            case "down":
+              this.publishToTopic({
+                topic: 'carduino/movement',
+                message: 'arrowDown',  
+            });
+              // code block
+              break;
+
+            case "left":
+              this.publishToTopic({
+                topic: 'carduino/movement',
+                message: 'arrowLeft',  
+            });
+            break;
+            
+        // code block
     }
-  }
-};
+          // Add logic for handling arrow clicks here
+        }
+      }
+    };
 </script>
