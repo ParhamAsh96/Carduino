@@ -1,4 +1,4 @@
-@import '../assets/main.css';
+
 <template>
   <h1 class="text">this is where the joystick is</h1>
 </template>

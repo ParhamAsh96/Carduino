@@ -1,4 +1,3 @@
-@import '../assets/main.css';
 <template>
     <div class = "container">
     <button class = "button fixed_button" @click="honk">Honk</button>
