@@ -3,8 +3,8 @@
 #include"LIS3DHTR.h" // Timer
 
 // Update these with values suitable for your network:
-const char *ssid = "iPhoneiee♨️";      // network SSID (Wifi)
-const char *password = "14444444"; // your network password
+const char *ssid = "COMHEM_6b0dde";      // network SSID (Wifi)
+const char *password = "adzyidjn"; // your network password
 
 const char *ID = "Wio-Terminal-Client-meep";  // Name of our device, must be unique
 // c172.20.10.3 - local brocker
@@ -21,7 +21,7 @@ const int rightBackward = D2;
 String sub_topics[4] = { 
   "carduino/lcd/print",
   "carduino/buzzer",
-  "carduino/directions/live-control",
+  "carduino/movement",
   "carduino/power/off"
 };
 
@@ -76,6 +76,12 @@ void setup()
   // Set MQTT client server connection
   client.setServer(server, port);
   client.setCallback(callback); // set callback function for recieving messages MQTT_sub
+
+  // set up the wheels
+  pinMode(leftForward, OUTPUT);
+  pinMode(leftBackward, OUTPUT);
+  pinMode(rightForward, OUTPUT);
+  pinMode(rightBackward, OUTPUT);
 }
 
 // loop() runs forever
@@ -162,9 +168,23 @@ void reciever_actions(String topic, String message){
       // print_to_WIO(text);
   }
 
-  if (topic == "carduino/directions/live-control"){
-    
-    //draw arrows
+  if (topic == "carduino/movement"){
+     if (message == "arrowUp") 
+     {
+      arrowUp();
+     } 
+     else if (message == "arrowRight")
+     {
+       arrowRight(); 
+     }
+     else if (message == "arrowLeft")     
+     {
+      arrowLeft(); 
+     }
+     else if (message == "arrowDown")     
+     {
+      arrowDown();
+     } 
     
   }
 
@@ -188,6 +208,42 @@ int beats_tune[] = { 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 2, 4 };
 char notes_anthem[] = "ggecg edc ggecg fed ";
 int beats_anthem[] = {2,2,2,1,1,4, 2,2,4, 2,2,2,1,1,4, 2,2,4, 4};
 int tempo = 200;
+
+// move the car forward
+void arrowUp()
+{
+  digitalWrite(leftForward, HIGH);
+  digitalWrite(rightForward, HIGH);
+  digitalWrite(leftBackward, LOW);
+  digitalWrite(rightBackward, LOW);
+
+}
+
+// turn the car right
+void arrowRight()
+{
+  digitalWrite(rightForward, LOW);
+  digitalWrite(rightBackward, LOW);
+}
+
+
+// turn the car left
+void arrowLeft()
+{
+  digitalWrite(leftForward, LOW);
+  digitalWrite(leftBackward, LOW);
+}
+
+
+// move the car back
+void arrowDown()
+{
+  digitalWrite(leftForward, LOW);
+  digitalWrite(rightForward, LOW);
+  digitalWrite(leftBackward, HIGH);
+  digitalWrite(rightBackward, HIGH);
+}
+
 
 void honk(int option){
   switch(option){
