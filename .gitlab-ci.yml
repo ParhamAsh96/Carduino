@@ -3,13 +3,12 @@ stages:
 
 build_app:
   stage: build
-  image: node:18
+  image: node:18 
   script:
-    - node -v
-    - curl -L https://www.npmjs.com/install.sh | sh  #  install npm
-    - npm -v  # Check if npm is installed after installation
-    - npm install
-    - npm run build
+    - node -v  # Confirm Node version
+    - npm -v   # Confirm npm is installed
+    - npm install  # Install dependencies
+    - npm run build  # Build the app
 
 
 
