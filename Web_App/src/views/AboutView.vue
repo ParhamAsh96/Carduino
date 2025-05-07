@@ -15,7 +15,7 @@
     
     <!-- Item 2 -->
     <div class="flex items-center space-x-2">
-      <img src="/About_page/person_lock_filled_icon_202008.webp" class="flex w-75 h-75 object-contain rounded-full hover:grayscale transition duration-300" />
+      <img src="/About_page/Sivert.png" class="flex w-75 h-75 object-contain rounded-full hover:grayscale transition duration-300" />
       
       <div class = "flex flex-col">
         <h1 class="flex text-xl text-cyan-700 hover:text-cyan-900 hover:text-2xl transition duration-300">Sivert Bronebakk</h1>
@@ -26,7 +26,7 @@
     
     <!-- Item 3 -->
     <div class="flex items-center space-x-2">
-      <img src="/About_page/person_lock_filled_icon_202008.webp" class="flex w-75 h-75 object-contain rounded-full hover:grayscale transition duration-300" />
+      <img src="/About_page/Mobin.png" class="flex w-75 h-75 object-contain rounded-full hover:grayscale transition duration-300" />
       
       <div class = "flex flex-col">
         <h1 class="flex text-xl text-cyan-700 hover:text-cyan-900 hover:text-2xl transition duration-300">Mobin Salehi</h1>
@@ -40,7 +40,7 @@
   <div class="flex justify-evenly pt-[25px]">
     <!-- Item 4 -->
     <div class="flex items-center space-x-2">
-      <img src="/About_page/person_lock_filled_icon_202008.webp" class="flex w-75 h-75 object-contain rounded-full hover:grayscale transition duration-300" />
+      <img src="/About_page/Parham.png" class="flex w-75 h-75 object-contain rounded-full hover:grayscale transition duration-300" />
       
       <div class = "flex flex-col">
         <h1 class="flex text-xl text-cyan-700 hover:text-cyan-900 hover:text-2xl transition duration-300">Parham Ashrafzadeh</h1>
