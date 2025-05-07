@@ -1,4 +1,3 @@
-// #include <TFT_eSPI.h> // LCD Display
 #include <rpcWiFi.h>
 #include <PubSubClient.h>
 #include"LIS3DHTR.h" // Timer
@@ -8,8 +7,10 @@ const char *ssid = "iPhoneiee♨️";      // network SSID (Wifi)
 const char *password = "14444444"; // your network password
 
 const char *ID = "Wio-Terminal-Client-meep";  // Name of our device, must be unique
-// const char *server = "172.20.10.3"; // Address of brocker (URL or IP)
-const char *server = "test.mosquitto.org"; // ONLINE SERVER
+// c172.20.10.3 - local brocker
+// broker.hivemq.com
+// test.mosquitto.org
+const char *server = "broker.hivemq.com"; // ONLINE SERVER
 const uint16_t port = 1883;
 
 const int leftForward = D0;
