@@ -1,4 +1,3 @@
-@import '../assets/main.css';
 <template>
   <h1 class="text">this is where the statistics are</h1>
 </template>

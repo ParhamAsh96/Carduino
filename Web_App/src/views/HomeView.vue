@@ -1,4 +1,3 @@
-@import '../assets/main.css';
 <script setup>
 
 </script>
