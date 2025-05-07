@@ -1,4 +1,4 @@
-#include <TFT_eSPI.h> // LCD Display
+// #include <TFT_eSPI.h> // LCD Display
 #include <rpcWiFi.h>
 #include <PubSubClient.h>
 #include"LIS3DHTR.h" // Timer
@@ -11,6 +11,11 @@ const char *ID = "Wio-Terminal-Client-meep";  // Name of our device, must be uni
 // const char *server = "172.20.10.3"; // Address of brocker (URL or IP)
 const char *server = "test.mosquitto.org"; // ONLINE SERVER
 const uint16_t port = 1883;
+
+const int leftForward = D0;
+const int leftBackward = D1;
+const int rightForward = D3;
+const int rightBackward = D2;
 
 String sub_topics[4] = { 
   "carduino/lcd/print",
@@ -28,7 +33,7 @@ double previousTime = millis();
 double updateIntervalMs = 1000;
 double deltaTime = 0;
 
-TFT_eSPI lcd; // WIO LCD Display
+// TFT_eSPI lcd; // WIO LCD Display
 LIS3DHTR<TwoWire> lis; // Timer
 
 #define BUZZER_PIN WIO_BUZZER // WIO Buzzer
@@ -41,10 +46,11 @@ PubSubClient client(wifiClient);
 // setup() runs once
 void setup()
 { 
+
   // turn on WIO LCD
-  lcd.begin();
-  lcd.setRotation(3);
-  lcd.fillScreen(TFT_BLACK);
+  // lcd.begin();
+  // lcd.setRotation(3);
+  // lcd.fillScreen(TFT_BLACK);
 
   // turn on Buzzer
   pinMode(BUZZER_PIN, OUTPUT);
@@ -150,9 +156,9 @@ void reciever_actions(String topic, String message){
 
   // Print to WIO screen
   if (topic == "carduino/lcd/print"){
-      String text = "";
-      text.concat(message);
-      print_to_WIO(text);
+      // String text = "";
+      // text.concat(message);
+      // print_to_WIO(text);
   }
 
   if (topic == "carduino/directions/live-control"){
@@ -171,9 +177,9 @@ void reciever_actions(String topic, String message){
 /* Methods for WIO Terminal */
 
 void print_to_WIO(String message){
-  lcd.fillScreen(TFT_BLACK);
-  lcd.setTextSize(2);
-  lcd.drawString(message, 0, 10);
+  // lcd.fillScreen(TFT_BLACK);
+  // lcd.setTextSize(2);
+  // lcd.drawString(message, 0, 10);
 }
 
 char notes_tune[] = "ccggaagffeeddc ";
