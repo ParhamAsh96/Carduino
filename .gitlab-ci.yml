@@ -5,6 +5,7 @@ build_app:
   stage: build
   image: node:18 
   script:
+    - docker pull node:18  # Force pulling the latest Node 18 image
     - node -v  # Confirm Node version
     - npm -v   # Confirm npm is installed
     - npm install  # Install dependencies
