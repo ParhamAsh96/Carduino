@@ -21,7 +21,7 @@ arduino-cli core install Seeeduino:samd --config-file .arduino-cli.yaml
 
 arduino-cli lib install "PubSubClient@2.8.0"
 arduino-cli lib install "Seeed Arduino rpcWiFi@1.1.0"
-arduino-cli lib install "Grove-3-Axis-Digital-Accelerometer-2g-to-16g-LIS3DHTR by Seeed Studio@1.2.4"
+arduino-cli lib install --git-url https://github.com/Seeed-Studio/Seeed_Arduino_LIS3DHTR.git
 
 cd - # Return to previous working directory
 
