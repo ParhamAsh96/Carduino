@@ -13,6 +13,16 @@ build_app:
     - npm install
     - npm run build
 
+biuld_hardware_component:
+  image: node:18
+  stage: build
+  tags:
+    - docker
+  script:
+    - cd Arduino
+    - node -v
+    - npm -v
+    
 
 
   
