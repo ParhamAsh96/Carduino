@@ -1,5 +1,26 @@
-<script setup>
-  import { RouterLink, RouterView } from "vue-router";
+<script>
+import { RouterLink, RouterView } from "vue-router";
+
+import { mapActions } from 'vuex';
+
+export default {
+  name: 'App',
+  created() {
+    // create client when app is created
+    this.initializeMqttClient(); 
+  },
+  
+    
+      
+
+   
+    methods: {
+    ...mapActions(['initializeMqttClient'])  // Map the initializeMqttClient action to a method
+  }
+  
+  }
+  
+
 </script>
 
 <template>
