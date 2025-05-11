@@ -30,6 +30,10 @@ String sub_topics[4] = {
   "carduino/power/off"
 };
 
+const char* speedTopic = "carduino/accelerometer/speed";
+const char* distanceTopic = "carduino/accelerometer/distance";
+const char* temperatureTopic = "carduino/temperature";
+
 // For turning off
 bool running = true;
 
@@ -40,37 +44,14 @@ double updateIntervalMs = 1000;
 double deltaTime = 0;
 
 // TFT_eSPI lcd; // WIO LCD Display
-LIS3DHTR<TwoWire> lis; // Timer
 
 #define BUZZER_PIN WIO_BUZZER // WIO Buzzer
 #define LCD_BACKLIGHT (72Ul) // Control Pin of LCD
 
 WiFiClient wifiClient;
 PubSubClient client(wifiClient);
-AccelerometerSensor accelerometer(client,accelerometerTopic);
+AccelerometerSensor accelerometer(client,speedTopic);
 TemperatureSensor temperatureSensor(client,temperatureTopic);
-
-void reconnect() {
-  
-  while (!client.connected()) // Loop until we reconnected
-  {
-    Serial.print("Attempting MQTT connection...");
-    // Attempt to connect:
-    if (client.connect(ID)) {
-      Serial.println("connected");
-      client.publish(accelerometerTopic, "{\"message\": \"Wio Terminal is connected!\"}");
-      Serial.println("Published connection message successfully!");
-      
-    }
-    else {
-      Serial.print("failed, rc=");
-      Serial.print(client.state());
-      Serial.println(" try again in 5 seconds");
-      delay(5000);
-    }
-  }
- 
-}
 
 // setup() and loop() are the main methods for the Arduino
 // setup() runs once
@@ -133,7 +114,7 @@ void loop()
     temperatureSensor.publishMQTT(temperatureSensor.getSensorValue());
 
     // Need to add a function to check if the car is moving or not to restart the speed since it only accumulates...
-    accelerometer.publishMQTT(accelerometerSubTopic,accelerometer.getTravelledDistance());
+    accelerometer.publishMQTT(distanceTopic,accelerometer.getTravelledDistance());
   }
   
   // MQTT client loop to recieve messages 
