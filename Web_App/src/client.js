@@ -4,12 +4,21 @@ import mqtt from 'mqtt';
 const store = createStore({
   state() {
     return {
-      mqttClient: null,
+      mqttClient: null
     };
   },
   mutations: {
     setMqttClient(state, client) {
       state.mqttClient = client;
+    },
+    setDistance(state, value) {
+      state.distance = value;
+    },
+    setSpeed(state, value) {
+      state.speed = value;
+    },
+    setTemperature(state, value) {
+      state.temperature = value;
     },
   },
   actions: {
@@ -75,6 +84,15 @@ const store = createStore({
         mqttClient.on('message', (topic, message) => {
           console.log(`Message received on topic ${topic}:`, message.toString());
           // You can commit the message to Vuex or handle it directly here
+
+          if (topic == 'carduino/temperature') {
+            store.commit('setTemperature', message.toString());
+          } else if (topic == 'carduino/accelerometer/speed') {
+            store.commit('setSpeed', message.toString());
+          } else if (topic == 'carduino/accelerometer/distance') {
+            store.commit('setDistance', message.toString());
+          }
+
         });
       } else {
         console.error('MQTT client is not initialized');
@@ -84,7 +102,7 @@ const store = createStore({
   getters: {
     getMqttClient(state) {
       return state.mqttClient;
-    },
+    }
   },
 });
 
