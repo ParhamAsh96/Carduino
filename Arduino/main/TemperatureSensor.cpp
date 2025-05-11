@@ -1,4 +1,3 @@
-#include "arduino.h"
 #include "PubSubClient.h"
 #include "ArduinoSensor.h"
 #include "TemperatureSensor.h"

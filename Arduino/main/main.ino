@@ -5,11 +5,8 @@
 #include "TemperatureSensor.h"
 
 #include "LIS3DHTR.h"
-#include "AccelerometerSensor.h"
-#include "TemperatureSensor.h"
 
 LIS3DHTR<TwoWire> lis;
-#include"LIS3DHTR.h" // Timer
 
 // Update these with values suitable for your network:
 const char *ssid = "iPhoneiee♨️";      // network SSID (Wifi)
@@ -115,19 +112,6 @@ void loop()
 
   // MQTT Updates should be done inside this if statement to avoid publishing to the different topics too often.
   if (deltaTime >= 1){
-
-    deltaTime --;
-
-    accelerometer.publishMQTT(accelerometer.getSensorValue());
-    temperatureSensor.publishMQTT(temperatureSensor.getSensorValue());
-
-    // Need to add a function to check if the car is moving or not to restart the speed since it only accumulates...
-    accelerometer.publishMQTT(accelerometerSubTopic,accelerometer.getTravelledDistance());
-  }
-
-  
-
-
 
     deltaTime --;
 
