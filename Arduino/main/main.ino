@@ -6,6 +6,10 @@
 
 #include "LIS3DHTR.h"
 
+#define RESET_TURN_OFF 300;
+#define BUZZER_PIN WIO_BUZZER // WIO Buzzer
+#define LCD_BACKLIGHT (72Ul) // Control Pin of LCD
+
 LIS3DHTR<TwoWire> lis;
 
 // Update these with values suitable for your network:
@@ -39,19 +43,11 @@ const char* speedTopic = "carduino/accelerometer/speed";
 const char* distanceTopic = "carduino/accelerometer/distance";
 const char* temperatureTopic = "carduino/temperature";
 
-// For turning off
-bool running = true;
-
 // For Update Frequency
 double systemTime;
 double previousTime = millis();
 double updateIntervalMs = 1000;
 double deltaTime = 0;
-
-// TFT_eSPI lcd; // WIO LCD Display
-
-#define BUZZER_PIN WIO_BUZZER // WIO Buzzer
-#define LCD_BACKLIGHT (72Ul) // Control Pin of LCD
 
 WiFiClient wifiClient;
 PubSubClient client(wifiClient);
