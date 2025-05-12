@@ -1,9 +1,12 @@
 #include <rpcWiFi.h>
 #include <PubSubClient.h>
-#include"LIS3DHTR.h" // Timer
+#include "LIS3DHTR.h"
+#include "AccelerometerSensor.h"
+#include "TemperatureSensor.h"
 
-#define BUZZER_PIN WIO_BUZZER // WIO Buzzer
-#define RESET_TURN_OFF 300
+#include "LIS3DHTR.h"
+
+LIS3DHTR<TwoWire> lis;
 
 // Update these with values suitable for your network:
 const char *ssid = "iPhoneiee♨️";      // network SSID (Wifi)
@@ -32,15 +35,28 @@ String sub_topics[4] = {
   "carduino/power/off"
 };
 
+const char* speedTopic = "carduino/accelerometer/speed";
+const char* distanceTopic = "carduino/accelerometer/distance";
+const char* temperatureTopic = "carduino/temperature";
+
+// For turning off
+bool running = true;
+
 // For Update Frequency
 double systemTime;
 double previousTime = millis();
 double updateIntervalMs = 1000;
 double deltaTime = 0;
 
-LIS3DHTR<TwoWire> lis; // Timer
+// TFT_eSPI lcd; // WIO LCD Display
+
+#define BUZZER_PIN WIO_BUZZER // WIO Buzzer
+#define LCD_BACKLIGHT (72Ul) // Control Pin of LCD
+
 WiFiClient wifiClient;
 PubSubClient client(wifiClient);
+AccelerometerSensor accelerometer(client,speedTopic);
+TemperatureSensor temperatureSensor(client,temperatureTopic);
 
 // setup() and loop() are the main methods for the Arduino
 // setup() runs once
@@ -66,9 +82,12 @@ void setup()
   Serial.println(ssid);
   delay(500);
 
-  // Set MQTT client server connection
   client.setServer(server, port);
-  client.setCallback(callback); // set callback function for recieving messages MQTT_sub
+  client.setCallback(callback);
+  accelerometer.setup();
+  temperatureSensor.setup();
+  accelerometer.setup();
+  temperatureSensor.setup();
 }
 
 // loop() runs forever
@@ -91,8 +110,15 @@ void loop()
   previousTime = systemTime;
   /* this if-statememnt runs every 1000 ms */
   if (deltaTime >= 1){
-    deltaTime--;
+
+    deltaTime --;
     turnOffTimer--;
+
+    accelerometer.publishMQTT(accelerometer.getSensorValue());
+    temperatureSensor.publishMQTT(temperatureSensor.getSensorValue());
+
+    // Need to add a function to check if the car is moving or not to restart the speed since it only accumulates...
+    accelerometer.publishMQTT(distanceTopic,accelerometer.getTravelledDistance());
   }
   
   // MQTT client loop to recieve messages 

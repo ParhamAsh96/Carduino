@@ -1,5 +1,7 @@
 <template>
   <h1 class="text">This is where the diagnostics are</h1>
+
+  
 </template>
 
 <style>
@@ -10,4 +12,7 @@
   margin-bottom: 20px; /* Adjust the margin to fit text above the bottom */
 }
 </style>
-<script></script>
+<script>
+
+  
+</script>
