@@ -1,6 +1,10 @@
-
 <template>
   <h1 class="text">this is where the joystick is</h1>
+
+  <p id="speed">{{ speed }}m/s</p>
+  <p id="distance">{{ distance }}m travelled.</p>
+  <p id="temperature">{{ temperature }}°C</p>
+
 </template>
 
 <style>
@@ -11,4 +15,17 @@
   margin-bottom: 20px; /* Adjust the margin to fit text above the bottom */
 }
 </style>
-<script></script>
+<script>
+import { mapState } from 'vuex';
+
+export default {
+  computed: {
+    ...mapState(['temperature', 'speed', 'distance'])
+  },
+  mounted() {
+    this.$store.dispatch('subscribeToTopic', 'carduino/temperature');
+    this.$store.dispatch('subscribeToTopic', 'carduino/accelerometer/speed');
+    this.$store.dispatch('subscribeToTopic', 'carduino/accelerometer/distance');
+  }
+};
+  </script>

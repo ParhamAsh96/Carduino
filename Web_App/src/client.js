@@ -34,27 +34,8 @@ const store = createStore({
       mqttClient.on('error', (err) => {
         console.error('MQTT connection error:', err);
       });
-
-      // ADDED START — Setup message handler once
-      mqttClient.on('message', (topic, message) => { // ADDED
-        console.log(`Message received on topic ${topic}:`, message.toString()); // ADDED
-
-        const msg = message.toString(); // ADDED
-        const now = new Date(); // ADDED
-        const timestamp = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0'); // ADDED
-
-        if (topic == 'carduino/temperature') { // ADDED
-          store.commit('setTemperature', msg); // ADDED
-          saveToLocalStorage('temperatureHistory', msg, timestamp); // ADDED
-        } else if (topic == 'carduino/accelerometer/speed') { // ADDED
-          store.commit('setSpeed', msg); // ADDED
-          saveToLocalStorage('speedHistory', msg, timestamp); // ADDED
-        } else if (topic == 'carduino/accelerometer/distance') { // ADDED
-          store.commit('setDistance', msg); // ADDED
-          saveToLocalStorage('distanceHistory', msg, timestamp); // ADDED
-        } // ADDED
-      }); // ADDED
-      // ADDED END
+      
+      //HERE - could set up message handler once
 
       commit('setMqttClient', mqttClient); // Store the mqttClient in Vuex state
     },
@@ -97,6 +78,26 @@ const store = createStore({
             console.error(`Error subscribing to ${topic}:`, err);
           } else {
             console.log(`Successfully subscribed to ${topic}`);
+          }
+        });
+        
+        //ADDED ⨮ - store locally recieved messaged in JSON format
+        mqttClient.on('message', (topic, message) => {
+          console.log(`Message received on topic ${topic}:`, message.toString());
+  
+          const msg = message.toString(); //⨮
+          const now = new Date(); //⨮
+          const timestamp = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0'); //⨮
+  
+          if (topic == 'carduino/temperature') {
+            store.commit('setTemperature', msg);
+            saveToLocalStorage('temperatureHistory', msg, timestamp); //⨮
+          } else if (topic == 'carduino/accelerometer/speed') {
+            store.commit('setSpeed', msg);
+            saveToLocalStorage('speedHistory', msg, timestamp); //⨮
+          } else if (topic == 'carduino/accelerometer/distance') {
+            store.commit('setDistance', msg);
+            saveToLocalStorage('distanceHistory', msg, timestamp); //⨮
           }
         });
       } else {
