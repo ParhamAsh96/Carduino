@@ -1,62 +1,63 @@
 <template>
-	<h1 class="text">🌡️⏱️🗺️</h1>
+  <h1 class="text">🌡️⏱️🗺️</h1>
 
- 
-  <div v-for="(entries, type) in diagnostics" :key="type" class="section">
-    <h2>{{ type.toUpperCase() }}</h2>
-    <ul>
-      <li v-for="(entry, index) in entries" :key="index">
-        {{ entry.timestamp }} - {{ entry.value }}
-      </li>
-    </ul>
+  <div class="history">
+      <h2>Temperature History</h2>
+      <ul>
+          <li v-for="(item, index) in temperatureHistory" :key="index">
+              {{ item.time }} - {{ item.value }}°C
+          </li>
+      </ul>
+
+      <h2>Speed History</h2>
+      <ul>
+          <li v-for="(item, index) in speedHistory" :key="index">
+              {{ item.time }} - {{ item.value }} m/s
+          </li>
+      </ul>
+
+      <h2>Distance History</h2>
+      <ul>
+          <li v-for="(item, index) in distanceHistory" :key="index">
+              {{ item.time }} - {{ item.value }} m
+          </li>
+      </ul>
   </div>
-  
 </template>
 
 <style>
 .text {
-	font-size: 20px;
-	/* Adjust the size of the text */
-	color: black;
-	text-align: center;
-	margin-bottom: 20px;
-	/* Adjust the margin to fit text above the bottom */
+  font-size: 20px;
+  /* Adjust the size of the text */
+  color: black;
+  text-align: center;
+  margin-bottom: 20px;
+  /* Adjust the margin to fit text above the bottom */
 }
-
-
-.section {
-  margin: 20px;
+.history {
+  padding: 20px;
+  font-family: sans-serif;
 }
-
 </style>
 
 <script>
-import { mapGetters } from 'vuex';
-
 export default {
-  computed: {
-    ...mapGetters(['getDiagnostics']),
-    
-    diagnostics() {
-      return this.getDiagnostics;
-    }
-    
+  data() {
+      return {
+          temperatureHistory: [],
+          speedHistory: [],
+          distanceHistory: []
+      };
   },
   mounted() {
-    
-    const data = JSON.parse(localStorage.getItem('diagnostics')) || {};
-    for (const [type, entries] of Object.entries(data)) {
-      entries.forEach(entry => {
-        this.$store.commit('updateDiagnostics', {
-          type,
-          value: entry.value,
-          timestamp: entry.timestamp
-        });
-      });
-    }
-
-    this.$store.dispatch('initializeMqttClient');
-    
+      this.loadHistory();
+  },
+  methods: {
+      loadHistory() {
+          this.temperatureHistory = JSON.parse(localStorage.getItem('temperatureHistory') || '[]'); // ADDED
+          this.speedHistory = JSON.parse(localStorage.getItem('speedHistory') || '[]'); // ADDED
+          this.distanceHistory = JSON.parse(localStorage.getItem('distanceHistory') || '[]'); // ADDED
+      } // ADDED
   }
 };
 </script>
