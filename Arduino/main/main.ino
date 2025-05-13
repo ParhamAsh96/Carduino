@@ -3,14 +3,14 @@
 #include "LIS3DHTR.h"
 #include "AccelerometerSensor.h"
 #include "TemperatureSensor.h"
-
+#include "linefinder.h" 
 #include "LIS3DHTR.h"
-
+#include <Wire.h>
 LIS3DHTR<TwoWire> lis;
 
 // Update these with values suitable for your network:
-const char *ssid = "iPhoneiee♨️";      // network SSID (Wifi)
-const char *password = "14444444"; // your network password
+const char *ssid = "POCO M5s";      // network SSID (Wifi)
+const char *password = "138013801380"; // your network password
 
 const char *ID = "Wio-Terminal-Client-meep";  // Name of our device, must be unique
 // c172.20.10.3 - local brocker
@@ -54,6 +54,16 @@ PubSubClient client(wifiClient);
 AccelerometerSensor accelerometer(client,speedTopic);
 TemperatureSensor temperatureSensor(client,temperatureTopic);
 
+LineFinder lineSensor(client, "car/lineFinder", A0);
+
+
+
+
+
+
+
+
+
 // setup() and loop() are the main methods for the Arduino
 // setup() runs once
 void setup()
@@ -90,6 +100,7 @@ void setup()
   temperatureSensor.setup();
   accelerometer.setup();
   temperatureSensor.setup();
+  lineSensor.setup(); 
 }
 
 // loop() runs forever
@@ -124,6 +135,10 @@ void loop()
   
   // MQTT client loop to recieve messages 
   client.loop();
+
+   lineSensor.checkAndTriggerAutoBrake();
+    lineSensor.publishMQTT();
+    delay(100);
 }
 
 void reconnect() {
