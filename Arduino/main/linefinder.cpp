@@ -40,8 +40,8 @@ void LineFinder::checkAndTriggerAutoBrake() {
 }
 
 
-void LineFinder::publishMQTT() {
-    int sensorValue = getSensorValue();  
+void LineFinder::publishMQTT(float sensorValue) {
+     sensorValue = getSensorValue();  
     char returnMessage[5];
     
     // Convert the sensor value (HIGH or LOW) to a string

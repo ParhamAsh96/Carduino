@@ -7,7 +7,7 @@ class LineFinder{
     LineFinder(PubSubClient& client, const char* topic, int sensorPin = A0);
 
     void setup();
-    virtual float getSensorValue();
+    int getSensorValue();
     void publishMQTT(float sensorValue);
     void checkForLineAndBrake();
 
