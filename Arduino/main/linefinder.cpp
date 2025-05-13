@@ -10,13 +10,13 @@ void LineFinder::setup() {
 }
 
 //reads the sensors value
-char LineFinder::getSensorValue() {
+int LineFinder::getSensorValue() {
     return digitalRead(_sensorPin);
 }
 
 //checks if the line is detected and triggers the auto-brake
 void LineFinder::checkAndTriggerAutoBrake() {
-    char sensorValue = getSensorValue();
+    int sensorValue = getSensorValue();
      unsigned long currentMillis = millis();  // Get the current time in milliseconds
     //if no line
      if (sensorValue == HIGH) {  // If the sensor detects no line
@@ -41,7 +41,8 @@ void LineFinder::checkAndTriggerAutoBrake() {
 
 
 void LineFinder::publishMQTT() {
-    char sensorValue = getSensorValue();  
+    int sensorValue = getSensorValue();  
+    char returnMessage[5];
     
     // Convert the sensor value (HIGH or LOW) to a string
     dtostrf(sensorValue, 0, 0, returnMessage);
