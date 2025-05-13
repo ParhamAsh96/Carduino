@@ -40,7 +40,7 @@ void LineFinder::checkAndTriggerAutoBrake() {
 }
 
 
-void LineFinder::publishMQTT(float sensorValue) {
+void LineFinder::publishMQTT() {
      sensorValue = getSensorValue();  
     char returnMessage[5];
     

@@ -8,7 +8,7 @@ class LineFinder{
 
     void setup();
     int getSensorValue();
-    void publishMQTT(float sensorValue);
+    void publishMQTT();
     void checkForLineAndBrake();
 
     bool isLineDetected();  // Returns whether the line is detected
