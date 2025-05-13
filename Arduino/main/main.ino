@@ -1,4 +1,4 @@
-#include <rpcWiFi.h>
+
 #include <PubSubClient.h>
 #include "LIS3DHTR.h"
 #include "AccelerometerSensor.h"
@@ -137,8 +137,7 @@ void loop()
   client.loop();
 
    lineSensor.checkAndTriggerAutoBrake();
-   int linevalue = linesensor.getSensorValue();
-    lineSensor.publishMQTT(linevalue);
+    lineSensor.publishMQTT(getSensorValue());
     delay(100);
 }
 

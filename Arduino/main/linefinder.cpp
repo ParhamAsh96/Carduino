@@ -40,15 +40,9 @@ void LineFinder::checkAndTriggerAutoBrake() {
 }
 
 
-void LineFinder::publishMQTT() {
-    int sensorValue = getSensorValue();  
+void LineFinder::publishMQTT(float sensorValue) {
     char returnMessage[5];
-    
-    // Convert the sensor value (HIGH or LOW) to a string
     dtostrf(sensorValue, 0, 0, returnMessage);
-
-    // Publish the sensor data to the specified MQTT topic
     _client.publish(_topic, returnMessage);
 }
-
 
