@@ -35,7 +35,22 @@ const store = createStore({
         console.error('MQTT connection error:', err);
       });
       
-      //HERE - could set up message handler once
+      //ADDED - store recieved messaged locally, in JSON format. The mqttClient.on('message') actions from subscribeToTopic run 6 times, while here it runs only once(1).
+      mqttClient.on('message', (topic, message) => {
+        console.log(`Message received on topic ${topic}:`, message.toString());
+
+        const msg = message.toString();
+        const now = new Date();
+        const timestamp = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0'); //⨮
+
+        if (topic == 'carduino/temperature') {
+          saveToLocalStorage('temperatureHistory', msg, timestamp);
+        } else if (topic == 'carduino/accelerometer/speed') {
+          saveToLocalStorage('speedHistory', msg, timestamp); 
+        } else if (topic == 'carduino/accelerometer/distance') {
+          saveToLocalStorage('distanceHistory', msg, timestamp); 
+        }
+      });
 
       commit('setMqttClient', mqttClient); // Store the mqttClient in Vuex state
     },
@@ -77,33 +92,28 @@ const store = createStore({
           if (err) {
             console.error(`Error subscribing to ${topic}:`, err);
           } else {
-            console.log(`Successfully subscribed to ${topic}`);
+            // console.log(`Successfully subscribed to ${topic}`);
           }
         });
-        
-        //ADDED ⨮ - store locally recieved messaged in JSON format
-        mqttClient.on('message', (topic, message) => {
-          console.log(`Message received on topic ${topic}:`, message.toString());
-  
-          const msg = message.toString(); //⨮
-          const now = new Date(); //⨮
-          const timestamp = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0'); //⨮
-  
+    
+        // Set up message listener
+        mqttClient.on('message', (topic, message) => {  // NOTE: This will run 3 or 6 times per recieved message. (idk why)
+
+          // console.log(`Message received on topic ${topic}:`, message.toString());
+          
           if (topic == 'carduino/temperature') {
-            store.commit('setTemperature', msg);
-            saveToLocalStorage('temperatureHistory', msg, timestamp); //⨮
+            store.commit('setTemperature', message.toString());
           } else if (topic == 'carduino/accelerometer/speed') {
-            store.commit('setSpeed', msg);
-            saveToLocalStorage('speedHistory', msg, timestamp); //⨮
+            store.commit('setSpeed', message.toString());
           } else if (topic == 'carduino/accelerometer/distance') {
-            store.commit('setDistance', msg);
-            saveToLocalStorage('distanceHistory', msg, timestamp); //⨮
+            store.commit('setDistance', message.toString());
           }
         });
+
       } else {
         console.error('MQTT client is not initialized');
       }
-    }, // ADDED: removed message handler from here
+    },
   },
   getters: {
     getMqttClient(state) {
