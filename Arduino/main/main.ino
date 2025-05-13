@@ -8,7 +8,6 @@
 
 #define RESET_TURN_OFF 300;
 #define BUZZER_PIN WIO_BUZZER // WIO Buzzer
-#define LCD_BACKLIGHT (72Ul) // Control Pin of LCD
 
 LIS3DHTR<TwoWire> lis;
 
@@ -32,8 +31,7 @@ const int leftBackward = D1;
 const int rightForward = D3;
 const int rightBackward = D2;
 
-String sub_topics[4] = { 
-  "carduino/lcd/print",
+String sub_topics[3] = { 
   "carduino/buzzer",
   "carduino/directions/live-control",
   "carduino/power/off"
@@ -135,7 +133,6 @@ void reconnect() {
       for(String topic : sub_topics){
          client.subscribe(topic.c_str());
       }
-      // client.subscribe("carduino/lcd/print");
       // client.subscribe("carduino/buzzer/honk");
       // client.subscribe("carduino/directions/live-control");
       // client.subscribe("carduino/power/off");
