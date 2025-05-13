@@ -122,11 +122,11 @@ const store = createStore({
   },
 });
 
-// Helper to save MQTT values with timestamp to localStorage // ADDED
-function saveToLocalStorage(key, value, time) { // ADDED
-  let data = JSON.parse(localStorage.getItem(key) || '[]'); // ADDED
-  data.push({ value, time }); // ADDED
-  localStorage.setItem(key, JSON.stringify(data)); // ADDED
-} // ADDED
+// Helper to save MQTT values with timestamp to localStorage
+function saveToLocalStorage(key, value, time) {
+  let data = JSON.parse(localStorage.getItem(key) || '[]');
+  data.push({ value, time });
+  localStorage.setItem(key, JSON.stringify(data));
+}
 
 export default store; 
