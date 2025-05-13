@@ -63,43 +63,51 @@
   <div class="fixed bottom-6 right-6 flex flex-col items-center space-y-4">
     <!-- Up Arrow -->
     <button
-      @click="onArrow('up')"
+      @pointerdown="onArrow('up')"
+      @pointerup="letGo('up')"
+      @pointerleave="letGo('up')"
       class="flex items-center justify-center size-20 bg-blue-500 text-white rounded-full shadow-lg hover:bg-blue-600 hover:text-[#ffcc00] active:scale-90 active:bg-red-900 transition-transform"
       aria-label="Arrow Up"
-    >
+      >
       <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
         <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7"/>
       </svg>
     </button>
-
+    
     <!-- Down Arrow -->
     <button
-      @click="onArrow('down')"
-      class="flex items-center justify-center size-20 bg-blue-500 text-white rounded-full shadow-lg hover:bg-blue-600 hover:text-[#ffcc00] active:scale-90 active:bg-red-900 transition-transform"
-      aria-label="Arrow Down"
+    @pointerdown="onArrow('down')"
+    @pointerup="letGo('down')"
+    @pointerleave="letGo('down')"
+    class="flex items-center justify-center size-20 bg-blue-500 text-white rounded-full shadow-lg hover:bg-blue-600 hover:text-[#ffcc00] active:scale-90 active:bg-red-900 transition-transform"
+    aria-label="Arrow Down"
     >
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
-      </svg>
-    </button>
-  </div>
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+    </svg>
+  </button>
+</div>
 
-  <!-- Left/Right Arrows - Bottom Left -->
-  <div class="fixed bottom-6 left-6 flex space-x-4">
-    <!-- Left Arrow -->
-    <button
-      @click="onArrow('left')"
-      class="flex items-center justify-center size-20 bg-blue-500 text-white rounded-full shadow-lg hover:bg-blue-600 hover:text-[#ffcc00] active:scale-90 active:bg-red-900 transition-transform"
-      aria-label="Arrow Left"
-    >
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
-      </svg>
-    </button>
+<!-- Left/Right Arrows - Bottom Left -->
+<div class="fixed bottom-6 left-6 flex space-x-4">
+  <!-- Left Arrow -->
+  <button
+  @pointerdown="onArrow('left')"
+  @pointerup="letGo('left')"
+  @pointerleave="letGo('left')"
+  class="flex items-center justify-center size-20 bg-blue-500 text-white rounded-full shadow-lg hover:bg-blue-600 hover:text-[#ffcc00] active:scale-90 active:bg-red-900 transition-transform"
+  aria-label="Arrow Left"
+  >
+  <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
+  </svg>
+</button>
 
-    <!-- Right Arrow -->
-    <button
-      @click="onArrow('right')"
+<!-- Right Arrow -->
+<button
+      @pointerdown="onArrow('right')"
+      @pointerup="letGo('right')"
+      @pointerleave="letGo('right')"
       class="flex items-center justify-center size-20 bg-blue-500 text-white rounded-full shadow-lg hover:bg-blue-600 hover:text-[#ffcc00] active:scale-90 active:bg-red-900 transition-transform"
       aria-label="Arrow Right"
     >
@@ -120,12 +128,17 @@
           frontLights: false
         };
       },
+      
+      
       methods: {
           ...mapActions(['publishToTopic']),  // Map the publishToTopic action to a method
+        
         toggle(feature) {
           this[feature] = !this[feature];
           console.log(`${feature} toggled: ${this[feature]}`);
         },
+
+
         onArrow(direction) {
           switch(direction) {
             case "up":
@@ -154,6 +167,40 @@
               this.publishToTopic({
                 topic: 'carduino/movement',
                 message: 'arrowLeft',  
+            });
+            break;
+          }
+        },
+
+
+        letGo(direction) {
+          switch(direction) {
+            case "up":
+              this.publishToTopic({
+                topic: 'carduino/movement',
+                message: 'arrowUpStop',  
+              });
+                break;
+            
+            case "right":
+              this.publishToTopic({
+                topic: 'carduino/movement',
+                message: 'arrowRightStop',  
+            });
+            break;
+              
+            case "down":
+              this.publishToTopic({
+                topic: 'carduino/movement',
+                message: 'arrowDownStop',  
+            });
+              // code block
+              break;
+
+            case "left":
+              this.publishToTopic({
+                topic: 'carduino/movement',
+                message: 'arrowLeftStop',  
             });
             break;
             
