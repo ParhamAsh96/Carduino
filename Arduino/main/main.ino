@@ -137,7 +137,7 @@ void loop()
   client.loop();
 
    lineSensor.checkAndTriggerAutoBrake();
-    lineSensor.publishMQTT(sensorValue);
+    lineSensor.publishMQTT(getsensorValue());
     delay(100);
 }
 
