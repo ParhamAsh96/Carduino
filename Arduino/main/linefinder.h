@@ -2,17 +2,19 @@
 #include "Arduino.h"
 #include "PubSubClient.h"
 
-class LineFinder : public ArduinoSensor{
+class LineFinder{
   public:
     LineFinder(PubSubClient& client, const char* topic, int sensorPin = A0);
 
     void setup();
-    int getSensorValue();
-    void publishMQTT();
+    virtual float getSensorValue();
+    void publishMQTT(float sensorValue);
     void checkForLineAndBrake();
 
     bool isLineDetected();  // Returns whether the line is detected
     void triggerAutoBrake(bool status);
+    void checkAndTriggerAutoBrake(); 
+
 
   
 
