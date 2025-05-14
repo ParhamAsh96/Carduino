@@ -12,30 +12,10 @@ const char *ssid = "PW-Tech-2.4Ghz";      // network SSID (Wifi)
 const char *password = "Parham3000"; // your network password
 
 const char *ID = "Wio-Terminal-Client-meep";  // Name of our device, must be unique
-// c172.20.10.3 - local brocker
-// broker.hivemq.com
-// test.mosquitto.org
-const char *server = "broker.hivemq.com"; // ONLINE SERVER
-const uint16_t port = 1883;
-
-const int leftForward = D0;
-const int leftBackward = D1;
-const int rightForward = D3;
-const int rightBackward = D2;
-
-String sub_topics[4] = { 
-  "carduino/lcd/print",
-  "carduino/buzzer",
-  "carduino/directions/live-control",
-  "carduino/power/off"
-};
-
-const char* speedTopic = "carduino/accelerometer/speed";
-const char* distanceTopic = "carduino/accelerometer/distance";
-const char* temperatureTopic = "carduino/temperature";
-
-// For turning off
-bool running = true;
+const char *pubTOPIC = "my/test/topic";  // Topic to publish to
+const char *subTopic = "my/test/topic";  // Topic to subcribe to
+const char *accelerometerTopic = "carduino/acceleration";
+const char *server = "test.mosquitto.org"; // Address of brocker (URL or IP)
 
 // For Update Frequency
 double systemTime;
@@ -43,28 +23,47 @@ double previousTime = millis();
 double updateIntervalMs = 1000;
 double deltaTime = 0;
 
-// TFT_eSPI lcd; // WIO LCD Display
 
 #define BUZZER_PIN WIO_BUZZER // WIO Buzzer
 #define LCD_BACKLIGHT (72Ul) // Control Pin of LCD
 
 WiFiClient wifiClient;
 PubSubClient client(wifiClient);
-AccelerometerSensor accelerometer(client,speedTopic);
-TemperatureSensor temperatureSensor(client,temperatureTopic);
+AccelerometerSensor accelerometer(client,accelerometerTopic);
+
+void reconnect() {
+  
+  while (!client.connected()) // Loop until we reconnected
+  {
+    Serial.print("Attempting MQTT connection...");
+    // Attempt to connect:
+    if (client.connect(ID)) {
+      Serial.println("connected");
+      client.publish(accelerometerTopic, "{\"message\": \"Wio Terminal is connected!\"}");
+      Serial.println("Published connection message successfully!");
+      
+    }
+    else {
+      Serial.print("failed, rc=");
+      Serial.print(client.state());
+      Serial.println(" try again in 5 seconds");
+      delay(5000);
+    }
+  }
+ 
+}
 
 // setup() and loop() are the main methods for the Arduino
 // setup() runs once
 void setup()
 { 
+  
+  // to turn on WIO LCD
+  lcd.begin();
+  lcd.setRotation(3);
+  lcd.fillScreen(TFT_BLACK);
 
-  // turn on WIO LCD
-  // lcd.begin();
-  // lcd.setRotation(3);
-  // lcd.fillScreen(TFT_BLACK);
-
-  // turn on Buzzer
-  pinMode(BUZZER_PIN, OUTPUT);
+  
 
   Serial.begin(115200);
   while (!Serial); // Wait for Serial to be ready
@@ -111,13 +110,9 @@ void loop()
     deltaTime --;
 
     accelerometer.publishMQTT(accelerometer.getSensorValue());
-    temperatureSensor.publishMQTT(temperatureSensor.getSensorValue());
-
-    // Need to add a function to check if the car is moving or not to restart the speed since it only accumulates...
-    accelerometer.publishMQTT(distanceTopic,accelerometer.getTravelledDistance());
   }
-  
-  // MQTT client loop to recieve messages 
+
+
   client.loop();
 }
 
