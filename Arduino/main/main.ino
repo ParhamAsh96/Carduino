@@ -9,8 +9,8 @@
 LIS3DHTR<TwoWire> lis;
 
 // Update these with values suitable for your network:
-const char *ssid = "POCO M5s";      // network SSID (Wifi)
-const char *password = "138013801380"; // your network password
+const char *ssid = "Parham";      // network SSID (Wifi)
+const char *password = "Parham3000"; // your network password
 
 const char *ID = "Wio-Terminal-Client-meep";  // Name of our device, must be unique
 // c172.20.10.3 - local brocker
@@ -29,11 +29,12 @@ const int  brakeLightPin = D1;
 
 float previousSpeed = 0;
 
-String sub_topics[4] = { 
+String sub_topics[5] = { 
   "carduino/lcd/print",
   "carduino/buzzer",
   "carduino/directions/live-control",
-  "carduino/power/off"
+  "carduino/power/off",
+  "carduino/light",
 };
 
 const char* speedTopic = "carduino/accelerometer/speed";
