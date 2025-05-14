@@ -11,16 +11,13 @@ class BrakeLight
 
     float arduinoSpeed;
 
+
   public:
+  
+    float previousSpeed;
 
-    void setup();
-
-    float getPreviousSpeedTime();
+    float currentSpeed = accelerometer.getSpeed();
     
-    float getArduinoSpeed();
-
-    float CalculateBrakeSpeed(float newCurrentSpeed, float arduinoSpeed);
-    
-    int TurnOnBrakeLight(float arduinoSpeed, float newCurrentSpeed);
+    int TurnOnBrakeLight(float arduinoSpeed, float previousSpeedTime);
 
 };
