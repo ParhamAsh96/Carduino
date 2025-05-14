@@ -4,12 +4,21 @@ import mqtt from 'mqtt';
 const store = createStore({
   state() {
     return {
-      mqttClient: null,
+      mqttClient: null
     };
   },
   mutations: {
     setMqttClient(state, client) {
       state.mqttClient = client;
+    },
+    setDistance(state, value) {
+      state.distance = value;
+    },
+    setSpeed(state, value) {
+      state.speed = value;
+    },
+    setTemperature(state, value) {
+      state.temperature = value;
     },
   },
   actions: {
@@ -45,11 +54,55 @@ const store = createStore({
         console.error('MQTT client is not initialized');
       }
     },
+    
+    
+    /*use 
+    "this.$store.dispatch('subscribeToTopic', 'the topic you want')" 
+    in any component to subscribe to a topic
+
+    if you want to subscribe when the component is added to the DOM , call the SUB function inside the "mount" 
+    (which is inside the export default in script):
+         mounted() {
+         this.$store.dispatch('subscribeToTopic', 'your/topic');
+
+  */
+  
+    
+    subscribeToTopic({ state }, topic) {
+      const mqttClient = state.mqttClient;
+    
+      if (mqttClient) {
+        mqttClient.subscribe(topic, (err) => {
+          if (err) {
+            console.error(`Error subscribing to ${topic}:`, err);
+          } else {
+            console.log(`Successfully subscribed to ${topic}`);
+          }
+        });
+    
+        // Set up message listener
+        mqttClient.on('message', (topic, message) => {
+          console.log(`Message received on topic ${topic}:`, message.toString());
+          // You can commit the message to Vuex or handle it directly here
+
+          if (topic == 'carduino/temperature') {
+            store.commit('setTemperature', message.toString());
+          } else if (topic == 'carduino/accelerometer/speed') {
+            store.commit('setSpeed', message.toString());
+          } else if (topic == 'carduino/accelerometer/distance') {
+            store.commit('setDistance', message.toString());
+          }
+
+        });
+      } else {
+        console.error('MQTT client is not initialized');
+      }
+    }
   },
   getters: {
     getMqttClient(state) {
       return state.mqttClient;
-    },
+    }
   },
 });
 

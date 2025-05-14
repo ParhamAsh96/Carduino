@@ -1,6 +1,12 @@
 #include <rpcWiFi.h>
 #include <PubSubClient.h>
-#include"LIS3DHTR.h" // Timer
+#include "LIS3DHTR.h"
+#include "AccelerometerSensor.h"
+#include "TemperatureSensor.h"
+
+#include "LIS3DHTR.h"
+
+LIS3DHTR<TwoWire> lis;
 
 // Update these with values suitable for your network:
 const char *ssid = "COMHEM_6b0dde";      // network SSID (Wifi)
@@ -25,6 +31,10 @@ String sub_topics[4] = {
   "carduino/power/off"
 };
 
+const char* speedTopic = "carduino/accelerometer/speed";
+const char* distanceTopic = "carduino/accelerometer/distance";
+const char* temperatureTopic = "carduino/temperature";
+
 // For turning off
 bool running = true;
 
@@ -35,13 +45,14 @@ double updateIntervalMs = 1000;
 double deltaTime = 0;
 
 // TFT_eSPI lcd; // WIO LCD Display
-LIS3DHTR<TwoWire> lis; // Timer
 
 #define BUZZER_PIN WIO_BUZZER // WIO Buzzer
 #define LCD_BACKLIGHT (72Ul) // Control Pin of LCD
 
 WiFiClient wifiClient;
 PubSubClient client(wifiClient);
+AccelerometerSensor accelerometer(client,speedTopic);
+TemperatureSensor temperatureSensor(client,temperatureTopic);
 
 // setup() and loop() are the main methods for the Arduino
 // setup() runs once
@@ -73,9 +84,12 @@ void setup()
   Serial.println(ssid);
   delay(500);
 
-  // Set MQTT client server connection
   client.setServer(server, port);
-  client.setCallback(callback); // set callback function for recieving messages MQTT_sub
+  client.setCallback(callback);
+  accelerometer.setup();
+  temperatureSensor.setup();
+  accelerometer.setup();
+  temperatureSensor.setup();
 
   // set up the wheels
   pinMode(leftForward, OUTPUT);
@@ -97,10 +111,21 @@ void loop()
   systemTime = millis();
   deltaTime += (systemTime - previousTime) / updateIntervalMs;
   previousTime = systemTime;
-  // MQTT Updates should be done using a timer to avoid publishing to the different topics too often.
+
+  
+
+  
+
+  // MQTT Updates should be done inside this if statement to avoid publishing to the different topics too often.
   if (deltaTime >= 1){
-    deltaTime--;
-    
+
+    deltaTime --;
+
+    accelerometer.publishMQTT(accelerometer.getSensorValue());
+    temperatureSensor.publishMQTT(temperatureSensor.getSensorValue());
+
+    // Need to add a function to check if the car is moving or not to restart the speed since it only accumulates...
+    accelerometer.publishMQTT(distanceTopic,accelerometer.getTravelledDistance());
   }
   
   // MQTT client loop to recieve messages 

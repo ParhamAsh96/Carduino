@@ -47,17 +47,18 @@
   <div class="inset-x-0 flex justify-center space-x-6">
     <div class="bg-white shadow-md rounded-xl px-6 py-3 text-center">
       <p class="text-sm font-medium text-gray-500">Temperature</p>
-      <p class="text-xl font-bold text-gray-800">-- °C</p>
+      <p class="text-xl font-bold text-gray-800">{{ temperature }} °C</p>
     </div>
     <div class="bg-white shadow-md rounded-xl px-6 py-3 text-center">
       <p class="text-sm font-medium text-gray-500">Speed</p>
-      <p class="text-xl font-bold text-gray-800">-- m/s</p>
+      <p class="text-xl font-bold text-gray-800">{{ speed }} m/s</p>
     </div>
     <div class="bg-white shadow-md rounded-xl px-6 py-3 text-center">
       <p class="text-sm font-medium text-gray-500">Distance</p>
-      <p class="text-xl font-bold text-gray-800">-- m</p>
+      <p class="text-xl font-bold text-gray-800">{{ distance }} m</p>
     </div>
   </div>
+
 
   <!-- Up/Down Arrows - Bottom Right -->
   <div class="fixed bottom-6 right-6 flex flex-col items-center space-y-4">
@@ -120,8 +121,17 @@
 
 <script>
     import { mapActions } from 'vuex';
+    import { mapState } from 'vuex';
+
     export default {
-      
+      computed: {
+    ...mapState(['temperature', 'speed', 'distance'])
+  },
+  mounted() {
+    this.$store.dispatch('subscribeToTopic', 'carduino/temperature');
+    this.$store.dispatch('subscribeToTopic', 'carduino/accelerometer/speed');
+    this.$store.dispatch('subscribeToTopic', 'carduino/accelerometer/distance');
+  },
       data() {
         return {
           autoBrake: false,
