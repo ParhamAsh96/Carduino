@@ -3,13 +3,13 @@
 #include "LIS3DHTR.h"
 #include "AccelerometerSensor.h"
 #include "TemperatureSensor.h"
-#include "BrakeLight.h"
+//#include "BrakeLight.h"
 
 LIS3DHTR<TwoWire> lis;
 
 // Update these with values suitable for your network:
-const char *ssid = "PW-Tech-2.4Ghz";      // network SSID (Wifi)
-const char *password = "Parham3000"; // your network password
+const char *ssid = "POCO M5s";      // network SSID (Wifi)
+const char *password = "138013801380"; // your network password
 
 const char *ID = "Wio-Terminal-Client-meep";  // Name of our device, must be unique
 // c172.20.10.3 - local brocker
@@ -60,13 +60,13 @@ void setup()
 { 
   
   // to turn on WIO LCD
-  lcd.begin();
-  lcd.setRotation(3);
-  lcd.fillScreen(TFT_BLACK);
+  //lcd.begin();
+  //lcd.setRotation(3);
+  //lcd.fillScreen(TFT_BLACK);
 
   // turn on Buzzer
   pinMode(BUZZER_PIN, OUTPUT);
-  pinMode(brakeLight, OUTPUT);
+  //pinMode(brakeLight, OUTPUT);
 
   Serial.begin(115200);
   while (!Serial); // Wait for Serial to be ready
@@ -108,10 +108,10 @@ void loop()
   previousTime = systemTime;
 
   // Accessing current and previous speeds
-  previousSpeed = currentSpeed;
-  currentSpeed = accelerometer.getSpeed();
+  //previousSpeed = currentSpeed;
+  //currentSpeed = accelerometer.getSpeed();
 
-  TurnOnBrakeLight(float currentSpeed, float previousSpeed);
+  //TurnOnBrakeLight(float currentSpeed, float previousSpeed);
   
 
   // MQTT Updates should be done inside this if statement to avoid publishing to the different topics too often.

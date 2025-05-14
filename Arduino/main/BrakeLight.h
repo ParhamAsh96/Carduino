@@ -1,23 +1,23 @@
-#include "AccelerometerSensor.h"
+//#include "AccelerometerSensor.h"
 
-class BrakeLight
-{
+//class BrakeLight
+//{
 
-  private:
+//  private:
 
-    const int brakeLight;
+//    const int brakeLight;
 
-    float previousSpeed;
+//    float previousSpeed;
 
-    float currentSpeed;
+//    float currentSpeed;
 
 
-  public:
+//  public:
 
-    float previousSpeed;
+//    float previousSpeed;
 
-    float currentSpeed = accelerometer.getSpeed();
+//    float currentSpeed = accelerometer.getSpeed();
     
-    int TurnOnBrakeLight(float currentSpeed, float previousSpeed);
+//    int TurnOnBrakeLight(float currentSpeed, float previousSpeed);
 
-};
+//};
