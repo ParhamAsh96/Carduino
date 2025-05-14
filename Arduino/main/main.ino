@@ -111,7 +111,7 @@ void loop()
   previousSpeed = currentSpeed;
   currentSpeed = accelerometer.getSpeed();
 
-
+  TurnOnBrakeLight(float currentSpeed, float previousSpeed);
   
 
   // MQTT Updates should be done inside this if statement to avoid publishing to the different topics too often.
