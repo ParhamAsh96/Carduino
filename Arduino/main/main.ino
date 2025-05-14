@@ -58,11 +58,11 @@ TemperatureSensor temperatureSensor(client,temperatureTopic);
 // setup() runs once
 void setup()
 { 
-
-  // turn on WIO LCD
-  // lcd.begin();
-  // lcd.setRotation(3);
-  // lcd.fillScreen(TFT_BLACK);
+  
+  // to turn on WIO LCD
+  lcd.begin();
+  lcd.setRotation(3);
+  lcd.fillScreen(TFT_BLACK);
 
   // turn on Buzzer
   pinMode(BUZZER_PIN, OUTPUT);
@@ -125,8 +125,8 @@ void loop()
     // Need to add a function to check if the car is moving or not to restart the speed since it only accumulates...
     accelerometer.publishMQTT(distanceTopic,accelerometer.getTravelledDistance());
   }
-  
-  // MQTT client loop to recieve messages 
+
+
   client.loop();
 }
 
