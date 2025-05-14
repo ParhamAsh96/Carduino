@@ -1,15 +1,20 @@
-//#include "AccelerometerSensor.h"
-//#include "BrakeLight.h"
+#include <ChainableLED.h>
+#include "AccelerometerSensor.h"
+#include "BrakeLight.h"
 
-//brakeLight = D1; 
+BrakeLight::BrakeLight(int pin)
+  : brakeLight(pin), previousSpeed(0), currentSpeed(0) {
+    pinMode(brakeLight, OUTPUT);
+  }
+  
+const int brakeLight = D1; 
 
-//float previousSpeed = 0;
-//float currentSpeed = 0;
+void BrakeLight::TurnOnBrakeLight(float currentSpeed, float previousSpeed)
+{
+  if (currentSpeed < previousSpeed) {
+    digitalWrite(brakeLight, HIGH);
 
-//void TurnOnBrakeLight(float currentSpeed, float previousSpeed){
-//  if (currentSpeed < previousSpeed) {
-//    pinMode(brakeLight, HIGH)
-//  } else {
-//    pinMode(brakeLight, LOW)
-//  }
-//}
+  } else {
+    digitalWrite(brakeLight, LOW);
+  }
+}

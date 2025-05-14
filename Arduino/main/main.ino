@@ -1,9 +1,10 @@
+#include <ChainableLED.h>
 #include <rpcWiFi.h>
 #include <PubSubClient.h>
 #include "LIS3DHTR.h"
 #include "AccelerometerSensor.h"
 #include "TemperatureSensor.h"
-//#include "BrakeLight.h"
+#include "BrakeLight.h"
 
 LIS3DHTR<TwoWire> lis;
 
@@ -23,6 +24,10 @@ const int leftForward = D0;
 const int leftBackward = D4;
 const int rightForward = D3;
 const int rightBackward = D2;
+
+const int  brakeLightPin = D1;
+
+float previousSpeed = 0;
 
 String sub_topics[4] = { 
   "carduino/lcd/print",
@@ -53,6 +58,7 @@ WiFiClient wifiClient;
 PubSubClient client(wifiClient);
 AccelerometerSensor accelerometer(client,speedTopic);
 TemperatureSensor temperatureSensor(client,temperatureTopic);
+BrakeLight brakeLightController(D1);
 
 // setup() and loop() are the main methods for the Arduino
 // setup() runs once
@@ -66,7 +72,9 @@ void setup()
 
   // turn on Buzzer
   pinMode(BUZZER_PIN, OUTPUT);
-  //pinMode(brakeLight, OUTPUT);
+
+  accelerometer.setup();
+  pinMode(brakeLightPin, OUTPUT);
 
   Serial.begin(115200);
   while (!Serial); // Wait for Serial to be ready
@@ -108,10 +116,9 @@ void loop()
   previousTime = systemTime;
 
   // Accessing current and previous speeds
-  //previousSpeed = currentSpeed;
-  //currentSpeed = accelerometer.getSpeed();
-
-  //TurnOnBrakeLight(float currentSpeed, float previousSpeed);
+  float currentSpeed = accelerometer.getSensorValue();
+  brakeLightController.TurnOnBrakeLight(currentSpeed, previousSpeed);
+  previousSpeed = currentSpeed;
   
 
   // MQTT Updates should be done inside this if statement to avoid publishing to the different topics too often.

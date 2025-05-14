@@ -1,23 +1,18 @@
-//#include "AccelerometerSensor.h"
+#include <ChainableLED.h>
+#include "AccelerometerSensor.h"
 
-//class BrakeLight
-//{
+class BrakeLight {
+public:
 
-//  private:
+  BrakeLight(int pin);
 
-//    const int brakeLight;
+  void TurnOnBrakeLight(float currentSpeed, float previousSpeed);
 
-//    float previousSpeed;
+private:
 
-//    float currentSpeed;
+  const int brakeLight;
 
-
-//  public:
-
-//    float previousSpeed;
-
-//    float currentSpeed = accelerometer.getSpeed();
-    
-//    int TurnOnBrakeLight(float currentSpeed, float previousSpeed);
-
-//};
+  float previousSpeed;
+  
+  float currentSpeed;
+};
