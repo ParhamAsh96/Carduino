@@ -49,7 +49,7 @@ WiFiClient wifiClient;
 PubSubClient client(wifiClient);
 AccelerometerSensor accelerometer(client,speedTopic);
 TemperatureSensor temperatureSensor(client,temperatureTopic);
-CarController wheels(leftForward, leftBackward, rightForward, rightBackward);
+CarController wheels;
 
 // setup() and loop() are the main methods for the Arduino
 // setup() runs once
@@ -187,7 +187,7 @@ void reciever_actions(String topic, String message){
   }
 
   if (topic == "carduino/movement"){
-     wheels.wheelsReciever(message);
+     wheels.wheelsReceiver(message);
     
   }
 

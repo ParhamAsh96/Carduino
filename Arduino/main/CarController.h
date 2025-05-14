@@ -1,6 +1,7 @@
 #ifndef CAR_CONTROLLER_H
 #define CAR_CONTROLLER_H
 
+#include <Arduino.h>
 
 class CarController {
 public:
@@ -24,3 +25,5 @@ private:
     bool goingForward;
     bool goingBackward;
 };
+
+#endif
