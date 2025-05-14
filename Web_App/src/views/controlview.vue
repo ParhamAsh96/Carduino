@@ -5,6 +5,7 @@
   <p id="distance">{{ distance }}m travelled.</p>
   <p id="temperature">{{ temperature }}°C</p>
 
+  <button class="button fixed_button" @click="lightOn">Light</button>
 </template>
 
 <style>
@@ -16,16 +17,23 @@
 }
 </style>
 <script>
-import { mapState } from 'vuex';
+import { mapState } from "vuex";
 
 export default {
+  methods: {
+    lightOn() {
+      this.publishToTopic({ topic: "carduino/light", message: "light on" });
+    },
+  },
   computed: {
-    ...mapState(['temperature', 'speed', 'distance'])
+    ...mapState(["temperature", "speed", "distance", "mqttClient"]),
   },
   mounted() {
-    this.$store.dispatch('subscribeToTopic', 'carduino/temperature');
-    this.$store.dispatch('subscribeToTopic', 'carduino/accelerometer/speed');
-    this.$store.dispatch('subscribeToTopic', 'carduino/accelerometer/distance');
-  }
+    this.$store.dispatch("subscribeToTopic", "carduino/temperature");
+    this.$store.dispatch("subscribeToTopic", "carduino/accelerometer/speed");
+    this.$store.dispatch("subscribeToTopic", "carduino/accelerometer/distance");
+
+    this.$store.dispatch("subscribeToTopic", "carduino/light");
+  },
 };
-  </script>
+</script>
