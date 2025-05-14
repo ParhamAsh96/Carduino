@@ -3,8 +3,7 @@
 #include "LIS3DHTR.h"
 #include "AccelerometerSensor.h"
 #include "TemperatureSensor.h"
-
-#include "LIS3DHTR.h"
+#include "BrakeLight.h"
 
 LIS3DHTR<TwoWire> lis;
 
@@ -20,7 +19,8 @@ const char *server = "broker.hivemq.com"; // ONLINE SERVER
 const uint16_t port = 1883;
 
 const int leftForward = D0;
-const int leftBackward = D1;
+// leftBackward's pin changed from D1 to D4.
+const int leftBackward = D4;
 const int rightForward = D3;
 const int rightBackward = D2;
 
@@ -66,6 +66,7 @@ void setup()
 
   // turn on Buzzer
   pinMode(BUZZER_PIN, OUTPUT);
+  pinMode(brakeLight, OUTPUT);
 
   Serial.begin(115200);
   while (!Serial); // Wait for Serial to be ready
@@ -106,7 +107,10 @@ void loop()
   deltaTime += (systemTime - previousTime) / updateIntervalMs;
   previousTime = systemTime;
 
-  
+  // Accessing current and previous speeds
+  previousSpeed = currentSpeed;
+  currentSpeed = accelerometer.getSpeed();
+
 
   
 
