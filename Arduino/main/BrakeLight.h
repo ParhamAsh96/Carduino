@@ -7,17 +7,17 @@ class BrakeLight
 
     const int brakeLight;
 
-    float previousSpeedTime;
+    float previousSpeed;
 
-    float arduinoSpeed;
+    float currentSpeed;
 
 
   public:
-  
+
     float previousSpeed;
 
     float currentSpeed = accelerometer.getSpeed();
     
-    int TurnOnBrakeLight(float arduinoSpeed, float previousSpeedTime);
+    int TurnOnBrakeLight(float currentSpeed, float previousSpeed);
 
 };
