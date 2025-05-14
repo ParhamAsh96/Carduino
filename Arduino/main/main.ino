@@ -3,7 +3,7 @@
 #include "LIS3DHTR.h"
 #include "AccelerometerSensor.h"
 #include "TemperatureSensor.h"
-
+#include "CarController.h"
 #include "LIS3DHTR.h"
 
 LIS3DHTR<TwoWire> lis;
@@ -19,10 +19,6 @@ const char *ID = "Wio-Terminal-Client-meep";  // Name of our device, must be uni
 const char *server = "broker.hivemq.com"; // ONLINE SERVER
 const uint16_t port = 1883;
 
-const int leftForward = D0;
-const int leftBackward = D1;
-const int rightForward = D3;
-const int rightBackward = D2;
 
 String sub_topics[4] = { 
   "carduino/lcd/print",
@@ -53,6 +49,7 @@ WiFiClient wifiClient;
 PubSubClient client(wifiClient);
 AccelerometerSensor accelerometer(client,speedTopic);
 TemperatureSensor temperatureSensor(client,temperatureTopic);
+CarController wheels(leftForward, leftBackward, rightForward, rightBackward);
 
 // setup() and loop() are the main methods for the Arduino
 // setup() runs once
@@ -90,12 +87,8 @@ void setup()
   temperatureSensor.setup();
   accelerometer.setup();
   temperatureSensor.setup();
+  wheels.setup();
 
-  // set up the wheels
-  pinMode(leftForward, OUTPUT);
-  pinMode(leftBackward, OUTPUT);
-  pinMode(rightForward, OUTPUT);
-  pinMode(rightBackward, OUTPUT);
 }
 
 // loop() runs forever
@@ -194,22 +187,7 @@ void reciever_actions(String topic, String message){
   }
 
   if (topic == "carduino/movement"){
-     if (message == "arrowUp") 
-     {
-      arrowUp();
-     } 
-     else if (message == "arrowRight")
-     {
-       arrowRight(); 
-     }
-     else if (message == "arrowLeft")     
-     {
-      arrowLeft(); 
-     }
-     else if (message == "arrowDown")     
-     {
-      arrowDown();
-     } 
+     wheels.wheelsReciever(message);
     
   }
 
@@ -233,41 +211,6 @@ int beats_tune[] = { 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 2, 4 };
 char notes_anthem[] = "ggecg edc ggecg fed ";
 int beats_anthem[] = {2,2,2,1,1,4, 2,2,4, 2,2,2,1,1,4, 2,2,4, 4};
 int tempo = 200;
-
-// move the car forward
-void arrowUp()
-{
-  digitalWrite(leftForward, HIGH);
-  digitalWrite(rightForward, HIGH);
-  digitalWrite(leftBackward, LOW);
-  digitalWrite(rightBackward, LOW);
-
-}
-
-// turn the car right
-void arrowRight()
-{
-  digitalWrite(rightForward, LOW);
-  digitalWrite(rightBackward, LOW);
-}
-
-
-// turn the car left
-void arrowLeft()
-{
-  digitalWrite(leftForward, LOW);
-  digitalWrite(leftBackward, LOW);
-}
-
-
-// move the car back
-void arrowDown()
-{
-  digitalWrite(leftForward, LOW);
-  digitalWrite(rightForward, LOW);
-  digitalWrite(leftBackward, HIGH);
-  digitalWrite(rightBackward, HIGH);
-}
 
 
 void honk(int option){
