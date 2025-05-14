@@ -1,21 +1,15 @@
-#include "LIS3DHTR.h"
 #include "AccelerometerSensor.h"
 #include "BrakeLight.h"
 
 brakeLight = D1; 
 
-float previousSpeedTime = 0;
-float arduinoSpeed = 0;
+float previousSpeed = 0;
+float currentSpeed = 0;
 
-float BrakeLight::getPreviousSpeedTime() {
-    return previousSpeedTime;
-}
-
-float BrakeLight::getArduinoSpeed() {
-    return arduinoSpeed;
-}
-
-void updateFromSensor(const AccelerometerSensor& s) {
-  arduinoSpeed      = s.getSensorValue();
-  previousSpeedTime = s.getPreviousSpeedTime();
+void TurnOnBrakeLight(float currentSpeed, float previousSpeed){
+  if (currentSpeed < previousSpeed) {
+    pinMode(brakeLight, HIGH)
+  } else {
+    pinMode(brakeLight, LOW)
+  }
 }
