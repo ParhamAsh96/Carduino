@@ -7,7 +7,7 @@ BrakeLight::BrakeLight(int pin)
     pinMode(brakeLight, OUTPUT);
   }
   
-const int brakeLight = D1; 
+const int brakeLight = A0; 
 
 void BrakeLight::TurnOnBrakeLight(float currentSpeed, float previousSpeed)
 {

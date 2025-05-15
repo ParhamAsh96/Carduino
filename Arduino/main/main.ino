@@ -20,12 +20,11 @@ const char *server = "broker.hivemq.com"; // ONLINE SERVER
 const uint16_t port = 1883;
 
 const int leftForward = D0;
-// leftBackward's pin changed from D1 to D4.
-const int leftBackward = D4;
+const int leftBackward = D1;
 const int rightForward = D3;
 const int rightBackward = D2;
 
-const int  brakeLightPin = D1;
+const int  brakeLightPin = A0;
 
 float previousSpeed = 0;
 

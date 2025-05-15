@@ -37,9 +37,9 @@ export default {
     ...mapState(["temperature", "speed", "distance", "mqttClient"]),
   },
   mounted() {
-    //this.$store.dispatch("subscribeToTopic", "carduino/temperature");
-    //this.$store.dispatch("subscribeToTopic", "carduino/accelerometer/speed");
-    //this.$store.dispatch("subscribeToTopic", "carduino/accelerometer/distance");
+    this.$store.dispatch("subscribeToTopic", "carduino/temperature");
+    this.$store.dispatch("subscribeToTopic", "carduino/accelerometer/speed");
+    this.$store.dispatch("subscribeToTopic", "carduino/accelerometer/distance");
 
     this.$store.dispatch("subscribeToTopic", "carduino/light");
   },
