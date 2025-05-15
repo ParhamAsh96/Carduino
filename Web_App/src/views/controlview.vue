@@ -66,7 +66,7 @@
     <button
       @pointerdown="onArrow('up')"
       @pointerup="letGo('up')"
-      @pointerleave="letGo('up')"
+      @pointercancel="letGo('up')"
       class="flex items-center justify-center size-20 bg-blue-500 text-white rounded-full shadow-lg hover:bg-blue-600 hover:text-[#ffcc00] active:scale-90 active:bg-red-900 transition-transform"
       aria-label="Arrow Up"
       >
@@ -79,7 +79,7 @@
     <button
     @pointerdown="onArrow('down')"
     @pointerup="letGo('down')"
-    @pointerleave="letGo('down')"
+    @pointercancel="letGo('down')"
     class="flex items-center justify-center size-20 bg-blue-500 text-white rounded-full shadow-lg hover:bg-blue-600 hover:text-[#ffcc00] active:scale-90 active:bg-red-900 transition-transform"
     aria-label="Arrow Down"
     >
@@ -95,7 +95,7 @@
   <button
   @pointerdown="onArrow('left')"
   @pointerup="letGo('left')"
-  @pointerleave="letGo('left')"
+  @pointercancel="letGo('left')"
   class="flex items-center justify-center size-20 bg-blue-500 text-white rounded-full shadow-lg hover:bg-blue-600 hover:text-[#ffcc00] active:scale-90 active:bg-red-900 transition-transform"
   aria-label="Arrow Left"
   >
@@ -108,7 +108,7 @@
 <button
       @pointerdown="onArrow('right')"
       @pointerup="letGo('right')"
-      @pointerleave="letGo('right')"
+      @pointercancel="letGo('right')"
       class="flex items-center justify-center size-20 bg-blue-500 text-white rounded-full shadow-lg hover:bg-blue-600 hover:text-[#ffcc00] active:scale-90 active:bg-red-900 transition-transform"
       aria-label="Arrow Right"
     >
