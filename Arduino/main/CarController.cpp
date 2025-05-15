@@ -12,8 +12,8 @@ CarController::CarController()
 void CarController::setup() {
     leftForward = D0;
     leftBackward = D1;
-    rightForward = D3;
-    rightBackward = D2;
+    rightForward = D2;
+    rightBackward = D3;
 
     pinMode(leftForward, OUTPUT);
     pinMode(leftBackward, OUTPUT);

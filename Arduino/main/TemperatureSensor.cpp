@@ -10,7 +10,7 @@ void TemperatureSensor::setup() {
     // Startup values
     betaCoefficient = 4275;               
     baseResistance = 100000;            
-    pinTempSensor = A0;
+    pinTempSensor = A5;
 
     pinMode(pinTempSensor, INPUT);
 }
