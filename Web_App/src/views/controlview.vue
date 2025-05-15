@@ -131,11 +131,24 @@
     this.$store.dispatch('subscribeToTopic', 'carduino/temperature');
     this.$store.dispatch('subscribeToTopic', 'carduino/accelerometer/speed');
     this.$store.dispatch('subscribeToTopic', 'carduino/accelerometer/distance');
+
+    // Keyboard listeners
+    window.addEventListener('keydown', this.KeyDown);
+    window.addEventListener('keyup', this.KeyUp);
+  },
+
+  beforeUnmount(){
+    window.removeEventListener('keydown', this.KeyDown);
+    window.removeEventListener('keyup', this.KeyUp);
   },
       data() {
         return {
           autoBrake: false,
-          frontLights: false
+          frontLights: false,
+          isRightArrowDown: false,
+          isLeftArrowDown: false,
+          isUpArrowDown: false,
+          isDownArrowDown: false
         };
       },
       
@@ -216,8 +229,50 @@
             
         // code block
     }
-          // Add logic for handling arrow clicks here
-        }
+              // Add logic for handling arrow clicks here
+},
+
+    KeyDown(direction) {
+      if (direction.key === 'ArrowRight' && !this.isRightArrowDown) {
+        this.isRightArrowDown = true;
+        this.onArrow('right');
+      }
+      else if (direction.key === 'ArrowLeft' && !this.isLeftArrowDown) {
+        this.isLeftArrowDown = true;
+        this.onArrow('left');
+      }
+      else if (direction.key === 'ArrowUp' && !this.isUpArrowDown) {
+        this.isUpArrowDown = true;
+        this.onArrow('up');
+      }
+      else if (direction.key === 'ArrowDown' && !this.isDownArrowDown) {
+        this.isDownArrowDown = true;
+        this.onArrow('down');
+      }
+      },
+
+
+
+    KeyUp(direction) {
+    if (direction.key === 'ArrowRight') {
+      this.isRightArrowDown = false;
+      this.letGo('right');
+    }
+    else if (direction.key === 'ArrowLeft') {
+      this.isLeftArrowDown = false;
+      this.letGo('left');
+    }
+    else if (direction.key === 'ArrowUp') {
+      this.isUpArrowDown = false;
+      this.letGo('up');
+    }
+    else if (direction.key === 'ArrowDown') {
+      this.isDownArrowDown = false;
+      this.letGo('down');
+    }
+  }
+
       }
     };
+    
 </script>
