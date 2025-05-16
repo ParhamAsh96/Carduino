@@ -1,18 +1,20 @@
-#include <ChainableLED.h>
-#include "AccelerometerSensor.h"
+#ifndef BRAKELIGHTS_H
+#define BRAKELIGHTS_H
+
+#include <Arduino.h>
 
 class BrakeLight {
-public:
+  public:
+      BrakeLight(int pin);
+      void setup();
+      void brakeLightOnRed();
+      void brakeLightOnYellow();
+      void brakeLightOff();
 
-  BrakeLight(int pin);
-
-  void TurnOnBrakeLight(float currentSpeed, float previousSpeed);
-
-private:
-
-  const int brakeLight;
-
-  float previousSpeed;
-  
-  float currentSpeed;
+  private:
+      const int brakeLight;
+      bool lightTurnOn;
+      bool lightTurnOff;
 };
+
+#endif
