@@ -44,6 +44,27 @@
       </div>
       <span class="text-white text-lg">Front Lights</span>
     </div>
+
+    <!-- Brake Lights Toggle -->
+    <div
+      @click="toggle('brakeLights')"
+      class="flex items-center space-x-4 cursor-pointer"
+    >
+      <div
+        :class="[
+          'w-12 h-6 flex items-center rounded-full p-1 transition duration-300',
+          brakeLights ? 'bg-[#ffcc00]' : 'bg-gray-400',
+        ]"
+      >
+        <div
+          :class="[
+            'bg-white w-4 h-4 rounded-full shadow-md transform transition duration-300',
+            brakeLights ? 'translate-x-6' : 'translate-x-0',
+          ]"
+        ></div>
+      </div>
+      <span class="text-white text-lg">Brake Lights</span>
+    </div>
   </div>
 
   <!-- Background Video Placeholder -->
@@ -175,13 +196,6 @@ import { mapActions } from "vuex";
 import { mapState } from "vuex";
 
 export default {
-  methods: {
-    ...mapActions(["publishToTopic"]), // Map the publishToTopic action to a method
-
-    lightOn() {
-      this.publishToTopic({ topic: "carduino/light", message: "light on" });
-    },
-  },
   computed: {
     ...mapState(["temperature", "speed", "distance", "mqttClient"]),
   },
@@ -204,6 +218,7 @@ export default {
     return {
       autoBrake: false,
       frontLights: false,
+      brakeLights: false,
       isRightArrowDown: false,
       isLeftArrowDown: false,
       isUpArrowDown: false,
@@ -217,6 +232,10 @@ export default {
     toggle(feature) {
       this[feature] = !this[feature];
       console.log(`${feature} toggled: ${this[feature]}`);
+    },
+
+    lightOn() {
+      this.publishToTopic({ topic: "carduino/light", message: "light on" });
     },
 
     onArrow(direction) {
