@@ -10,10 +10,10 @@ CarController::CarController()
 
 
 void CarController::setup() {
-    leftForward = D4;
-    leftBackward = D1;
-    rightForward = D3;
-    rightBackward = D2;
+    leftForward = D1;
+    leftBackward = D4;
+    rightForward = D2;
+    rightBackward = D3;
 
     pinMode(leftForward, OUTPUT);
     pinMode(leftBackward, OUTPUT);
@@ -25,36 +25,50 @@ void CarController::arrowUp() {
     digitalWrite(leftForward, HIGH);
     digitalWrite(rightForward, HIGH);
     goingForward = true;
-    goingBackward = false;
 }
 
 
 void CarController::arrowDown() {
     digitalWrite(leftBackward, HIGH);
     digitalWrite(rightBackward, HIGH);
-    goingForward = false;
     goingBackward = true;
 
 }
 
 void CarController::arrowLeft() {
-    digitalWrite(leftForward, LOW);
-    digitalWrite(leftBackward, LOW);
+    if (goingForward)
+    {
+        digitalWrite(leftForward, LOW);
+    }
+    else if (goingBackward)
+    {
+        digitalWrite(leftBackward, LOW);
+    }
+
 }
 
 void CarController::arrowRight() {
-    digitalWrite(rightForward, LOW);
-    digitalWrite(rightBackward, LOW);
+    if (goingForward)
+    {
+        digitalWrite(rightForward, LOW);
+    }
+    else if (goingBackward)
+    {
+        digitalWrite(rightBackward, LOW);
+    }
+    
 }
 
 void CarController::arrowUpStop() {
     digitalWrite(leftForward, LOW);
     digitalWrite(rightForward, LOW);
+    goingForward = false;
 }
 
 void CarController::arrowDownStop() {
     digitalWrite(leftBackward, LOW);
     digitalWrite(rightBackward, LOW);
+    goingBackward = false;
 }
 
 void CarController::arrowLeftStop() {
@@ -84,19 +98,19 @@ void CarController::wheelsReceiver(String message)
 {
         if (message == "arrowUp") {
             arrowUp();
-        } else if (message == "arrowDown") {
+        } if (message == "arrowDown") {
             arrowDown();
-        } else if (message == "arrowLeft") {
+        } if (message == "arrowLeft") {
             arrowLeft();
-        } else if (message == "arrowRight") {
+        } if (message == "arrowRight") {
             arrowRight();
-        } else if (message == "arrowUpStop") {
+        } if (message == "arrowUpStop") {
             arrowUpStop();}
-        else if (message == "arrowDownStop") {
+         if (message == "arrowDownStop") {
             arrowDownStop();
-        } else if (message == "arrowLeftStop") {
+        } if (message == "arrowLeftStop") {
             arrowLeftStop();
-        } else if (message == "arrowRightStop") {
+        } if (message == "arrowRightStop") {
             arrowRightStop();
         }
     
