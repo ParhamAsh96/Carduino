@@ -4,6 +4,7 @@
 #include "LIS3DHTR.h"
 #include "AccelerometerSensor.h"
 #include "TemperatureSensor.h"
+#include "CarController.h"
 #include "BrakeLight.h"
 
 LIS3DHTR<TwoWire> lis;
@@ -31,7 +32,7 @@ float previousSpeed = 0;
 String sub_topics[5] = { 
   "carduino/lcd/print",
   "carduino/buzzer",
-  "carduino/directions/live-control",
+  "carduino/movement",
   "carduino/power/off",
   "carduino/light",
 };
@@ -58,7 +59,8 @@ WiFiClient wifiClient;
 PubSubClient client(wifiClient);
 AccelerometerSensor accelerometer(client,speedTopic);
 TemperatureSensor temperatureSensor(client,temperatureTopic);
-BrakeLight brakeLightController(D1);
+CarController wheels;
+BrakeLight brakeLightController(A0);
 
 // setup() and loop() are the main methods for the Arduino
 // setup() runs once
@@ -99,6 +101,8 @@ void setup()
   temperatureSensor.setup();
   accelerometer.setup();
   temperatureSensor.setup();
+  wheels.setup();
+
 }
 
 // loop() runs forever
@@ -198,9 +202,8 @@ void reciever_actions(String topic, String message){
       // print_to_WIO(text);
   }
 
-  if (topic == "carduino/directions/live-control"){
-    
-    //draw arrows
+  if (topic == "carduino/movement"){
+     wheels.wheelsReceiver(message);
     
   }
 
@@ -224,6 +227,7 @@ int beats_tune[] = { 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 2, 4 };
 char notes_anthem[] = "ggecg edc ggecg fed ";
 int beats_anthem[] = {2,2,2,1,1,4, 2,2,4, 2,2,2,1,1,4, 2,2,4, 4};
 int tempo = 200;
+
 
 void honk(int option){
   switch(option){
