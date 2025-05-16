@@ -3,14 +3,14 @@
 #include "LIS3DHTR.h"
 #include "AccelerometerSensor.h"
 #include "TemperatureSensor.h"
-
+#include "CarController.h"
 #include "LIS3DHTR.h"
 
 LIS3DHTR<TwoWire> lis;
 
 // Update these with values suitable for your network:
-const char *ssid = "iPhoneiee♨️";      // network SSID (Wifi)
-const char *password = "14444444"; // your network password
+const char *ssid = "Parham";      // network SSID (Wifi)
+const char *password = "Parham3000"; // your network password
 
 const char *ID = "Wio-Terminal-Client-meep";  // Name of our device, must be unique
 // c172.20.10.3 - local brocker
@@ -19,15 +19,11 @@ const char *ID = "Wio-Terminal-Client-meep";  // Name of our device, must be uni
 const char *server = "broker.hivemq.com"; // ONLINE SERVER
 const uint16_t port = 1883;
 
-const int leftForward = D0;
-const int leftBackward = D1;
-const int rightForward = D3;
-const int rightBackward = D2;
 
 String sub_topics[4] = { 
   "carduino/lcd/print",
   "carduino/buzzer",
-  "carduino/directions/live-control",
+  "carduino/movement",
   "carduino/power/off"
 };
 
@@ -53,6 +49,7 @@ WiFiClient wifiClient;
 PubSubClient client(wifiClient);
 AccelerometerSensor accelerometer(client,speedTopic);
 TemperatureSensor temperatureSensor(client,temperatureTopic);
+CarController wheels;
 
 // setup() and loop() are the main methods for the Arduino
 // setup() runs once
@@ -90,6 +87,8 @@ void setup()
   temperatureSensor.setup();
   accelerometer.setup();
   temperatureSensor.setup();
+  wheels.setup();
+
 }
 
 // loop() runs forever
@@ -187,9 +186,8 @@ void reciever_actions(String topic, String message){
       // print_to_WIO(text);
   }
 
-  if (topic == "carduino/directions/live-control"){
-    
-    //draw arrows
+  if (topic == "carduino/movement"){
+     wheels.wheelsReceiver(message);
     
   }
 
@@ -213,6 +211,7 @@ int beats_tune[] = { 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 2, 4 };
 char notes_anthem[] = "ggecg edc ggecg fed ";
 int beats_anthem[] = {2,2,2,1,1,4, 2,2,4, 2,2,2,1,1,4, 2,2,4, 4};
 int tempo = 200;
+
 
 void honk(int option){
   switch(option){
