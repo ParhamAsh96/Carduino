@@ -1,20 +1,28 @@
-#ifndef BRAKELIGHTS_H
-#define BRAKELIGHTS_H
+#ifndef BRAKELIGHT_H
+#define BRAKELIGHT_H
 
 #include <Arduino.h>
+#include <ChainableLED.h>
 
 class BrakeLight {
+
   public:
-      BrakeLight(int pin);
+      BrakeLight();
       void setup();
+      void init();
+      void setColorRGB();
       void brakeLightOnRed();
       void brakeLightOnYellow();
       void brakeLightOff();
 
   private:
-      const int brakeLight;
-      bool lightTurnOn;
-      bool lightTurnOff;
+        const int LED_NUM;
+        const int CLK_PIN;
+        const int DAT_PIN;
+        bool lightTurnOn;
+        bool lightTurnOff;
+        ChainableLED brakeLight;
+
 };
 
 #endif

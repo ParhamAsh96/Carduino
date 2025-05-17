@@ -60,7 +60,6 @@ PubSubClient client(wifiClient);
 AccelerometerSensor accelerometer(client,speedTopic);
 TemperatureSensor temperatureSensor(client,temperatureTopic);
 CarController wheels;
-BrakeLight brakeLightController(A0);
 
 // setup() and loop() are the main methods for the Arduino
 // setup() runs once
@@ -74,9 +73,6 @@ void setup()
 
   // turn on Buzzer
   pinMode(BUZZER_PIN, OUTPUT);
-
-  accelerometer.setup();
-  pinMode(brakeLightPin, OUTPUT);
 
   Serial.begin(115200);
   while (!Serial); // Wait for Serial to be ready
@@ -119,12 +115,6 @@ void loop()
   deltaTime += (systemTime - previousTime) / updateIntervalMs;
   previousTime = systemTime;
 
-  // Accessing current and previous speeds
-  float currentSpeed = accelerometer.getSensorValue();
-  brakeLightController.TurnOnBrakeLight(currentSpeed, previousSpeed);
-  previousSpeed = currentSpeed;
-  
-
   // MQTT Updates should be done inside this if statement to avoid publishing to the different topics too often.
   if (deltaTime >= 1){
 
@@ -136,7 +126,6 @@ void loop()
     // Need to add a function to check if the car is moving or not to restart the speed since it only accumulates...
     accelerometer.publishMQTT(distanceTopic,accelerometer.getTravelledDistance());
   }
-
 
   client.loop();
 }
