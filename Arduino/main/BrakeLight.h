@@ -14,13 +14,13 @@ class BrakeLight {
       void brakeLightOnRed();
       void brakeLightOnYellow();
       void brakeLightOff();
+      void lightReceiver(const String& message);
 
   private:
         const int LED_NUM;
         const int CLK_PIN;
         const int DAT_PIN;
-        bool lightTurnOn;
-        bool lightTurnOff;
+        bool enabled;
         ChainableLED brakeLight;
 
 };

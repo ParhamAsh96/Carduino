@@ -77,7 +77,7 @@
   </div>
 
   <!-- Info Section - Top Center -->
-  <div class="inset-x-0 flex justify-center space-x-6">
+  <div class="inset-x-0 flex justify-center space-x-6 mt-8">
     <div class="bg-white shadow-md rounded-xl px-6 py-3 text-center">
       <p class="text-sm font-medium text-gray-500">Temperature</p>
       <p class="text-xl font-bold text-gray-800">{{ temperature }} °C</p>
@@ -234,10 +234,6 @@ export default {
       console.log(`${feature} toggled: ${this[feature]}`);
     },
 
-    lightOn() {
-      this.publishToTopic({ topic: "carduino/light", message: "light on" });
-    },
-
     onArrow(direction) {
       switch (direction) {
         case "up":
@@ -337,6 +333,14 @@ export default {
         this.isDownArrowDown = false;
         this.letGo("down");
       }
+    },
+
+    lightOn() {
+      this.publishToTopic({ topic: "carduino/light", message: "lightOn" });
+    },
+
+    lightOff() {
+      this.publishToTopic({ topic: "carduino/light", message: "lightOff" });
     },
   },
 };

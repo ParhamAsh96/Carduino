@@ -25,21 +25,21 @@ const int leftBackward = D1;
 const int rightForward = D3;
 const int rightBackward = D2;
 
-const int  brakeLightPin = A0;
-
-float previousSpeed = 0;
+const int BRAKELIGHT_PIN = A0;
 
 String sub_topics[5] = { 
   "carduino/lcd/print",
   "carduino/buzzer",
   "carduino/movement",
-  "carduino/power/off",
   "carduino/light",
+  "carduino/power/off",
 };
 
 const char* speedTopic = "carduino/accelerometer/speed";
 const char* distanceTopic = "carduino/accelerometer/distance";
 const char* temperatureTopic = "carduino/temperature";
+const char* brakeTopic = "carduino/light";
+
 
 // For turning off
 bool running = true;
@@ -57,8 +57,8 @@ double deltaTime = 0;
 
 WiFiClient wifiClient;
 PubSubClient client(wifiClient);
-AccelerometerSensor accelerometer(client,speedTopic);
-TemperatureSensor temperatureSensor(client,temperatureTopic);
+AccelerometerSensor accelerometer(client, speedTopic);
+TemperatureSensor temperatureSensor(client, temperatureTopic);
 BrakeLight brakeLight;
 CarController wheels(brakeLight);
 
@@ -74,6 +74,7 @@ void setup()
 
   // turn on Buzzer
   pinMode(BUZZER_PIN, OUTPUT);
+  pinMode(BRAKELIGHT_PIN, OUTPUT);
 
   Serial.begin(115200);
   while (!Serial); // Wait for Serial to be ready
@@ -94,10 +95,12 @@ void setup()
 
   client.setServer(server, port);
   client.setCallback(callback);
+  client.subscribe(brakeTopic);
   accelerometer.setup();
   temperatureSensor.setup();
   accelerometer.setup();
   temperatureSensor.setup();
+  brakeLight.setup();
   wheels.setup();
 
 }
