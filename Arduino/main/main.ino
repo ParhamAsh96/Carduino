@@ -59,7 +59,8 @@ WiFiClient wifiClient;
 PubSubClient client(wifiClient);
 AccelerometerSensor accelerometer(client,speedTopic);
 TemperatureSensor temperatureSensor(client,temperatureTopic);
-CarController wheels;
+BrakeLight brakeLight;
+CarController wheels(brakeLight);
 
 // setup() and loop() are the main methods for the Arduino
 // setup() runs once

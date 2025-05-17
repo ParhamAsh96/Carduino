@@ -2,10 +2,12 @@
 #define CAR_CONTROLLER_H
 
 #include <Arduino.h>
+#include "BrakeLight.h"
+
 
 class CarController {
 public:
-    CarController();  // Constructor
+    CarController(BrakeLight& bl);  // Constructor
     void setup();                                   // Set pinMode for motors
     void arrowUp();                                 
     void arrowDown();                               
@@ -24,6 +26,7 @@ private:
     int rightBackward;
     bool goingForward;
     bool goingBackward;
+    BrakeLight& brakeLight;
 };
 
 #endif
