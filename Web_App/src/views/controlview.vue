@@ -200,9 +200,9 @@ export default {
     ...mapState(["temperature", "speed", "distance", "mqttClient"]),
   },
   mounted() {
-    //this.$store.dispatch("subscribeToTopic", "carduino/temperature");
-    //this.$store.dispatch("subscribeToTopic", "carduino/accelerometer/speed");
-    //this.$store.dispatch("subscribeToTopic", "carduino/accelerometer/distance");
+    this.$store.dispatch("subscribeToTopic", "carduino/temperature");
+    this.$store.dispatch("subscribeToTopic", "carduino/accelerometer/speed");
+    this.$store.dispatch("subscribeToTopic", "carduino/accelerometer/distance");
     this.$store.dispatch("subscribeToTopic", "carduino/light");
 
     // Keyboard listeners
@@ -232,6 +232,24 @@ export default {
     toggle(feature) {
       this[feature] = !this[feature];
       console.log(`${feature} toggled: ${this[feature]}`);
+    },
+
+    brakeLight(msg) {
+      switch (msg) {
+        case true:
+          this.publishToTopic({
+            topic: "carduino/light",
+            message: "lightOn",
+          });
+          break;
+
+        case false:
+          this.publishToTopic({
+            topic: "carduino/light",
+            message: "lightOff",
+          });
+          break;
+      }
     },
 
     onArrow(direction) {
@@ -332,24 +350,6 @@ export default {
       } else if (direction.key === "ArrowDown") {
         this.isDownArrowDown = false;
         this.letGo("down");
-      }
-    },
-
-    brakeLights(direction) {
-      switch (direction) {
-        case "lightOn":
-          this.publishToTopic({
-            topic: "carduino/light",
-            message: "lightOn",
-          });
-          break;
-
-        case "lightOff":
-          this.publishToTopic({
-            topic: "carduino/light",
-            message: "lightOff",
-          });
-          break;
       }
     },
   },

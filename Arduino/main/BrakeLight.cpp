@@ -4,7 +4,7 @@
 #include "BrakeLight.h"
 
 BrakeLight::BrakeLight()
-    : LED_NUM(1), CLK_PIN(A0), DAT_PIN(A1), brakeLight(CLK_PIN, DAT_PIN, LED_NUM), enabled(true)
+    : LED_NUM(2), CLK_PIN(A0), DAT_PIN(A1), brakeLight(CLK_PIN, DAT_PIN, LED_NUM), enabled(true)
 {
 
 }
@@ -21,7 +21,8 @@ void BrakeLight::brakeLightOnRed() {
     } else {
     brakeLight.init();
     brakeLight.setColorRGB(0, 255, 0, 0);
-    Serial.println("Red called");
+    brakeLight.setColorRGB(1, 255, 0, 0);
+    Serial.println("Red LEDs On");
   }
 }
 
@@ -31,23 +32,25 @@ void BrakeLight::brakeLightOnWhite() {
     } else {
     brakeLight.init();
     brakeLight.setColorRGB(0, 255, 255, 255);
-    Serial.println("Yellow called");
+    brakeLight.setColorRGB(1, 255, 255, 255);
+    Serial.println("White LEDs On");
   }
 }
 
 void BrakeLight::brakeLightOff() {
   brakeLight.init();
   brakeLight.setColorRGB(0, 0, 0, 0);
-  Serial.println("Turn off called");
+  brakeLight.setColorRGB(1, 0, 0, 0);
+  Serial.println("LEDs Off");
 }
 
 void BrakeLight::lightReceiver(const String& message) 
 {
-  if (message == "turnOn") {
+  if (message == "lightOn") {
       enabled = true;
   } 
 
-  if (message == "turnOff") {
+  if (message == "lightOff") {
       enabled = false;
       brakeLightOff();
   } 
