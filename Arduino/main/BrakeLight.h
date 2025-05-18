@@ -25,4 +25,6 @@ class BrakeLight {
 
 };
 
+extern BrakeLight brakeLight;
+
 #endif

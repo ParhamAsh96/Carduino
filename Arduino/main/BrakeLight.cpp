@@ -10,25 +10,35 @@ BrakeLight::BrakeLight()
 }
 
 void BrakeLight::setup() {
-  const int LED_NUM = 1;
-  const int CLK_PIN = A0;
-  const int DAT_PIN = A1;
-
+  Serial.println("[BrakeLight] setup()");
   brakeLight.init();
+  brakeLightOnRed();
 }
 
 void BrakeLight::brakeLightOnRed() {
-  if (!enabled) return;
-  brakeLight.setColorRGB(0, 255, 0, 0);
+  if (!enabled) {
+    return; 
+    } else {
+    brakeLight.init();
+    brakeLight.setColorRGB(0, 255, 0, 0);
+    Serial.println("Red called");
+  }
 }
 
 void BrakeLight::brakeLightOnYellow() {
-  if (!enabled) return;
-  brakeLight.setColorRGB(0, 255, 255, 0);
+  if (!enabled) {
+    return; 
+    } else {
+    brakeLight.init();
+    brakeLight.setColorRGB(0, 255, 255, 0);
+    Serial.println("Yellow called");
+  }
 }
 
 void BrakeLight::brakeLightOff() {
+  brakeLight.init();
   brakeLight.setColorRGB(0, 0, 0, 0);
+  Serial.println("Turn off called");
 }
 
 void BrakeLight::lightReceiver(const String& message) 

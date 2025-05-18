@@ -25,7 +25,6 @@ const int leftBackward = D1;
 const int rightForward = D3;
 const int rightBackward = D2;
 
-const int BRAKELIGHT_PIN = A0;
 
 String sub_topics[5] = { 
   "carduino/lcd/print",
@@ -40,9 +39,11 @@ const char* distanceTopic = "carduino/accelerometer/distance";
 const char* temperatureTopic = "carduino/temperature";
 const char* brakeTopic = "carduino/light";
 
-
 // For turning off
 bool running = true;
+
+// Brake Light turning on
+bool enabled = true;
 
 // For Update Frequency
 double systemTime;
@@ -74,7 +75,6 @@ void setup()
 
   // turn on Buzzer
   pinMode(BUZZER_PIN, OUTPUT);
-  pinMode(BRAKELIGHT_PIN, OUTPUT);
 
   Serial.begin(115200);
   while (!Serial); // Wait for Serial to be ready
@@ -98,11 +98,8 @@ void setup()
   client.subscribe(brakeTopic);
   accelerometer.setup();
   temperatureSensor.setup();
-  accelerometer.setup();
-  temperatureSensor.setup();
-  brakeLight.setup();
   wheels.setup();
-
+  brakeLight.setup();
 }
 
 // loop() runs forever
@@ -197,6 +194,16 @@ void reciever_actions(String topic, String message){
 
   if (topic == "carduino/movement"){
      wheels.wheelsReceiver(message);
+    
+  }
+
+  if (topic == "carduino/light"){
+     
+     if (message == "lightON") {
+      enabled = true;
+     } else if (message == "lightOff") {
+      enabled = false;
+     }
     
   }
 

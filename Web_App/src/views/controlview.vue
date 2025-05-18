@@ -200,9 +200,9 @@ export default {
     ...mapState(["temperature", "speed", "distance", "mqttClient"]),
   },
   mounted() {
-    this.$store.dispatch("subscribeToTopic", "carduino/temperature");
-    this.$store.dispatch("subscribeToTopic", "carduino/accelerometer/speed");
-    this.$store.dispatch("subscribeToTopic", "carduino/accelerometer/distance");
+    //this.$store.dispatch("subscribeToTopic", "carduino/temperature");
+    //this.$store.dispatch("subscribeToTopic", "carduino/accelerometer/speed");
+    //this.$store.dispatch("subscribeToTopic", "carduino/accelerometer/distance");
     this.$store.dispatch("subscribeToTopic", "carduino/light");
 
     // Keyboard listeners
@@ -218,7 +218,7 @@ export default {
     return {
       autoBrake: false,
       frontLights: false,
-      brakeLights: false,
+      brakeLights: true,
       isRightArrowDown: false,
       isLeftArrowDown: false,
       isUpArrowDown: false,
@@ -335,12 +335,22 @@ export default {
       }
     },
 
-    lightOn() {
-      this.publishToTopic({ topic: "carduino/light", message: "lightOn" });
-    },
+    brakeLights(direction) {
+      switch (direction) {
+        case "lightOn":
+          this.publishToTopic({
+            topic: "carduino/light",
+            message: "lightOn",
+          });
+          break;
 
-    lightOff() {
-      this.publishToTopic({ topic: "carduino/light", message: "lightOff" });
+        case "lightOff":
+          this.publishToTopic({
+            topic: "carduino/light",
+            message: "lightOff",
+          });
+          break;
+      }
     },
   },
 };
