@@ -12,7 +12,7 @@ class BrakeLight {
       void init();
       void setColorRGB();
       void brakeLightOnRed();
-      void brakeLightOnYellow();
+      void brakeLightOnWhite();
       void brakeLightOff();
       void lightReceiver(const String& message);
 

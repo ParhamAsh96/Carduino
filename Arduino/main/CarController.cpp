@@ -34,7 +34,7 @@ void CarController::arrowDown() {
     digitalWrite(leftBackward, HIGH);
     digitalWrite(rightBackward, HIGH);
     goingBackward = true;
-    brakeLight.brakeLightOnYellow();
+    brakeLight.brakeLightOnWhite();
 }
 
 void CarController::arrowLeft() {
@@ -46,7 +46,7 @@ void CarController::arrowLeft() {
     else if (goingBackward)
     {
         digitalWrite(leftBackward, LOW);
-        brakeLight.brakeLightOnYellow();
+        brakeLight.brakeLightOnWhite();
     }
 
 }
@@ -60,7 +60,7 @@ void CarController::arrowRight() {
     else if (goingBackward)
     {
         digitalWrite(rightBackward, LOW);
-        brakeLight.brakeLightOnYellow();
+        brakeLight.brakeLightOnWhite();
     }
     
 }
@@ -88,7 +88,7 @@ void CarController::arrowLeftStop() {
     else if (goingBackward)
     {
         digitalWrite(leftBackward, HIGH);
-        brakeLight.brakeLightOnYellow();
+        brakeLight.brakeLightOnWhite();
     }
     
 }
@@ -102,7 +102,7 @@ void CarController::arrowRightStop() {
     else if (goingBackward)
     {
         digitalWrite(rightBackward, HIGH);
-        brakeLight.brakeLightOnYellow();
+        brakeLight.brakeLightOnWhite();
     }
 }
 

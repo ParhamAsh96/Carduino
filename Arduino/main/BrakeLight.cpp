@@ -25,12 +25,12 @@ void BrakeLight::brakeLightOnRed() {
   }
 }
 
-void BrakeLight::brakeLightOnYellow() {
+void BrakeLight::brakeLightOnWhite() {
   if (!enabled) {
     return; 
     } else {
     brakeLight.init();
-    brakeLight.setColorRGB(0, 255, 255, 0);
+    brakeLight.setColorRGB(0, 255, 255, 255);
     Serial.println("Yellow called");
   }
 }
