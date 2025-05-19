@@ -43,7 +43,6 @@ export default {
 .diagnostics-page {
     background-color: #1f1f1f;
     padding: 20px;
-    font-family: sans-serif;
 }
 
 .title {
