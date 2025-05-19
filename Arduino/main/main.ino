@@ -20,11 +20,6 @@ const char *ID = "Wio-Terminal-Client-meep";  // Name of our device, must be uni
 const char *server = "broker.hivemq.com"; // ONLINE SERVER
 const uint16_t port = 1883;
 
-const int leftForward = D0;
-const int leftBackward = D1;
-const int rightForward = D3;
-const int rightBackward = D2;
-
 
 String sub_topics[5] = { 
   "carduino/lcd/print",

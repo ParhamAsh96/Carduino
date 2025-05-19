@@ -11,10 +11,10 @@ CarController::CarController(BrakeLight& bl)
 
 
 void CarController::setup() {
-    leftForward = D1;
-    leftBackward = D4;
-    rightForward = D2;
-    rightBackward = D3;
+    leftForward = D6;
+    leftBackward = D5;
+    rightForward = D7;
+    rightBackward = D8;
 
     pinMode(leftForward, OUTPUT);
     pinMode(leftBackward, OUTPUT);
