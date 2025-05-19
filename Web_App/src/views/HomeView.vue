@@ -14,7 +14,7 @@
             />
 
             <p
-              class="text-[#d9d9d9] container text-justify p-8 max-lg:mb-20 max-lg:-mt-10"
+              class="text-[#0f0f0f] container text-justify p-8 max-lg:mb-20 max-lg:-mt-10"
             >
               The Carduino offers a comprehensive suite of smart features. It
               automatically logs historical data, capturing every temperature
@@ -49,7 +49,7 @@
             />
 
             <p
-              class="text-[#d9d9d9] container text-justify p-8 max-lg:mb-20 max-lg:-mt-10"
+              class="text-[#0f0f0f] container text-justify p-8 max-lg:mb-20 max-lg:-mt-10"
             >
               Lorem, ipsum dolor sit amet consectetur adipisicing elit. Sed
               eligendi explicabo saepe quidem assumenda corrupti culpa
@@ -82,7 +82,7 @@
             />
 
             <p
-              class="text-[#d9d9d9] container text-justify p-8 max-lg:mb-20 max-lg:-mt-10"
+              class="text-[#0f0f0f] container text-justify p-8 max-lg:mb-20 max-lg:-mt-10"
             >
               Lorem, ipsum dolor sit amet consectetur adipisicing elit. Sed
               eligendi explicabo saepe quidem assumenda corrupti culpa
