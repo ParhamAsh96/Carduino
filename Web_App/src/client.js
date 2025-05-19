@@ -1,6 +1,16 @@
 import { createStore } from 'vuex';
 import mqtt from 'mqtt';
 
+class PrevDiagSes { // for Diagnostics
+  constructor(hiTemp, lowTemp, speed, distance, startTime) {
+    this.hiTemp = hiTemp;
+    this.lowTemp = lowTemp;
+    this.speed = speed;
+    this.distance = distance;
+    this.startTime = startTime;
+  }
+}
+
 const store = createStore({
   state() {
     return {
@@ -35,22 +45,25 @@ const store = createStore({
         console.error('MQTT connection error:', err);
       });
       
-      //ADDED - store recieved messaged locally, in JSON format. The mqttClient.on('message') actions from subscribeToTopic run 6 times, while here it runs only once(1).
+      // ADDED - store recieved messaged locally, in JSON format. The mqttClient.on('message') actions from subscribeToTopic run 6 times, while here it runs only once(1).
       mqttClient.on('message', (topic, message) => {
         console.log(`Message received on topic ${topic}:`, message.toString());
 
         const msg = message.toString();
         const now = new Date();
-        const timestamp = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0'); //⨮
+        const timestamp = `${now.getDate()} ${now.toLocaleString('default', { month: 'short' })} ${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
 
-        if (topic == 'carduino/temperature') {
-          saveToLocalStorage('temperatureHistory', msg, timestamp);
-        } else if (topic == 'carduino/accelerometer/speed') {
-          saveToLocalStorage('speedHistory', msg, timestamp); 
-        } else if (topic == 'carduino/accelerometer/distance') {
-          saveToLocalStorage('distanceHistory', msg, timestamp); 
+        if (topic === 'carduino/temperature') {
+          updateDiagnostics('temperatureHistory', msg, timestamp);
+        } 
+        else if (topic === 'carduino/accelerometer/speed') {
+          updateDiagnostics('speedHistory', msg, timestamp);
+        } 
+        else if (topic === 'carduino/accelerometer/distance') {
+          updateDiagnostics('distanceHistory', msg, timestamp);
         }
       });
+      // END - Diagnostics
 
       commit('setMqttClient', mqttClient); // Store the mqttClient in Vuex state
     },
@@ -123,10 +136,43 @@ const store = createStore({
 });
 
 // Helper to save MQTT values with timestamp to localStorage
-function saveToLocalStorage(key, value, time) {
-  let data = JSON.parse(localStorage.getItem(key) || '[]');
-  data.push({ value, time });
-  localStorage.setItem(key, JSON.stringify(data));
+// PrevDiagSes() CLASS is used to create JSON {} block, then pushed to localStorage. Same block will be overwritten with recieved values from mqtt, until distance becomes '0.00 m' again.
+function updateDiagnostics(key, msg /*mqtt message*/, time) {
+  let sessions = JSON.parse(localStorage.getItem('diagnosticSessions') || '[]');
+  let lastSession = sessions[sessions.length - 1]; // gets latest saved JSON block of the Diagnostics, from localStorage
+  // Start new diagnostics session if:
+  // 1. No sessions exist yet, OR
+  // 2. Current topic is distance AND value is "0.00 m" AND previous distance was > 0
+  const shouldStartNewSession = !lastSession || (key === 'distanceHistory' &&  
+                                                      lastSession.distance && 
+                                                      parseFloat(lastSession.distance) > parseFloat(msg));
+
+  if (shouldStartNewSession) {
+    const newSession = new PrevDiagSes( 
+      null, // hiTemp
+      null, // lowTemp
+      null, // speed
+      key === 'distanceHistory' ? msg : null, //Ensures distance isn't accidentally set for temperature/speed updates
+      time
+    );
+    sessions.push(newSession);
+  } 
+  else if (lastSession) { // Otherwise, update the last session
+    if (key === 'temperatureHistory') {
+      const numValue = parseFloat(msg);
+      lastSession.hiTemp = lastSession.hiTemp ? Math.max(lastSession.hiTemp, numValue) : numValue;
+      lastSession.lowTemp = lastSession.lowTemp ? Math.min(lastSession.lowTemp, numValue) : numValue;
+    }
+    else if (key === 'speedHistory') {
+      const numValue = parseFloat(msg);
+      lastSession.speed = lastSession.speed < numValue ? numValue : lastSession.speed;
+    } 
+    else if (key === 'distanceHistory') {
+      lastSession.distance = msg;
+    }
+  }
+
+  localStorage.setItem('diagnosticSessions', JSON.stringify(sessions)); // sets JSON saved data as 'diagnosticSessions':{} in localStorage
 }
 
 export default store; 
