@@ -144,7 +144,7 @@ function updateDiagnostics(key, msg /*mqtt message*/, time) {
   // 1. No sessions exist yet, OR
   // 2. Current topic is distance AND value is "0.00 m" AND previous distance was > 0
   const shouldStartNewSession = !lastSession || (key === 'distanceHistory' && 
-                                                      msg === '0.00 m' && 
+                                                      msg === '0.00' && 
                                                       lastSession.distance && 
                                                       parseFloat(lastSession.distance) > 0);
 
@@ -165,7 +165,8 @@ function updateDiagnostics(key, msg /*mqtt message*/, time) {
       lastSession.lowTemp = lastSession.lowTemp ? Math.min(lastSession.lowTemp, numValue) : numValue;
     }
     else if (key === 'speedHistory') {
-      lastSession.speed = msg;
+      const numValue = parseFloat(msg);
+      lastSession.speed = lastSession.speed < numValue ? numValue : lastSession.speed;
     } 
     else if (key === 'distanceHistory') {
       lastSession.distance = msg;

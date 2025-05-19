@@ -13,11 +13,11 @@
                 </div>
                 <div>
                     <h3>⏱️ Speed</h3>
-                    <p>{{ session.speed || 'N/A' }}</p>
+                    <p>{{ session.speed || 'N/A' }} m/s</p>
                 </div>
                 <div>
                     <h3>🗺️ Distance</h3>
-                    <p>{{ session.distance || 'N/A' }}</p>
+                    <p>{{ session.distance || 'N/A' }} m</p>
                 </div>
             </div>
         </div>
@@ -25,6 +25,7 @@
 </template>
 
 <script>
+// localStorage.clear();
 export default {
     data() {
         return {
