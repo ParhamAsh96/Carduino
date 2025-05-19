@@ -232,23 +232,22 @@ export default {
     toggle(feature) {
       this[feature] = !this[feature];
       console.log(`${feature} toggled: ${this[feature]}`);
+      if (feature == "brakeLights") {
+        this.brakeLight(this[feature]);
+      }
     },
 
-    brakeLight(msg) {
-      switch (msg) {
-        case true:
-          this.publishToTopic({
-            topic: "carduino/light",
-            message: "lightOn",
-          });
-          break;
-
-        case false:
-          this.publishToTopic({
-            topic: "carduino/light",
-            message: "lightOff",
-          });
-          break;
+    brakeLight(brakeLights) {
+      if (brakeLights == true) {
+        this.publishToTopic({
+          topic: "carduino/light",
+          message: "lightOn",
+        });
+      } else if (brakeLights == false) {
+        this.publishToTopic({
+          topic: "carduino/light",
+          message: "lightOff",
+        });
       }
     },
 

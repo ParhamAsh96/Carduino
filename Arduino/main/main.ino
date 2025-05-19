@@ -198,13 +198,8 @@ void reciever_actions(String topic, String message){
   }
 
   if (topic == "carduino/light"){
-     
-     if (message == "lightON") {
-      enabled = true;
-     } else if (message == "lightOff") {
-      enabled = false;
-     }
-    
+    brakeLight.lightReceiver(message);
+  
   }
 
   if (topic == "carduino/power/off"){

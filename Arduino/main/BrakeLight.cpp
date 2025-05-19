@@ -48,6 +48,7 @@ void BrakeLight::lightReceiver(const String& message)
 {
   if (message == "lightOn") {
       enabled = true;
+      brakeLightOnRed();
   } 
 
   if (message == "lightOff") {
