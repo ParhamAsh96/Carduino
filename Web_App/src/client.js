@@ -145,7 +145,7 @@ function updateDiagnostics(key, msg /*mqtt message*/, time) {
   // 2. Current topic is distance AND value is "0.00 m" AND previous distance was > 0
   const shouldStartNewSession = !lastSession || (key === 'distanceHistory' &&  
                                                       lastSession.distance && 
-                                                      parseFloat(lastSession.distance) > 0);
+                                                      parseFloat(lastSession.distance) > parseFloat(msg));
 
   if (shouldStartNewSession) {
     const newSession = new PrevDiagSes( 
