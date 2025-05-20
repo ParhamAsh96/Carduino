@@ -34,7 +34,7 @@ export default {
     },
     mounted() {
         // Load sessions and reverse the array once
-        this.sessions = JSON.parse(localStorage.getItem('diagnosticSessions') || []).reverse();
+        if(localStorage.getItem('diagnosticSessions')) this.sessions = JSON.parse(localStorage.getItem('diagnosticSessions') || []).reverse();
     }
 };
 </script>
