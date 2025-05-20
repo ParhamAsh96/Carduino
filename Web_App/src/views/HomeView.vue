@@ -3,13 +3,13 @@
 
 <template>
   <main>
-    <div class="container flex flex-col mt-50 mb-20 mx-auto gap-8">
+    <div class="container flex flex-col mt-20 mb-20 mx-auto gap-8">
       <div>
         <ul>
           <li class="flex flex-col lg:flex-row lg:items-start gap-8">
             <img
-              src="/test2.png"
-              alt="test"
+              src="/Home_page/carduino_transparent.png"
+              alt="Carduino"
               class="box-border block w-100 h-100 object-contain"
             />
 
@@ -17,7 +17,7 @@
               class="text-[#0f0f0f] container text-justify p-8 max-lg:mb-20 max-lg:-mt-10"
             >
               The Carduino offers a comprehensive suite of smart features. It
-              automatically logs historical data, capturing every temperature
+              automatically logs historical data, capturing every temperatqure
               extreme, top-speed run and total distance covered, while a live
               trip page displays current temperature, speed and distance from
               the moment you set off. A unified control dashboard lets you
@@ -34,72 +34,6 @@
               switch on through the control page whenever you need extra
               illumination, and an energy-saving auto-shutdown powers the car
               down after prolonged inactivity.
-            </p>
-          </li>
-        </ul>
-      </div>
-
-      <div>
-        <ul>
-          <li class="flex flex-col lg:flex-row lg:items-start gap-8">
-            <img
-              src="/test.png"
-              alt="test"
-              class="box-border block w-100 h-100 object-contain"
-            />
-
-            <p
-              class="text-[#0f0f0f] container text-justify p-8 max-lg:mb-20 max-lg:-mt-10"
-            >
-              Lorem, ipsum dolor sit amet consectetur adipisicing elit. Sed
-              eligendi explicabo saepe quidem assumenda corrupti culpa
-              recusandae aliquam ut aspernatur, sit nisi! Ullam accusantium
-              dolorum laboriosam explicabo, tenetur reprehenderit fugiat! Lorem,
-              ipsum dolor sit amet consectetur adipisicing elit. Sed eligendi
-              explicabo saepe quidem assumenda corrupti culpa recusandae aliquam
-              ut aspernatur, sit nisi! Ullam accusantium dolorum laboriosam
-              explicabo, tenetur reprehenderit fugiat! Lorem, ipsum dolor sit
-              amet consectetur adipisicing elit. Sed eligendi explicabo saepe
-              quidem assumenda corrupti culpa recusandae aliquam ut aspernatur,
-              sit nisi! Ullam accusantium dolorum laboriosam explicabo, tenetur
-              reprehenderit fugiat! Lorem, ipsum dolor sit amet consectetur
-              adipisicing elit. Sed eligendi explicabo saepe quidem assumenda
-              corrupti culpa recusandae aliquam ut aspernatur, sit nisi! Ullam
-              accusantium dolorum laboriosam explicabo, tenetur reprehenderit
-              fugiat!
-            </p>
-          </li>
-        </ul>
-      </div>
-
-      <div>
-        <ul>
-          <li class="flex flex-col lg:flex-row lg:items-start gap-8">
-            <img
-              src="/test.png"
-              alt="test"
-              class="box-border block w-100 h-100 object-contain"
-            />
-
-            <p
-              class="text-[#0f0f0f] container text-justify p-8 max-lg:mb-20 max-lg:-mt-10"
-            >
-              Lorem, ipsum dolor sit amet consectetur adipisicing elit. Sed
-              eligendi explicabo saepe quidem assumenda corrupti culpa
-              recusandae aliquam ut aspernatur, sit nisi! Ullam accusantium
-              dolorum laboriosam explicabo, tenetur reprehenderit fugiat! Lorem,
-              ipsum dolor sit amet consectetur adipisicing elit. Sed eligendi
-              explicabo saepe quidem assumenda corrupti culpa recusandae aliquam
-              ut aspernatur, sit nisi! Ullam accusantium dolorum laboriosam
-              explicabo, tenetur reprehenderit fugiat! Lorem, ipsum dolor sit
-              amet consectetur adipisicing elit. Sed eligendi explicabo saepe
-              quidem assumenda corrupti culpa recusandae aliquam ut aspernatur,
-              sit nisi! Ullam accusantium dolorum laboriosam explicabo, tenetur
-              reprehenderit fugiat! Lorem, ipsum dolor sit amet consectetur
-              adipisicing elit. Sed eligendi explicabo saepe quidem assumenda
-              corrupti culpa recusandae aliquam ut aspernatur, sit nisi! Ullam
-              accusantium dolorum laboriosam explicabo, tenetur reprehenderit
-              fugiat!
             </p>
           </li>
         </ul>
