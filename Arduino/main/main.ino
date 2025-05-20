@@ -55,7 +55,7 @@ PubSubClient client(wifiClient);
 AccelerometerSensor accelerometer(client,speedTopic);
 TemperatureSensor temperatureSensor(client,temperatureTopic);
 
-LineFinder lineSensor(client, lineTopic, A2);
+LineFinder linefinder (client, lineTopic, A2);
 
 
 
@@ -120,7 +120,7 @@ void loop()
 
   
 
-  lineSensor.checkAndTriggerAutoBrake();
+  linefinder.checkAndTriggerAutoBrake();
 
   // MQTT Updates should be done inside this if statement to avoid publishing to the different topics too often.
   if (deltaTime >= 1){
@@ -129,7 +129,7 @@ void loop()
 
     accelerometer.publishMQTT(accelerometer.getSensorValue());
     temperatureSensor.publishMQTT(temperatureSensor.getSensorValue());
-    lineSensor.publishMQTT(linesensor.getSensorValue());
+    linefinder.publishMQTT(linefinder.getSensorValue());
 
     // Need to add a function to check if the car is moving or not to restart the speed since it only accumulates...
     accelerometer.publishMQTT(distanceTopic,accelerometer.getTravelledDistance());
