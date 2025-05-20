@@ -1,4 +1,3 @@
-#include "Arduino.h"
 #include "LIS3DHTR.h"
 #include "PubSubClient.h"
 #include "ArduinoSensor.h"
