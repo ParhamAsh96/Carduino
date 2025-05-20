@@ -10,7 +10,7 @@
             <img
               src="/Home_page/carduino_transparent.png"
               alt="Carduino"
-              class="box-border block w-100 h-100 object-contain"
+              class="box-border block w-100 h-100 object-contain -mt-15"
             />
 
             <p
