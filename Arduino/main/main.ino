@@ -23,11 +23,6 @@ const char *ID = "Wio-Terminal-Client-meep";  // Name of our device, must be uni
 const char *server = "broker.hivemq.com";
 const uint16_t port = 1883;
 
-// For turning off
-bool running = true;
-double turnOffTimer = RESET_TURN_OFF;
-bool stopLoop = false;
-
 String sub_topics[4] = { 
   "carduino/buzzer",
   "carduino/movement",
@@ -40,8 +35,10 @@ const char* distanceTopic = "carduino/accelerometer/distance";
 const char* temperatureTopic = "carduino/temperature";
 const char* brakeTopic = "carduino/light";
 
-// Brake Light turning on
-bool enabled = true;
+// For turning off
+bool running = true;
+double turnOffTimer = RESET_TURN_OFF;
+bool stopLoop = false;
 
 // For Update Frequency
 double systemTime;
@@ -93,7 +90,7 @@ void setup()
 // loop() runs forever
 void loop()
 {
-  if(!stopLoop){
+  if(!stopLoop) {
     
     // reconnect if connection failed
     if (!client.connected()) {
@@ -167,25 +164,6 @@ void callback(char* topic, byte* payload, unsigned int length) {
   reciever_actions(topic, message);
 }
 
-void turnCarduinoOff(){
-  if(!running || turnOffTimer <= 1) {
-    digitalWrite(2, LOW);// temperatureSensor.
-    digitalWrite(6, LOW);// wheels.
-    digitalWrite(5, LOW);
-    digitalWrite(7, LOW);
-    digitalWrite(8, LOW);
-    digitalWrite(1, LOW); // brakeLight. CLK_PIN(A0), DAT_PIN(A1)
-    digitalWrite(0, LOW); // brakeLight. CLK_PIN(A0), DAT_PIN(A1)
-    digitalWrite(3, LOW); 
-    digitalWrite(4, LOW); 
-    pinMode(A0, LOW);
-    pinMode(A2, LOW);
-    brakeLight.brakeLightOff();
-    stopLoop = true;
-    client.disconnect();
-  }
-}
-
 void reciever_actions(String topic, String message){
   // Honk
   if (topic == "carduino/buzzer"){
@@ -211,7 +189,25 @@ void reciever_actions(String topic, String message){
   }
 }
 
-/* Methods for WIO Terminal hardware */
+
+void turnCarduinoOff(){
+  if(!running || turnOffTimer <= 1) {
+    digitalWrite(2, LOW);// temperatureSensor.
+    digitalWrite(6, LOW);// wheels.
+    digitalWrite(5, LOW);
+    digitalWrite(7, LOW);
+    digitalWrite(8, LOW);
+    digitalWrite(1, LOW); // brakeLight. CLK_PIN(A0), DAT_PIN(A1)
+    digitalWrite(0, LOW); // brakeLight. CLK_PIN(A0), DAT_PIN(A1)
+    digitalWrite(3, LOW); 
+    digitalWrite(4, LOW); 
+    pinMode(A0, LOW);
+    pinMode(A2, LOW);
+    brakeLight.brakeLightOff();
+    stopLoop = true;
+    client.disconnect();
+  }
+}
 
 char notes_tune[] = "ccggaagffeeddc ";
 int beats_tune[] = { 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 2, 4 };
