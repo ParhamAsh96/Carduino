@@ -6,6 +6,7 @@
 #include "linefinder.h" 
 #include "LIS3DHTR.h"
 #include <Wire.h>
+#include <rpcWiFi.h>
 LIS3DHTR<TwoWire> lis;
 
 // Update these with values suitable for your network:

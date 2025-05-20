@@ -9,7 +9,7 @@ class LineFinder{
     void setup();
     void publishMQTT(int sensorValue);
     void publishMQTT();
-    
+    int getSensorValue();
 
     bool isLineDetected();  // Returns whether the line is detected
     void triggerAutoBrake(bool status);
