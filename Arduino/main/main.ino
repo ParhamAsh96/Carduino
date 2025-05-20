@@ -1,10 +1,11 @@
+#include <ChainableLED.h>
 #include <rpcWiFi.h>
 #include <PubSubClient.h>
 #include "LIS3DHTR.h"
 #include "AccelerometerSensor.h"
 #include "TemperatureSensor.h"
 #include "CarController.h"
-#include "LIS3DHTR.h"
+#include "BrakeLight.h"
 
 LIS3DHTR<TwoWire> lis;
 
@@ -20,19 +21,24 @@ const char *server = "broker.hivemq.com"; // ONLINE SERVER
 const uint16_t port = 1883;
 
 
-String sub_topics[4] = { 
+String sub_topics[5] = { 
   "carduino/lcd/print",
   "carduino/buzzer",
   "carduino/movement",
-  "carduino/power/off"
+  "carduino/light",
+  "carduino/power/off",
 };
 
 const char* speedTopic = "carduino/accelerometer/speed";
 const char* distanceTopic = "carduino/accelerometer/distance";
 const char* temperatureTopic = "carduino/temperature";
+const char* brakeTopic = "carduino/light";
 
 // For turning off
 bool running = true;
+
+// Brake Light turning on
+bool enabled = true;
 
 // For Update Frequency
 double systemTime;
@@ -47,19 +53,20 @@ double deltaTime = 0;
 
 WiFiClient wifiClient;
 PubSubClient client(wifiClient);
-AccelerometerSensor accelerometer(client,speedTopic);
-TemperatureSensor temperatureSensor(client,temperatureTopic);
-CarController wheels;
+AccelerometerSensor accelerometer(client, speedTopic);
+TemperatureSensor temperatureSensor(client, temperatureTopic);
+BrakeLight brakeLight;
+CarController wheels(brakeLight);
 
 // setup() and loop() are the main methods for the Arduino
 // setup() runs once
 void setup()
 { 
-
-  // turn on WIO LCD
-  // lcd.begin();
-  // lcd.setRotation(3);
-  // lcd.fillScreen(TFT_BLACK);
+  
+  // to turn on WIO LCD
+  //lcd.begin();
+  //lcd.setRotation(3);
+  //lcd.fillScreen(TFT_BLACK);
 
   // turn on Buzzer
   pinMode(BUZZER_PIN, OUTPUT);
@@ -83,12 +90,11 @@ void setup()
 
   client.setServer(server, port);
   client.setCallback(callback);
-  accelerometer.setup();
-  temperatureSensor.setup();
+  client.subscribe(brakeTopic);
   accelerometer.setup();
   temperatureSensor.setup();
   wheels.setup();
-
+  brakeLight.setup();
 }
 
 // loop() runs forever
@@ -105,10 +111,6 @@ void loop()
   deltaTime += (systemTime - previousTime) / updateIntervalMs;
   previousTime = systemTime;
 
-  
-
-  
-
   // MQTT Updates should be done inside this if statement to avoid publishing to the different topics too often.
   if (deltaTime >= 1){
 
@@ -120,8 +122,7 @@ void loop()
     // Need to add a function to check if the car is moving or not to restart the speed since it only accumulates...
     accelerometer.publishMQTT(distanceTopic,accelerometer.getTravelledDistance());
   }
-  
-  // MQTT client loop to recieve messages 
+
   client.loop();
 }
 
@@ -189,6 +190,11 @@ void reciever_actions(String topic, String message){
   if (topic == "carduino/movement"){
      wheels.wheelsReceiver(message);
     
+  }
+
+  if (topic == "carduino/light"){
+    brakeLight.lightReceiver(message);
+  
   }
 
   if (topic == "carduino/power/off"){

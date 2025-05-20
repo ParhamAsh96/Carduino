@@ -1,3 +1,7 @@
+#ifndef ACCELEROMETERSENSOR_H
+#define ACCELEROMETERSENSOR_H
+
+#include "LIS3DHTR.h"
 #include "ArduinoSensor.h"
 #include "PubSubClient.h"
 
@@ -49,3 +53,5 @@ private:
     const char *topic;
 
 };
+
+#endif
