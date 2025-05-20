@@ -1,10 +1,11 @@
+#include <ChainableLED.h>
 #include <rpcWiFi.h>
 #include <PubSubClient.h>
 #include "LIS3DHTR.h"
 #include "AccelerometerSensor.h"
 #include "TemperatureSensor.h"
-
-#include "LIS3DHTR.h"
+#include "CarController.h"
+#include "BrakeLight.h"
 
 #define RESET_TURN_OFF 300;
 #define BUZZER_PIN WIO_BUZZER // WIO Buzzer
@@ -12,8 +13,8 @@
 LIS3DHTR<TwoWire> lis;
 
 // Update these with values suitable for your network:
-const char *ssid = "iPhoneiee♨️";      // network SSID (Wifi)
-const char *password = "14444444"; // your network password
+const char *ssid = "Parham";      // network SSID (Wifi)
+const char *password = "Parham3000"; // your network password
 
 const char *ID = "Wio-Terminal-Client-meep";  // Name of our device, must be unique
 // 172.20.10.3 - local brocker
@@ -26,20 +27,20 @@ const uint16_t port = 1883;
 bool running = true;
 double turnOffTimer = RESET_TURN_OFF;
 
-const int leftForward = D0;
-const int leftBackward = D1;
-const int rightForward = D3;
-const int rightBackward = D2;
-
-String sub_topics[3] = { 
+String sub_topics[4] = { 
   "carduino/buzzer",
-  "carduino/directions/live-control",
-  "carduino/power/off"
+  "carduino/movement",
+  "carduino/light",
+  "carduino/power/off",
 };
 
 const char* speedTopic = "carduino/accelerometer/speed";
 const char* distanceTopic = "carduino/accelerometer/distance";
 const char* temperatureTopic = "carduino/temperature";
+const char* brakeTopic = "carduino/light";
+
+// Brake Light turning on
+bool enabled = true;
 
 // For Update Frequency
 double systemTime;
@@ -49,13 +50,16 @@ double deltaTime = 0;
 
 WiFiClient wifiClient;
 PubSubClient client(wifiClient);
-AccelerometerSensor accelerometer(client,speedTopic);
-TemperatureSensor temperatureSensor(client,temperatureTopic);
+AccelerometerSensor accelerometer(client, speedTopic);
+TemperatureSensor temperatureSensor(client, temperatureTopic);
+BrakeLight brakeLight;
+CarController wheels(brakeLight);
 
 // setup() and loop() are the main methods for the Arduino
 // setup() runs once
 void setup()
 { 
+
   // turn on Buzzer
   pinMode(BUZZER_PIN, OUTPUT);
 
@@ -78,10 +82,11 @@ void setup()
 
   client.setServer(server, port);
   client.setCallback(callback);
+  client.subscribe(brakeTopic);
   accelerometer.setup();
   temperatureSensor.setup();
-  accelerometer.setup();
-  temperatureSensor.setup();
+  wheels.setup();
+  brakeLight.setup();
 }
 
 // loop() runs forever
@@ -114,8 +119,7 @@ void loop()
     // Need to add a function to check if the car is moving or not to restart the speed since it only accumulates...
     accelerometer.publishMQTT(distanceTopic,accelerometer.getTravelledDistance());
   }
-  
-  // MQTT client loop to recieve messages 
+
   client.loop();
 }
 
@@ -173,17 +177,14 @@ void reciever_actions(String topic, String message){
     if (message == "anthem") honk(2); //pass message as option
   }
 
-  // Print to WIO screen
-  if (topic == "carduino/lcd/print"){
-
-    // currently not used
-
+  if (topic == "carduino/movement"){
+     wheels.wheelsReceiver(message);
+    
   }
 
-  if (topic == "carduino/directions/live-control"){
-    
-    //method for turning the wheels
-    
+  if (topic == "carduino/light"){
+    brakeLight.lightReceiver(message);
+  
   }
 
   if (topic == "carduino/power/off"){
@@ -200,6 +201,7 @@ int beats_tune[] = { 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 2, 4 };
 char notes_anthem[] = "ggecg edc ggecg fed ";
 int beats_anthem[] = {2,2,2,1,1,4, 2,2,4, 2,2,2,1,1,4, 2,2,4, 4};
 int tempo = 200;
+
 
 void honk(int option){
   switch(option){
