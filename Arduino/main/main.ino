@@ -29,12 +29,13 @@ String sub_topics[4] = {
   "carduino/buzzer",
   "carduino/directions/live-control",
   "carduino/power/off"
+  "carduino/lineFinder"
 };
 
 const char* speedTopic = "carduino/accelerometer/speed";
 const char* distanceTopic = "carduino/accelerometer/distance";
 const char* temperatureTopic = "carduino/temperature";
-
+const char* lineTopic = "carduino/lineFinder";
 // For turning off
 bool running = true;
 
@@ -54,7 +55,7 @@ PubSubClient client(wifiClient);
 AccelerometerSensor accelerometer(client,speedTopic);
 TemperatureSensor temperatureSensor(client,temperatureTopic);
 
-LineFinder lineSensor(client, "car/lineFinder", A0);
+LineFinder lineSensor(client, lineTopic, A2);
 
 
 
@@ -100,7 +101,7 @@ void setup()
   temperatureSensor.setup();
   accelerometer.setup();
   temperatureSensor.setup();
-  lineSensor.setup(); 
+  linefinder.setup(); 
 }
 
 // loop() runs forever
@@ -119,7 +120,7 @@ void loop()
 
   
 
-  
+  lineSensor.checkAndTriggerAutoBrake();
 
   // MQTT Updates should be done inside this if statement to avoid publishing to the different topics too often.
   if (deltaTime >= 1){
@@ -128,6 +129,7 @@ void loop()
 
     accelerometer.publishMQTT(accelerometer.getSensorValue());
     temperatureSensor.publishMQTT(temperatureSensor.getSensorValue());
+    lineSensor.publishMQTT(linesensor.getSensorValue());
 
     // Need to add a function to check if the car is moving or not to restart the speed since it only accumulates...
     accelerometer.publishMQTT(distanceTopic,accelerometer.getTravelledDistance());
@@ -136,9 +138,9 @@ void loop()
   // MQTT client loop to recieve messages 
   client.loop();
 
-   lineSensor.checkAndTriggerAutoBrake();
-  lineSensor.publishMQTT(linesensor.getSensorValue());
-    delay(100);
+  
+  
+    
 }
 
 void reconnect() {
