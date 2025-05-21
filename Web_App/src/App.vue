@@ -28,10 +28,10 @@ export default {
       <nav>
         <RouterLink class = "transition delay-150 duration-300 ease-in-out hover:scale-110" to="/">Home</RouterLink>
         <RouterLink class = "transition delay-150 duration-300 ease-in-out hover:scale-110" to="/controlview"> Control </RouterLink>
-        <RouterLink class = "transition delay-150 duration-300 ease-in-out hover:scale-110" to="/linetrackingview"> Line-Tracker </RouterLink>
+        
         <RouterLink class = "transition delay-150 duration-300 ease-in-out hover:scale-110" to="/diagnosticsview">Diagnostics</RouterLink>
         <RouterLink class = "transition delay-150 duration-300 ease-in-out hover:scale-110" to="/musicview">Music</RouterLink>
-        <RouterLink class = "transition delay-150 duration-300 ease-in-out hover:scale-110" to="/guideview">Guide</RouterLink>
+        
         <RouterLink class = "transition delay-150 duration-300 ease-in-out hover:scale-110" to="/about">About</RouterLink>
       </nav>
     </div>
