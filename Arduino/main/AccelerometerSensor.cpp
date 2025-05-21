@@ -57,8 +57,8 @@ float AccelerometerSensor::getZAcceleration(){
     return lis.getAccelerationZ();
 }
 
-float AccelerometerSensor::getTotalAcceleration(float accelerationX, float accelerationY){
-    return sqrt((accelerationX * accelerationX) + (accelerationY * accelerationY) + (accelerationZ * AccelerationZ));
+float AccelerometerSensor::getTotalAcceleration(float accelerationX, float accelerationY, float accelerationZ){
+    return sqrt((accelerationX * accelerationX) + (accelerationY * accelerationY) + (accelerationZ * accelerationZ));
 }
 
 float AccelerometerSensor::getSensorValue() {
