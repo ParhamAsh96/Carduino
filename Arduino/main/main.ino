@@ -1,17 +1,18 @@
-
+#include <ChainableLED.h>
+#include <rpcWiFi.h>
 #include <PubSubClient.h>
 #include "LIS3DHTR.h"
 #include "AccelerometerSensor.h"
 #include "TemperatureSensor.h"
-#include "linefinder.h" 
-#include "LIS3DHTR.h"
+#include "CarController.h"#include "linefinder.h" 
+#include "BrakeLight.h"
 #include <Wire.h>
-#include <rpcWiFi.h>
+
 LIS3DHTR<TwoWire> lis;
 
 // Update these with values suitable for your network:
-const char *ssid = "POCO M5s";      // network SSID (Wifi)
-const char *password = "138013801380"; // your network password
+const char *ssid = "Parham";      // network SSID (Wifi)
+const char *password = "Parham3000"; // your network password
 
 const char *ID = "Wio-Terminal-Client-meep";  // Name of our device, must be unique
 // c172.20.10.3 - local brocker
@@ -20,25 +21,26 @@ const char *ID = "Wio-Terminal-Client-meep";  // Name of our device, must be uni
 const char *server = "broker.hivemq.com"; // ONLINE SERVER
 const uint16_t port = 1883;
 
-const int leftForward = D0;
-const int leftBackward = D1;
-const int rightForward = D3;
-const int rightBackward = D2;
 
-String sub_topics[4] = { 
+String sub_topics[5] = { 
   "carduino/lcd/print",
   "carduino/buzzer",
-  "carduino/directions/live-control",
-  "carduino/power/off"
+  "carduino/movement",
+  "carduino/light",
+  "carduino/power/off",
   "carduino/lineFinder"
 };
 
 const char* speedTopic = "carduino/accelerometer/speed";
 const char* distanceTopic = "carduino/accelerometer/distance";
 const char* temperatureTopic = "carduino/temperature";
+const char* brakeTopic = "carduino/light";
 const char* lineTopic = "carduino/lineFinder";
 // For turning off
 bool running = true;
+
+// Brake Light turning on
+bool enabled = true;
 
 // For Update Frequency
 double systemTime;
@@ -53,8 +55,10 @@ double deltaTime = 0;
 
 WiFiClient wifiClient;
 PubSubClient client(wifiClient);
-AccelerometerSensor accelerometer(client,speedTopic);
-TemperatureSensor temperatureSensor(client,temperatureTopic);
+AccelerometerSensor accelerometer(client, speedTopic);
+TemperatureSensor temperatureSensor(client, temperatureTopic);
+BrakeLight brakeLight;
+CarController wheels(brakeLight);
 
 LineFinder linefinder (client, lineTopic, A2);
 
@@ -70,11 +74,11 @@ LineFinder linefinder (client, lineTopic, A2);
 // setup() runs once
 void setup()
 { 
-
-  // turn on WIO LCD
-  // lcd.begin();
-  // lcd.setRotation(3);
-  // lcd.fillScreen(TFT_BLACK);
+  
+  // to turn on WIO LCD
+  //lcd.begin();
+  //lcd.setRotation(3);
+  //lcd.fillScreen(TFT_BLACK);
 
   // turn on Buzzer
   pinMode(BUZZER_PIN, OUTPUT);
@@ -98,10 +102,11 @@ void setup()
 
   client.setServer(server, port);
   client.setCallback(callback);
+  client.subscribe(brakeTopic);
   accelerometer.setup();
   temperatureSensor.setup();
-  accelerometer.setup();
-  temperatureSensor.setup();
+  wheels.setup();
+  brakeLight.setup();
   linefinder.setup(); 
 }
 
@@ -135,8 +140,7 @@ void loop()
     // Need to add a function to check if the car is moving or not to restart the speed since it only accumulates...
     accelerometer.publishMQTT(distanceTopic,accelerometer.getTravelledDistance());
   }
-  
-  // MQTT client loop to recieve messages 
+
   client.loop();
 
   
@@ -205,10 +209,14 @@ void reciever_actions(String topic, String message){
       // print_to_WIO(text);
   }
 
-  if (topic == "carduino/directions/live-control"){
+  if (topic == "carduino/movement"){
+     wheels.wheelsReceiver(message);
     
-    //draw arrows
-    
+  }
+
+  if (topic == "carduino/light"){
+    brakeLight.lightReceiver(message);
+  
   }
 
   if (topic == "carduino/power/off"){
@@ -231,6 +239,7 @@ int beats_tune[] = { 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 2, 4 };
 char notes_anthem[] = "ggecg edc ggecg fed ";
 int beats_anthem[] = {2,2,2,1,1,4, 2,2,4, 2,2,2,1,1,4, 2,2,4, 4};
 int tempo = 200;
+
 
 void honk(int option){
   switch(option){
