@@ -92,6 +92,7 @@ void setup()
   client.setCallback(callback);
   client.subscribe(brakeTopic);
   accelerometer.setup();
+  accelerometer.calibrateAccelerometer();
   temperatureSensor.setup();
   wheels.setup();
   brakeLight.setup();

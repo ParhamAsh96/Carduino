@@ -14,6 +14,8 @@ public:
 
     void setup();
 
+    void calibrateAccelerometer();
+
     void publishMQTT(float sensorValue) override;
 
     void publishMQTT(const char* subTopic,float sensorValue);
@@ -35,6 +37,9 @@ private:
     LIS3DHTR<TwoWire> lis;
 
     // For sensor values
+
+    float calibrationX, calibrationY;
+
     float accelerationX, accelerationY;
     float totalAcceleration;
 

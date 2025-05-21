@@ -39,6 +39,11 @@ void AccelerometerSensor::publishMQTT(const char* subTopic,float sensorValue) {
     client.publish(subTopic, returnMessage);
 }
 
+void AccelerometerSensor::calibrateAccelerometer(){
+    calibrationX = getXAcceleration();
+    calibrationY = getYAcceleration();
+};
+
 float AccelerometerSensor::getXAcceleration(){
     return lis.getAccelerationX();
 }
@@ -53,16 +58,24 @@ float AccelerometerSensor::getTotalAcceleration(float accelerationX, float accel
 
 float AccelerometerSensor::getSensorValue() {
 
-    accelerationX = getXAcceleration();
-    accelerationY = getYAcceleration();
+    /* 
+    The Wio has a base acceleration around -1 in total depending on the rotation of the wio which has to be accounted for.
+    We account for this by calibrating before the car starts moving and removing it everytime we receive the speed.
+    */
+    accelerationX = getXAcceleration() - calibrationX;
+    accelerationY = getYAcceleration() - calibrationY;
 
-    // Account for drift in values.
+
+    /* 
+    The values might drift a bit, since we know the arduino will not accelerate with an acceleration of only 0.07
+    we can safely remove anything less than that.
+    */
     accelerationX = (abs(accelerationX) < 0.07) ? 0 : accelerationX;
     accelerationY = (abs(accelerationY) < 0.07) ? 0 : accelerationY;
     
     totalAcceleration = getTotalAcceleration(accelerationX,accelerationY);
 
-
+    // Find out if the acceleration is negative (driving backwards)
     if ((accelerationX * accelerationY) < 0 ){
         totalAcceleration = totalAcceleration * -1;
     }
