@@ -23,16 +23,32 @@ void CarController::setup() {
 }
 
 void CarController::arrowUp() {
-    digitalWrite(leftForward, HIGH);
-    digitalWrite(rightForward, HIGH);
+    if (goingLeft){
+        digitalWrite(rightForward, HIGH);
+    }
+    else if (goingRight){
+        digitalWrite(leftForward, HIGH);
+    }
+    else{
+        digitalWrite(leftForward, HIGH);
+        digitalWrite(rightForward, HIGH);
+    }
     goingForward = true;
     brakeLight.brakeLightOff();
 }
 
 
 void CarController::arrowDown() {
-    digitalWrite(leftBackward, HIGH);
-    digitalWrite(rightBackward, HIGH);
+    if (goingLeft){
+        digitalWrite(rightBackward, HIGH);
+    }
+    else if (goingRight){
+        digitalWrite(leftBackward, HIGH);
+    }
+    else{
+        digitalWrite(leftBackward, HIGH);
+        digitalWrite(rightBackward, HIGH);
+    }
     goingBackward = true;
     brakeLight.brakeLightOnWhite();
 }
@@ -48,7 +64,8 @@ void CarController::arrowLeft() {
         digitalWrite(leftBackward, LOW);
         brakeLight.brakeLightOnWhite();
     }
-
+    goingLeft = true;
+    
 }
 
 void CarController::arrowRight() {
@@ -62,6 +79,7 @@ void CarController::arrowRight() {
         digitalWrite(rightBackward, LOW);
         brakeLight.brakeLightOnWhite();
     }
+    goingRight = true;
     
 }
 
@@ -90,6 +108,7 @@ void CarController::arrowLeftStop() {
         digitalWrite(leftBackward, HIGH);
         brakeLight.brakeLightOnWhite();
     }
+    goingLeft = false;
     
 }
 
@@ -104,6 +123,7 @@ void CarController::arrowRightStop() {
         digitalWrite(rightBackward, HIGH);
         brakeLight.brakeLightOnWhite();
     }
+    goingRight = false;
 }
 
 void CarController::wheelsReceiver(String message) 
