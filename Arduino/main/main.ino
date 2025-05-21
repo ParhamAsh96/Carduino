@@ -119,7 +119,7 @@ void loop()
       accelerometer.publishMQTT(distanceTopic,accelerometer.getTravelledDistance());
     }
 
-    if (!client.connected()){
+    if (client.connected()){
       client.loop();
     }
 
