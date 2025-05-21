@@ -28,6 +28,8 @@ public:
 
     float getYAcceleration();
 
+    float getZAcceleration();
+
     float getTotalAcceleration(float accelerationX, float accelerationY);
 
     ~AccelerometerSensor();
@@ -38,9 +40,9 @@ private:
 
     // For sensor values
 
-    float calibrationX, calibrationY;
+    float calibrationX, calibrationY, calibrationZ;
 
-    float accelerationX, accelerationY;
+    float accelerationX, accelerationY, accelerationZ;
     float totalAcceleration;
 
     // For calculating changes in speed.

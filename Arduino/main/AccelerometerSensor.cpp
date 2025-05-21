@@ -42,6 +42,7 @@ void AccelerometerSensor::publishMQTT(const char* subTopic,float sensorValue) {
 void AccelerometerSensor::calibrateAccelerometer(){
     calibrationX = getXAcceleration();
     calibrationY = getYAcceleration();
+    calibrationZ = getZAcceleration();
 };
 
 float AccelerometerSensor::getXAcceleration(){
@@ -50,6 +51,10 @@ float AccelerometerSensor::getXAcceleration(){
 
 float AccelerometerSensor::getYAcceleration(){
     return lis.getAccelerationY();
+}
+
+float AccelerometerSensor::getZAcceleration(){
+    return lis.getAccelerationZ();
 }
 
 float AccelerometerSensor::getTotalAcceleration(float accelerationX, float accelerationY){
