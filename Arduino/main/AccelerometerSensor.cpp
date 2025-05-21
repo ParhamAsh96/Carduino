@@ -23,6 +23,10 @@ void AccelerometerSensor::setup() {
 
     previousSpeedTime = millis();
 
+    calibrationX = 0;
+    calibrationY = 0;
+    calibrationZ = 0;
+
     calibrateAccelerometer();
 }
 
@@ -64,8 +68,8 @@ float AccelerometerSensor::getZAcceleration(){
     return accelerationZ;
 }
 
-float AccelerometerSensor::getTotalAcceleration(float accelerationX, float accelerationY, float accelerationZ){
-    return sqrt((accelerationX * accelerationX) + (accelerationY * accelerationY) + (accelerationZ * accelerationZ));
+float AccelerometerSensor::getTotalAcceleration(float xAcceleration, float yAcceleration, float zAcceleration){
+    return sqrt((xAcceleration * xAcceleration) + (yAcceleration * yAcceleration) + (zAcceleration * zAcceleration));
 }
 
 float AccelerometerSensor::getSensorValue() {
@@ -82,17 +86,17 @@ float AccelerometerSensor::getSensorValue() {
         totalAcceleration = totalAcceleration * -1;
     }
 
-    arduinoSpeed = updateSpeed();
+    arduinoSpeed = updateSpeed(totalAcceleration);
 
     return arduinoSpeed;
 }
 
-float AccelerometerSensor::updateSpeed(){
+float AccelerometerSensor::updateSpeed(float acceleration){
     currentAccelerationTime = millis();
     currentSpeedTime = millis();
 
     // Assuming constant acceleration in the timeframe.
-    arduinoSpeed = previousSpeed + totalAcceleration * (currentAccelerationTime - previousAccelerationTime) / msRatio;
+    arduinoSpeed = previousSpeed + acceleration * (currentAccelerationTime - previousAccelerationTime) / msRatio;
     
 
     // Distance travelled also needs to be updated in here so we can get the proper speed.

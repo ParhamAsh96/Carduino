@@ -67,7 +67,7 @@ private:
     PubSubClient& client;
     const char *topic;
 
-    float updateDistance();
+    float updateDistance(float acceleration);
     float updateSpeed();
 };
 

@@ -92,7 +92,6 @@ void setup()
   client.setCallback(callback);
   client.subscribe(brakeTopic);
   accelerometer.setup();
-  accelerometer.calibrateAccelerometer();
   temperatureSensor.setup();
   wheels.setup();
   brakeLight.setup();
@@ -103,7 +102,7 @@ void loop()
 {
   // Update acceleration, speed and distance more frequently. Should lower drift.
   accelerometer.getSensorValue();
-  if ((!wheels.getDrivingStatus()) && accelerometer.getTotalAcceleration(accelerometer.getXAcceleration(), accelerometer.getYAcceleration(), accelerometer.getZAcceleration()) == 0){ // None of the wheels are driving
+  if ((!wheels.getDrivingStatus()) && abs(accelerometer.getTotalAcceleration(accelerometer.getXAcceleration(), accelerometer.getYAcceleration(), accelerometer.getZAcceleration())) < 0.1){ // None of the wheels are driving
     accelerometer.restartSpeed();
   } 
 
