@@ -21,6 +21,12 @@ public:
     float getSensorValue() override;
 
     float getTravelledDistance();
+    
+    float getXAcceleration();
+
+    float getYAcceleration();
+
+    float getTotalAcceleration(float accelerationX, float accelerationY);
 
     ~AccelerometerSensor();
 private:
@@ -29,7 +35,7 @@ private:
     LIS3DHTR<TwoWire> lis;
 
     // For sensor values
-    float xValue, yValue, zValue;
+    float accelerationX, accelerationY;
     float totalAcceleration;
 
     // For calculating changes in speed.

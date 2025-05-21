@@ -39,26 +39,31 @@ void AccelerometerSensor::publishMQTT(const char* subTopic,float sensorValue) {
     client.publish(subTopic, returnMessage);
 }
 
+float AccelerometerSensor::getXAcceleration(){
+    return lis.getAccelerationX();
+}
+
+float AccelerometerSensor::getYAcceleration(){
+    return lis.getAccelerationY();
+}
+
+float AccelerometerSensor::getTotalAcceleration(float accelerationX, float accelerationY){
+    return sqrt((accelerationX * accelerationX) + (accelerationY * accelerationY));
+}
+
 float AccelerometerSensor::getSensorValue() {
 
-
-    xValue = lis.getAccelerationX();
-    yValue = lis.getAccelerationY();
-    /* 
-    zValue has some noise and shows 1 less than the actual acceleration. (-1 when standing still) 
-    This depends on how the Arduino is positioned and has to be accounted for when placing the arduino in the chassis.
-    */
-    zValue = lis.getAccelerationZ() + 1;
-
+    accelerationX = getXAcceleration();
+    accelerationY = getYAcceleration();
 
     // Account for drift in values.
-    xValue = (abs(xValue) < 0.07) ? 0 : xValue;
-    yValue = (abs(yValue) < 0.07) ? 0 : yValue;
+    accelerationX = (abs(accelerationX) < 0.07) ? 0 : accelerationX;
+    accelerationY = (abs(accelerationY) < 0.07) ? 0 : accelerationY;
     
-    totalAcceleration = sqrt((xValue * xValue) + (yValue * yValue));
+    totalAcceleration = getTotalAcceleration(accelerationX,accelerationY);
 
 
-    if ((xValue * yValue) < 0 ){
+    if ((accelerationX * accelerationY) < 0 ){
         totalAcceleration = totalAcceleration * -1;
     }
 
