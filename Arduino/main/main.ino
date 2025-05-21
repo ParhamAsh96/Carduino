@@ -7,22 +7,22 @@
 #include "CarController.h"
 #include "BrakeLight.h"
 
+#define BUZZER_PIN WIO_BUZZER // WIO Buzzer
+
 LIS3DHTR<TwoWire> lis;
 
 // Update these with values suitable for your network:
-const char *ssid = "Parham";      // network SSID (Wifi)
-const char *password = "Parham3000"; // your network password
+const char *ssid = "iPhoneiee♨️";      // network SSID (Wifi)
+const char *password = "14444444"; // your network password
 
 const char *ID = "Wio-Terminal-Client-meep";  // Name of our device, must be unique
-// c172.20.10.3 - local brocker
+// 172.20.10.3 - local brocker
 // broker.hivemq.com
 // test.mosquitto.org
 const char *server = "broker.hivemq.com"; // ONLINE SERVER
 const uint16_t port = 1883;
 
-
-String sub_topics[5] = { 
-  "carduino/lcd/print",
+String sub_topics[4] = { 
   "carduino/buzzer",
   "carduino/movement",
   "carduino/light",
@@ -46,10 +46,9 @@ double previousTime = millis();
 double updateIntervalMs = 1000;
 double deltaTime = 0;
 
-// TFT_eSPI lcd; // WIO LCD Display
-
-#define BUZZER_PIN WIO_BUZZER // WIO Buzzer
-#define LCD_BACKLIGHT (72Ul) // Control Pin of LCD
+// To check topics and messages inside other methods
+String recTopic = " ";
+String recMsg = " ";
 
 WiFiClient wifiClient;
 PubSubClient client(wifiClient);
@@ -62,11 +61,6 @@ CarController wheels(brakeLight);
 // setup() runs once
 void setup()
 { 
-  
-  // to turn on WIO LCD
-  //lcd.begin();
-  //lcd.setRotation(3);
-  //lcd.fillScreen(TFT_BLACK);
 
   // turn on Buzzer
   pinMode(BUZZER_PIN, OUTPUT);
@@ -103,6 +97,7 @@ void loop()
 
   // reconnect if connection failed
   if (!client.connected()) {
+    preventPins();
     reconnect();
   }
 
@@ -140,10 +135,6 @@ void reconnect() {
       for(String topic : sub_topics){
          client.subscribe(topic.c_str());
       }
-      // client.subscribe("carduino/lcd/print");
-      // client.subscribe("carduino/buzzer/honk");
-      // client.subscribe("carduino/directions/live-control");
-      // client.subscribe("carduino/power/off");
       Serial.println("Subcribed to all topics");
     }
     else {
@@ -169,22 +160,25 @@ void callback(char* topic, byte* payload, unsigned int length) {
   }
   Serial.println();
 
-  reciever_actions(topic, message);
+  setRecTopic(topic);
+  setMessage(message);
+
+  if (!checkPins()) reciever_actions(topic, message);
 }
+
+void setRecTopic(String topic){
+  recTopic = topic;
+}
+
+void setMessage(String msg){
+  recMsg = msg;
+};
 
 void reciever_actions(String topic, String message){
   // Honk
   if (topic == "carduino/buzzer"){
-    if (message == "honk") honk(0); //pass message as option
-    if (message == "tune") honk(1); //pass message as option
-    if (message == "anthem") honk(2); //pass message as option
-  }
+    tuneReceiver(message);
 
-  // Print to WIO screen
-  if (topic == "carduino/lcd/print"){
-      // String text = "";
-      // text.concat(message);
-      // print_to_WIO(text);
   }
 
   if (topic == "carduino/movement"){
@@ -204,22 +198,33 @@ void reciever_actions(String topic, String message){
   }
 }
 
-/* Methods for WIO Terminal */
-
-void print_to_WIO(String message){
-  // lcd.fillScreen(TFT_BLACK);
-  // lcd.setTextSize(2);
-  // lcd.drawString(message, 0, 10);
-}
-
+#define BUZZER_PIN WIO_BUZZER // WIO Buzzer
 char notes_tune[] = "ccggaagffeeddc ";
 int beats_tune[] = { 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 2, 4 };
 char notes_anthem[] = "ggecg edc ggecg fed ";
 int beats_anthem[] = {2,2,2,1,1,4, 2,2,4, 2,2,2,1,1,4, 2,2,4, 4};
 int tempo = 200;
 
+bool buzzerRuns = false;
+
+bool checkPins(){
+  if(buzzerRuns){
+    buzzerRuns = false;
+    return true;
+  }
+  return false;
+}
+
+void tuneReceiver(String message){
+  buzzerRuns = true;
+  if (message == "honk") honk(0); //pass message as option
+  if (message == "tune") honk(1); //pass message as option
+  if (message == "anthem") honk(2); //pass message as option
+  buzzerRuns = false;
+}
 
 void honk(int option){
+  Serial.print("honk");
   switch(option){
     case 0: // honk
       playTone(1519,1000);
@@ -238,8 +243,10 @@ void readMusicSheet(char notes[], int beats[], int length) {
   for(int i = 0; i < length; i++) {
     if(notes[i] == ' ') {
         delay(beats[i] * tempo);
+        if (checkmqtt()) return;
     } else {
         playNote(notes[i], beats[i] * tempo);
+        if (checkmqtt()) return;
     }
     delay(tempo / 2); //delay between notes 
   }
@@ -254,6 +261,7 @@ void playNote(char note, int duration) {
   for (int i = 0; i < 8; i++) {
     if (names[i] == note) {
       playTone(tones[i], duration);
+      if (checkmqtt()) return;
     }
   }
 }
@@ -262,9 +270,22 @@ void playTone(int tone, int duration) {
   for (long i = 0; i < duration * 1000L; i += tone * 2) {
     digitalWrite(BUZZER_PIN, HIGH);
     delayMicroseconds(tone);
+    // if (checkmqtt()) return;
     digitalWrite(BUZZER_PIN, LOW);
     delayMicroseconds(tone);
+    // if (checkmqtt()) return;
+    Serial.print("wap");
   }
 }
 
+bool checkmqtt() {
+  client.loop();
+  return (recTopic == "carduino/movement");
+}
 
+void preventPins() {
+  digitalWrite(D5, LOW);
+  digitalWrite(D6, LOW);
+  digitalWrite(D7, LOW);
+  digitalWrite(D8, LOW);
+}
