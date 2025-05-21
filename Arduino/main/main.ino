@@ -284,8 +284,8 @@ void playTone(int tone, int duration) {
 void preventPins() {
   reciever_actions(" "," ");
   Serial.println('stop wheels');
-  digitalWrite(D5, LOW);
-  digitalWrite(D6, LOW);
-  digitalWrite(D7, LOW);
-  digitalWrite(D8, LOW);
+  digitalWrite((int)D5, LOW);
+  digitalWrite((int)D6, LOW);
+  digitalWrite((int)D7, LOW);
+  digitalWrite((int)D8, LOW);
 }
