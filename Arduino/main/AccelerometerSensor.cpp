@@ -23,6 +23,7 @@ void AccelerometerSensor::setup() {
 
     previousSpeedTime = millis();
 
+    calibrateAccelerometer();
 }
 
 void AccelerometerSensor::publishMQTT(float sensorValue) {
@@ -46,15 +47,21 @@ void AccelerometerSensor::calibrateAccelerometer(){
 };
 
 float AccelerometerSensor::getXAcceleration(){
-    return lis.getAccelerationX();
+    accelerationX = lis.getAccelerationX() - calibrationX;
+    accelerationX = (abs(accelerationX) < 0.07) ? 0 : accelerationX;
+    return accelerationX;
 }
 
 float AccelerometerSensor::getYAcceleration(){
-    return lis.getAccelerationY();
+    accelerationY = lis.getAccelerationY() - calibrationY;
+    accelerationY = (abs(accelerationY) < 0.07) ? 0 : accelerationY;
+    return accelerationY;
 }
 
 float AccelerometerSensor::getZAcceleration(){
-    return lis.getAccelerationZ();
+    accelerationZ = lis.getAccelerationZ() - calibrationZ;
+    accelerationZ = (abs(accelerationZ) < 0.07) ? 0 : accelerationZ;
+    return accelerationZ;
 }
 
 float AccelerometerSensor::getTotalAcceleration(float accelerationX, float accelerationY, float accelerationZ){
@@ -63,21 +70,10 @@ float AccelerometerSensor::getTotalAcceleration(float accelerationX, float accel
 
 float AccelerometerSensor::getSensorValue() {
 
-    /* 
-    The Wio has a base acceleration around -1 in total depending on the rotation of the wio which has to be accounted for.
-    We account for this by calibrating before the car starts moving and removing it everytime we receive the speed.
-    */
-    accelerationX = getXAcceleration() - calibrationX;
-    accelerationY = getYAcceleration() - calibrationY;
-    accelerationZ = getZAcceleration() - calibrationZ;
 
-    /* 
-    The values might drift a bit, since we know the arduino will not accelerate with an acceleration of only 0.07
-    we can safely remove anything less than that.
-    */
-    accelerationX = (abs(accelerationX) < 0.07) ? 0 : accelerationX;
-    accelerationY = (abs(accelerationY) < 0.07) ? 0 : accelerationY;
-    accelerationZ = (abs(accelerationZ) < 0.07) ? 0 : accelerationZ;
+    accelerationX = getXAcceleration();
+    accelerationY = getYAcceleration();
+    accelerationZ = getZAcceleration();
 
     totalAcceleration = getTotalAcceleration(accelerationX,accelerationY, accelerationZ);
 
@@ -112,6 +108,10 @@ float AccelerometerSensor::updateSpeed(){
 
 float AccelerometerSensor::updateDistance(){
     return abs(((arduinoSpeed + previousSpeed) / 2) * ((currentSpeedTime - previousSpeedTime) / msRatio));
+}
+
+void AccelerometerSensor::restartSpeed(){
+    arduinoSpeed = 0;
 }
 
 float AccelerometerSensor::getTravelledDistance(){

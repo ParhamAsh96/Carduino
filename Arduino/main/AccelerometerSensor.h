@@ -16,6 +16,8 @@ public:
 
     void calibrateAccelerometer();
 
+    void restartSpeed();
+
     void publishMQTT(float sensorValue) override;
 
     void publishMQTT(const char* subTopic,float sensorValue);
