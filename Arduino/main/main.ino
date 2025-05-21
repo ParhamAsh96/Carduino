@@ -7,6 +7,7 @@
 #include "CarController.h"
 #include "BrakeLight.h"
 
+#define RESET_TURN_OFF 300;
 #define BUZZER_PIN WIO_BUZZER // WIO Buzzer
 
 LIS3DHTR<TwoWire> lis;
@@ -217,7 +218,7 @@ void honk(int option){
     case 2: // anthem
       readMusicSheet(notes_anthem, beats_anthem, 19);
       break;
-    default: Serial.println("waa");
+    default: Serial.println("tune not found");
   }
 }
 
