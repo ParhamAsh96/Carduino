@@ -127,3 +127,6 @@ void CarController::wheelsReceiver(String message)
         }
     
 }
+bool CarController::getDrivingStatus(){
+    return (goingForward && goingBackward);
+}

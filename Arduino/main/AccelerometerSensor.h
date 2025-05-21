@@ -65,6 +65,8 @@ private:
     PubSubClient& client;
     const char *topic;
 
+    float updateDistance();
+    float updateSpeed();
 };
 
 #endif
