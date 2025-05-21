@@ -6,8 +6,9 @@
 #include "TemperatureSensor.h"
 #include "CarController.h"
 #include "BrakeLight.h"
+#include "Tunes.h"
 
-#define BUZZER_PIN WIO_BUZZER // WIO Buzzer
+#define RESET_TURN_OFF 300;
 
 LIS3DHTR<TwoWire> lis;
 
@@ -36,9 +37,8 @@ const char* brakeTopic = "carduino/light";
 
 // For turning off
 bool running = true;
-
-// Brake Light turning on
-bool enabled = true;
+double turnOffTimer = RESET_TURN_OFF;
+bool stopLoop = false;
 
 // For Update Frequency
 double systemTime;
@@ -56,6 +56,7 @@ AccelerometerSensor accelerometer(client, speedTopic);
 TemperatureSensor temperatureSensor(client, temperatureTopic);
 BrakeLight brakeLight;
 CarController wheels(brakeLight);
+Tunes tunes(&client, &recTopic);
 
 // setup() and loop() are the main methods for the Arduino
 // setup() runs once
@@ -89,6 +90,7 @@ void setup()
   temperatureSensor.setup();
   wheels.setup();
   brakeLight.setup();
+  tunes.setup();
 }
 
 // loop() runs forever
@@ -163,7 +165,7 @@ void callback(char* topic, byte* payload, unsigned int length) {
   setRecTopic(topic);
   setMessage(message);
 
-  if (!checkPins()) reciever_actions(topic, message);
+  if (!tunes.checkWheels()) reciever_actions(topic, message);
 }
 
 void setRecTopic(String topic){
@@ -177,7 +179,7 @@ void setMessage(String msg){
 void reciever_actions(String topic, String message){
   // Honk
   if (topic == "carduino/buzzer"){
-    tuneReceiver(message);
+    tunes.tuneReceiver(message);
 
   }
 
@@ -196,91 +198,6 @@ void reciever_actions(String topic, String message){
     if (message == "12345678Sivert") running = false;
 
   }
-}
-
-#define BUZZER_PIN WIO_BUZZER // WIO Buzzer
-char notes_tune[] = "ccggaagffeeddc ";
-int beats_tune[] = { 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 2, 4 };
-char notes_anthem[] = "ggecg edc ggecg fed ";
-int beats_anthem[] = {2,2,2,1,1,4, 2,2,4, 2,2,2,1,1,4, 2,2,4, 4};
-int tempo = 200;
-
-bool buzzerRuns = false;
-
-bool checkPins(){
-  if(buzzerRuns){
-    buzzerRuns = false;
-    return true;
-  }
-  return false;
-}
-
-void tuneReceiver(String message){
-  buzzerRuns = true;
-  if (message == "honk") honk(0); //pass message as option
-  if (message == "tune") honk(1); //pass message as option
-  if (message == "anthem") honk(2); //pass message as option
-  buzzerRuns = false;
-}
-
-void honk(int option){
-  Serial.print("honk");
-  switch(option){
-    case 0: // honk
-      playTone(1519,1000);
-      break;
-    case 1: // tune
-      readMusicSheet(notes_tune, beats_tune, 15);
-      break;
-    case 2: // anthem
-      readMusicSheet(notes_anthem, beats_anthem, 19);
-      break;
-    default: Serial.println("waa");
-  }
-}
-
-void readMusicSheet(char notes[], int beats[], int length) {
-  for(int i = 0; i < length; i++) {
-    if(notes[i] == ' ') {
-        delay(beats[i] * tempo);
-        if (checkmqtt()) return;
-    } else {
-        playNote(notes[i], beats[i] * tempo);
-        if (checkmqtt()) return;
-    }
-    delay(tempo / 2); //delay between notes 
-  }
-  return;
-}
-
-void playNote(char note, int duration) {
-  char names[] = { 'c', 'd', 'e', 'f', 'g', 'a', 'b', 'C' };
-  int tones[] = { 1915, 1700, 1519, 1432, 1275, 1136, 1014, 956 };
-
-  // play the tone corresponding to the note name
-  for (int i = 0; i < 8; i++) {
-    if (names[i] == note) {
-      playTone(tones[i], duration);
-      if (checkmqtt()) return;
-    }
-  }
-}
-
-void playTone(int tone, int duration) {
-  for (long i = 0; i < duration * 1000L; i += tone * 2) {
-    digitalWrite(BUZZER_PIN, HIGH);
-    delayMicroseconds(tone);
-    // if (checkmqtt()) return;
-    digitalWrite(BUZZER_PIN, LOW);
-    delayMicroseconds(tone);
-    // if (checkmqtt()) return;
-    Serial.print("wap");
-  }
-}
-
-bool checkmqtt() {
-  client.loop();
-  return (recTopic == "carduino/movement");
 }
 
 void preventPins() {
