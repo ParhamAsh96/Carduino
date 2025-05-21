@@ -58,7 +58,7 @@ float AccelerometerSensor::getZAcceleration(){
 }
 
 float AccelerometerSensor::getTotalAcceleration(float accelerationX, float accelerationY){
-    return sqrt((accelerationX * accelerationX) + (accelerationY * accelerationY));
+    return sqrt((accelerationX * accelerationX) + (accelerationY * accelerationY) + (accelerationZ * AccelerationZ));
 }
 
 float AccelerometerSensor::getSensorValue() {
@@ -69,7 +69,7 @@ float AccelerometerSensor::getSensorValue() {
     */
     accelerationX = getXAcceleration() - calibrationX;
     accelerationY = getYAcceleration() - calibrationY;
-
+    accelerationZ = getZAcceleration() - calibrationZ;
 
     /* 
     The values might drift a bit, since we know the arduino will not accelerate with an acceleration of only 0.07
@@ -77,11 +77,12 @@ float AccelerometerSensor::getSensorValue() {
     */
     accelerationX = (abs(accelerationX) < 0.07) ? 0 : accelerationX;
     accelerationY = (abs(accelerationY) < 0.07) ? 0 : accelerationY;
-    
-    totalAcceleration = getTotalAcceleration(accelerationX,accelerationY);
+    accelerationZ = (abs(accelerationZ) < 0.07) ? 0 : accelerationZ;
+
+    totalAcceleration = getTotalAcceleration(accelerationX,accelerationY, accelerationZ);
 
     // Find out if the acceleration is negative (driving backwards)
-    if ((accelerationX * accelerationY) < 0 ){
+    if ((accelerationX * accelerationY * accelerationZ) < 0 ){
         totalAcceleration = totalAcceleration * -1;
     }
 

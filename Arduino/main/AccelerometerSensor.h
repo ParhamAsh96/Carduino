@@ -30,7 +30,7 @@ public:
 
     float getZAcceleration();
 
-    float getTotalAcceleration(float accelerationX, float accelerationY);
+    float getTotalAcceleration(float accelerationX, float accelerationY, float accelerationZ);
 
     ~AccelerometerSensor();
 private:
