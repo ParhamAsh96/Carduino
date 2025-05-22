@@ -116,6 +116,7 @@ float AccelerometerSensor::updateDistance(){
 
 void AccelerometerSensor::restartSpeed(){
     arduinoSpeed = 0;
+    previousSpeed = 0;
 }
 
 float AccelerometerSensor::getTravelledDistance(){

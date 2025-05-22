@@ -10,8 +10,8 @@
 LIS3DHTR<TwoWire> lis;
 
 // Update these with values suitable for your network:
-const char *ssid = "Parham";      // network SSID (Wifi)
-const char *password = "Parham3000"; // your network password
+const char *ssid = "Test";      // network SSID (Wifi)
+const char *password = "abcdefghi"; // your network password
 
 const char *ID = "Wio-Terminal-Client-meep";  // Name of our device, must be unique
 // c172.20.10.3 - local brocker
@@ -102,7 +102,7 @@ void loop()
 {
   // Update acceleration, speed and distance more frequently. Should lower drift.
   accelerometer.getSensorValue();
-  if ((!wheels.getDrivingStatus()) && abs(accelerometer.getTotalAcceleration(accelerometer.getXAcceleration(), accelerometer.getYAcceleration(), accelerometer.getZAcceleration())) < 0.1){ // None of the wheels are driving
+  if ((!wheels.getDrivingStatus())  && abs(accelerometer.getTotalAcceleration(accelerometer.getXAcceleration(), accelerometer.getYAcceleration(), accelerometer.getZAcceleration())) < 0.25){ // None of the wheels are driving
     accelerometer.restartSpeed();
   } 
 
