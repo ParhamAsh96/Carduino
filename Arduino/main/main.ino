@@ -20,7 +20,7 @@ const char *ID = "Wio-Terminal-Client-meep";  // Name of our device, must be uni
 // 172.20.10.3 - local brocker
 // broker.hivemq.com
 // test.mosquitto.org
-const char *server = "broker.hivemq.com"; // ONLINE SERVER
+const char *server = "broker.hivemq.com";
 const uint16_t port = 1883;
 
 String sub_topics[4] = { 
@@ -97,42 +97,44 @@ void setup()
 void loop()
 {
   if(!stopLoop) {
-
-  // reconnect if connection failed
-  if (!client.connected()) {
-    reconnect();
-  }
+    
+    // reconnect if connection failed
+    if (!client.connected()) {
+      reconnect();
+    }
 
   // Timer functionality
   systemTime = millis();
   deltaTime += (systemTime - previousTime) / updateIntervalMs;
   previousTime = systemTime;
-  /* this if-statememnt runs every 1000 ms */
+
+  // MQTT Updates should be done inside this if statement to avoid publishing to the different topics too often.
   if (deltaTime >= 1){
 
-    deltaTime --;
-    turnOffTimer--;
+      deltaTime --;
+      turnOffTimer--;
 
-    accelerometer.publishMQTT(accelerometer.getSensorValue());
-    temperatureSensor.publishMQTT(temperatureSensor.getSensorValue());
+      accelerometer.publishMQTT(accelerometer.getSensorValue());
+      temperatureSensor.publishMQTT(temperatureSensor.getSensorValue());
 
-    // Need to add a function to check if the car is moving or not to restart the speed since it only accumulates...
-    accelerometer.publishMQTT(distanceTopic,accelerometer.getTravelledDistance());
-  }
+      // Need to add a function to check if the car is moving or not to restart the speed since it only accumulates...
+      accelerometer.publishMQTT(distanceTopic,accelerometer.getTravelledDistance());
+    }
 
-  if (client.connected()){
-    client.loop();
-  }
+    if (client.connected()){
+      client.loop();
+    }
 
-  // turn off the car
+    // turn off the car
   if(!running || turnOffTimer <= 1) turnCarduinoOff();
+  }//stopLoop
 }
 
 void reconnect() {
   while (!client.connected()) // Loop until we reconnected
   {
     Serial.print("Attempting MQTT connection...");
-    // Connect:
+    // Connect
     if (client.connect(ID)) {
       Serial.println("connected");
       // Publish
@@ -153,9 +155,10 @@ void reconnect() {
   }
 }
 
-// The callback function must be provided for PubSubClient (if we subscribe).
+// The callback function is set with "client.setCallback(callback);" .
 // This function is called when new messages arrive at the client. 
 void callback(char* topic, byte* payload, unsigned int length) {
+  turnOffTimer = RESET_TURN_OFF; // Auto-Turn-Off timer resets each time we recieve a message
   Serial.print("Message arrived [");
   Serial.print(topic);
   Serial.print("] ");
@@ -180,7 +183,7 @@ void setRecTopic(String topic){
 
 void setMessage(String msg){
   recMsg = msg;
-};
+}
 
 void reciever_actions(String topic, String message){
   // Honk

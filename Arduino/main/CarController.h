@@ -26,6 +26,8 @@ private:
     int rightBackward;
     bool goingForward;
     bool goingBackward;
+    bool goingRight;
+    bool goingLeft;
     BrakeLight& brakeLight;
 };
 
