@@ -13,8 +13,8 @@
 LIS3DHTR<TwoWire> lis;
 
 // Update these with values suitable for your network:
-const char *ssid = "Test";      // network SSID (Wifi)
-const char *password = "abcdefghi"; // your network password
+const char *ssid = "iPhoneiee♨️";      // network SSID (Wifi)
+const char *password = "14444444"; // your network password
 
 const char *ID = "Wio-Terminal-Client-meep";  // Name of our device, must be unique
 // 172.20.10.3 - local brocker
@@ -24,10 +24,10 @@ const char *server = "broker.hivemq.com";
 const uint16_t port = 1883;
 
 String sub_topics[4] = { 
-  "carduino/buzzer",
   "carduino/movement",
+  "carduino/buzzer",
   "carduino/light",
-  "carduino/power/off",
+  "carduino/power/off"
 };
 
 const char* speedTopic = "carduino/accelerometer/speed";
@@ -99,8 +99,8 @@ void loop()
 
     if(WiFi.status() != WL_CONNECTED) {
       preventPins();
-      WiFi.begin(ssid, password);
-      reconnect();
+      Serial.println("HALT");
+      setup();
     }
 
     // Update acceleration, speed and distance more frequently. Should lower drift.
@@ -109,7 +109,7 @@ void loop()
       accelerometer.restartSpeed();
     }
     
-    // reconnect if connection failed
+        // reconnect if connection failed
     if (!client.connected()) {
       reconnect();
     }
@@ -192,7 +192,7 @@ void setRecTopic(String topic){
 
 void setMessage(String msg){
   recMsg = msg;
-};
+}
 
 void reciever_actions(String topic, String message){
   // Honk
@@ -218,7 +218,6 @@ void reciever_actions(String topic, String message){
 
   }
 }
-
 
 void turnCarduinoOff(){
   digitalWrite(2, LOW);// temperatureSensor.
@@ -293,21 +292,13 @@ void playTone(int tone, int duration) {
 }
 
 void preventPins() {
+  reciever_actions(" "," ");
   int leftForward = D6;
   int leftBackward = D5;
   int rightForward = D7;
   int rightBackward = D8;
-  reciever_actions(" "," ");
   digitalWrite(leftForward, LOW);
   digitalWrite(leftBackward, LOW);
   digitalWrite(rightForward, LOW);
   digitalWrite(rightBackward, LOW);
-  digitalWrite(static_cast<uint8_t>(D5), LOW);
-  digitalWrite(static_cast<uint8_t>(D6), LOW);
-  digitalWrite(static_cast<uint8_t>(D7), LOW);
-  digitalWrite(static_cast<uint8_t>(D8), LOW);
-  wheels.arrowUpStop();
-  wheels.arrowDownStop();
-  wheels.arrowLeftStop(); 
-  wheels.arrowRightStop();
 }

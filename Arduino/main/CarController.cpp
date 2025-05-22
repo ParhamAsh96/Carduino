@@ -16,6 +16,11 @@ void CarController::setup() {
     rightForward = D7;
     rightBackward = D8;
 
+    goingForward = false;
+    goingBackward = false;
+    goingRight = false;
+    goingLeft = false;
+
     pinMode(leftForward, OUTPUT);
     pinMode(leftBackward, OUTPUT);
     pinMode(rightForward, OUTPUT);
