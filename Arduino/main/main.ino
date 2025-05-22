@@ -95,10 +95,15 @@ void setup()
 void loop()
 {
   if(!stopLoop) {
+
+    if(WiFi.status() != WL_CONNECTED) {
+      preventPins();
+      WiFi.begin(ssid, password);
+      reconnect();
+    }
     
     // reconnect if connection failed
     if (!client.connected()) {
-      preventPins();
       reconnect();
     }
 
@@ -119,7 +124,7 @@ void loop()
       accelerometer.publishMQTT(distanceTopic,accelerometer.getTravelledDistance());
     }
 
-    if (client.connected()){
+    if (client.connected() && WiFi.status() == WL_CONNECTED){
       client.loop();
     }
 
@@ -171,7 +176,7 @@ void callback(char* topic, byte* payload, unsigned int length) {
   setRecTopic(topic);
   setMessage(message);
 
-  /* if (!tunes.checkPins())  */reciever_actions(topic, message);
+  reciever_actions(topic, message);
 }
 
 void setRecTopic(String topic){
@@ -280,16 +285,22 @@ void playTone(int tone, int duration) {
   }
 }
 
-
 void preventPins() {
+  int leftForward = D6;
+  int leftBackward = D5;
+  int rightForward = D7;
+  int rightBackward = D8;
   reciever_actions(" "," ");
+  digitalWrite(leftForward, LOW);
+  digitalWrite(leftBackward, LOW);
+  digitalWrite(rightForward, LOW);
+  digitalWrite(rightBackward, LOW);
+  digitalWrite(static_cast<uint8_t>(D5), LOW);
+  digitalWrite(static_cast<uint8_t>(D6), LOW);
+  digitalWrite(static_cast<uint8_t>(D7), LOW);
+  digitalWrite(static_cast<uint8_t>(D8), LOW);
   wheels.arrowUpStop();
   wheels.arrowDownStop();
   wheels.arrowLeftStop(); 
   wheels.arrowRightStop();
-  Serial.println("stop wheels");
-  // digitalWrite(static_cast<uint8_t>(D5), LOW);
-  // digitalWrite(static_cast<uint8_t>(D6), LOW);
-  // digitalWrite(static_cast<uint8_t>(D7), LOW);
-  // digitalWrite(static_cast<uint8_t>(D8), LOW);
 }
