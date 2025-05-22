@@ -23,6 +23,11 @@ void AccelerometerSensor::setup() {
 
     previousSpeedTime = millis();
 
+    calibrationX = 0;
+    calibrationY = 0;
+    calibrationZ = 0;
+
+    calibrateAccelerometer();
 }
 
 void AccelerometerSensor::publishMQTT(float sensorValue) {
@@ -39,44 +44,79 @@ void AccelerometerSensor::publishMQTT(const char* subTopic,float sensorValue) {
     client.publish(subTopic, returnMessage);
 }
 
+void AccelerometerSensor::calibrateAccelerometer(){
+    calibrationX = getXAcceleration();
+    calibrationY = getYAcceleration();
+    calibrationZ = getZAcceleration();
+};
+
+float AccelerometerSensor::getXAcceleration(){
+    accelerationX = lis.getAccelerationX() - calibrationX;
+    accelerationX = (abs(accelerationX) < 0.07) ? 0 : accelerationX;
+    return accelerationX;
+}
+
+float AccelerometerSensor::getYAcceleration(){
+    accelerationY = lis.getAccelerationY() - calibrationY;
+    accelerationY = (abs(accelerationY) < 0.07) ? 0 : accelerationY;
+    return accelerationY;
+}
+
+float AccelerometerSensor::getZAcceleration(){
+    accelerationZ = lis.getAccelerationZ() - calibrationZ;
+    accelerationZ = (abs(accelerationZ) < 0.07) ? 0 : accelerationZ;
+    return accelerationZ;
+}
+
+float AccelerometerSensor::getTotalAcceleration(float xAcceleration, float yAcceleration, float zAcceleration){
+    return sqrt((xAcceleration * xAcceleration) + (yAcceleration * yAcceleration) + (zAcceleration * zAcceleration));
+}
+
 float AccelerometerSensor::getSensorValue() {
 
 
-    xValue = lis.getAccelerationX();
-    yValue = lis.getAccelerationY();
-    /* 
-    zValue has some noise and shows 1 less than the actual acceleration. (-1 when standing still) 
-    This depends on how the Arduino is positioned and has to be accounted for when placing the arduino in the chassis.
-    */
-    zValue = lis.getAccelerationZ() + 1;
+    accelerationX = getXAcceleration();
+    accelerationY = getYAcceleration();
+    accelerationZ = getZAcceleration();
 
+    totalAcceleration = getTotalAcceleration(accelerationX,accelerationY, accelerationZ);
 
-    // Account for drift in values.
-    xValue = (abs(xValue) < 0.07) ? 0 : xValue;
-    yValue = (abs(yValue) < 0.07) ? 0 : yValue;
-    
-    totalAcceleration = sqrt((xValue * xValue) + (yValue * yValue));
-
-
-    if ((xValue * yValue) < 0 ){
+    // Find out if the acceleration is negative (driving backwards)
+    if ((accelerationX * accelerationY * accelerationZ) < 0 ){
         totalAcceleration = totalAcceleration * -1;
     }
 
+    arduinoSpeed = updateSpeed(totalAcceleration);
+
+    return arduinoSpeed;
+}
+
+float AccelerometerSensor::updateSpeed(float acceleration){
     currentAccelerationTime = millis();
     currentSpeedTime = millis();
 
     // Assuming constant acceleration in the timeframe.
-    arduinoSpeed = previousSpeed + totalAcceleration * (currentAccelerationTime - previousAccelerationTime) / msRatio;
+    arduinoSpeed = previousSpeed + acceleration * (currentAccelerationTime - previousAccelerationTime) / msRatio;
     
 
     // Distance travelled also needs to be updated in here so we can get the proper speed.
-    distanceTravelled += abs(((arduinoSpeed + previousSpeed) / 2) * ((currentSpeedTime - previousSpeedTime) / msRatio));
+    distanceTravelled += updateDistance();
 
+    previousSpeed = arduinoSpeed;
     previousAccelerationTime = currentSpeedTime;
     previousSpeedTime = currentSpeedTime;
-    previousSpeed = arduinoSpeed;
+    
 
     return arduinoSpeed;
+}
+
+float AccelerometerSensor::updateDistance(){
+    return abs(((arduinoSpeed + previousSpeed) / 2) * ((currentSpeedTime - previousSpeedTime) / msRatio));
+}
+
+void AccelerometerSensor::restartSpeed(){
+    arduinoSpeed = 0;
+    previousSpeed = 0;
 }
 
 float AccelerometerSensor::getTravelledDistance(){

@@ -18,6 +18,7 @@ public:
     void arrowLeftStop();                               
     void arrowRightStop();                              
     void wheelsReceiver(String message);  // Message handler
+    bool getDrivingStatus();
 
 private:
     int leftForward;
