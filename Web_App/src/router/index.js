@@ -18,11 +18,7 @@ const router = createRouter({
       name: "control",
       component: () => import("../views/controlview.vue"),
     },
-    {
-      path: "/linetrackingview",
-      name: "linetracking",
-      component: () => import("../views/linetrackingview.vue"),
-    },
+    
     {
       path: "/statisticsview",
       name: "statistics",
@@ -38,11 +34,7 @@ const router = createRouter({
       name: "music",
       component: () => import("../views/musicview.vue"),
     },
-    {
-      path: "/guideview",
-      name: "guide",
-      component: () => import("../views/guideview.vue"),
-    },
+   
     {
       path: "/about",
       name: "about",
