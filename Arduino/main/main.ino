@@ -90,12 +90,14 @@ void setup()
 // loop() runs forever
 void loop()
 {
-  // Update acceleration, speed and distance more frequently. Should lower drift.
-  accelerometer.getSensorValue();
-  if ((!wheels.getDrivingStatus())  && abs(accelerometer.getTotalAcceleration(accelerometer.getXAcceleration(), accelerometer.getYAcceleration(), accelerometer.getZAcceleration())) < 0.25){ // None of the wheels are driving
-    accelerometer.restartSpeed();
-  } 
+  
   if(!stopLoop) {
+
+    // Update acceleration, speed and distance more frequently. Should lower drift.
+    accelerometer.getSensorValue();
+    if ((!wheels.getDrivingStatus())  && abs(accelerometer.getTotalAcceleration(accelerometer.getXAcceleration(), accelerometer.getYAcceleration(), accelerometer.getZAcceleration())) < 0.25){ // None of the wheels are driving
+      accelerometer.restartSpeed();
+    }
     
     // reconnect if connection failed
     if (!client.connected()) {
