@@ -28,10 +28,10 @@ export default {
       <nav>
         <RouterLink class = "transition delay-150 duration-300 ease-in-out hover:scale-110" to="/">Home</RouterLink>
         <RouterLink class = "transition delay-150 duration-300 ease-in-out hover:scale-110" to="/controlview"> Control </RouterLink>
-        <RouterLink class = "transition delay-150 duration-300 ease-in-out hover:scale-110" to="/linetrackingview"> Line-Tracker </RouterLink>
+        
         <RouterLink class = "transition delay-150 duration-300 ease-in-out hover:scale-110" to="/diagnosticsview">Diagnostics</RouterLink>
         <RouterLink class = "transition delay-150 duration-300 ease-in-out hover:scale-110" to="/musicview">Music</RouterLink>
-        <RouterLink class = "transition delay-150 duration-300 ease-in-out hover:scale-110" to="/guideview">Guide</RouterLink>
+        
         <RouterLink class = "transition delay-150 duration-300 ease-in-out hover:scale-110" to="/about">About</RouterLink>
       </nav>
     </div>
@@ -57,7 +57,7 @@ export default {
     text-decoration: none; /* Removes underline from links */
     font-weight: bold;
     font-size: 22px; /* Adjust font size */
-    flex: 0 0 14.285%; /* 12.5% = 7 items per row normally */
+    flex: 0 0 20%; /* 12.5% = 7 items per row normally */
     box-sizing: border-box; /* So padding/margin don't break layout */
     background-color: #0f0f0f;
 

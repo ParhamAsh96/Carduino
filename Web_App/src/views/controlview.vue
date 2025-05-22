@@ -3,47 +3,8 @@
   <div
     class="fixed left-6 top-1/2 transform -translate-y-1/2 flex flex-col space-y-6"
   >
-    <!-- Auto Brake Toggle -->
-    <div
-      @click="toggle('autoBrake')"
-      class="flex items-center space-x-4 cursor-pointer"
-    >
-      <div
-        :class="[
-          'w-12 h-6 flex items-center rounded-full p-1 transition duration-300',
-          autoBrake ? 'bg-[#ffcc00]' : 'bg-gray-400',
-        ]"
-      >
-        <div
-          :class="[
-            'bg-white w-4 h-4 rounded-full shadow-md transform transition duration-300',
-            autoBrake ? 'translate-x-6' : 'translate-x-0',
-          ]"
-        ></div>
-      </div>
-      <span class="text-white text-lg">Auto Brake</span>
-    </div>
+   
 
-    <!-- Front Lights Toggle -->
-    <div
-      @click="toggle('frontLights')"
-      class="flex items-center space-x-4 cursor-pointer"
-    >
-      <div
-        :class="[
-          'w-12 h-6 flex items-center rounded-full p-1 transition duration-300',
-          frontLights ? 'bg-[#ffcc00]' : 'bg-gray-400',
-        ]"
-      >
-        <div
-          :class="[
-            'bg-white w-4 h-4 rounded-full shadow-md transform transition duration-300',
-            frontLights ? 'translate-x-6' : 'translate-x-0',
-          ]"
-        ></div>
-      </div>
-      <span class="text-white text-lg">Front Lights</span>
-    </div>
 
     <!-- Brake Lights Toggle -->
     <div
@@ -67,14 +28,7 @@
     </div>
   </div>
 
-  <!-- Background Video Placeholder -->
-  <div class="fixed inset-0 -z-10 bg-black flex items-center justify-center">
-    <p
-      class="text-white text-xl sm:text-2xl md:text-3xl lg:text-4xl text-center px-4"
-    >
-      Video not available
-    </p>
-  </div>
+  
 
   <!-- Info Section - Top Center -->
   <div class="inset-x-0 flex justify-center space-x-6 mt-8">
