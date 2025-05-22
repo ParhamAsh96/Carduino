@@ -57,7 +57,7 @@ export default {
     text-decoration: none; /* Removes underline from links */
     font-weight: bold;
     font-size: 22px; /* Adjust font size */
-    flex: 0 0 14.285%; /* 12.5% = 7 items per row normally */
+    flex: 0 0 20%; /* 12.5% = 7 items per row normally */
     box-sizing: border-box; /* So padding/margin don't break layout */
     background-color: #0f0f0f;
 
