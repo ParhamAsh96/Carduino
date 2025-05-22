@@ -19,18 +19,16 @@
               The Carduino delivers a rich set of connected features designed
               around performance, convenience and efficiency. It automatically
               logs every temperature extreme, top-speed run and total distance
-              covered, while a live trip page shows you current temperature,
-              speed and distance from the moment you set off. A unified control
-              sound the horn and even play your favorite tunes. Through that
-              same web app's unified control dashboard, using on-screen buttons
-              or PC keyboard shortcuts will let you can steer the car. Lighting
-              has been simplified for maximum clarity and safety. Two rear brake
-              lights, one on the back right and one on the back left glow red
-              when you brake or park, switch to white when you reverse, and
-              remain off when you move forward. Finally, after extended
-              inactivity the Carduino's energy-saving auto-shutdown powers the
-              system down to preserve battery life, so it's always ready when
-              you are.
+              covered, while a control page shows you current temperature, speed
+              and distance from the moment you set off. A unified control sound
+              the horn and even play your favorite tunes. Through that same web
+              app's unified control dashboard, using on-screen buttons or PC
+              keyboard shortcuts will let you steer the car. For saiftey, two
+              rear brake lights, glow red when you brake or park, switch to
+              white when you reverse, and remain off when you move forward.
+              Finally, after extended inactivity the Carduino's energy-saving
+              auto-shutdown powers the system down to preserve battery life, so
+              it's always ready when you are.
             </p>
           </li>
         </ul>
