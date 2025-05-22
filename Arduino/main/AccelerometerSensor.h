@@ -14,6 +14,10 @@ public:
 
     void setup();
 
+    void calibrateAccelerometer();
+
+    void restartSpeed();
+
     void publishMQTT(float sensorValue) override;
 
     void publishMQTT(const char* subTopic,float sensorValue);
@@ -21,6 +25,14 @@ public:
     float getSensorValue() override;
 
     float getTravelledDistance();
+    
+    float getXAcceleration();
+
+    float getYAcceleration();
+
+    float getZAcceleration();
+
+    float getTotalAcceleration(float accelerationX, float accelerationY, float accelerationZ);
 
     ~AccelerometerSensor();
 private:
@@ -29,7 +41,10 @@ private:
     LIS3DHTR<TwoWire> lis;
 
     // For sensor values
-    float xValue, yValue, zValue;
+
+    float calibrationX, calibrationY, calibrationZ;
+
+    float accelerationX, accelerationY, accelerationZ;
     float totalAcceleration;
 
     // For calculating changes in speed.
@@ -52,6 +67,8 @@ private:
     PubSubClient& client;
     const char *topic;
 
+    float updateDistance();
+    float updateSpeed(float acceleration);
 };
 
 #endif

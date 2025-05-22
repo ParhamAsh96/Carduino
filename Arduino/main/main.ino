@@ -13,8 +13,8 @@
 LIS3DHTR<TwoWire> lis;
 
 // Update these with values suitable for your network:
-const char *ssid = "iPhoneiee♨️";      // network SSID (Wifi)
-const char *password = "14444444"; // your network password
+const char *ssid = "Test";      // network SSID (Wifi)
+const char *password = "abcdefghi"; // your network password
 
 const char *ID = "Wio-Terminal-Client-meep";  // Name of our device, must be unique
 // 172.20.10.3 - local brocker
@@ -94,12 +94,19 @@ void setup()
 // loop() runs forever
 void loop()
 {
+  
   if(!stopLoop) {
 
     if(WiFi.status() != WL_CONNECTED) {
       preventPins();
       WiFi.begin(ssid, password);
       reconnect();
+    }
+
+    // Update acceleration, speed and distance more frequently. Should lower drift.
+    accelerometer.getSensorValue();
+    if ((!wheels.getDrivingStatus())  && abs(accelerometer.getTotalAcceleration(accelerometer.getXAcceleration(), accelerometer.getYAcceleration(), accelerometer.getZAcceleration())) < 0.25){ // None of the wheels are driving
+      accelerometer.restartSpeed();
     }
     
     // reconnect if connection failed
