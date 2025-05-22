@@ -7,6 +7,9 @@
 #include "CarController.h"
 #include "BrakeLight.h"
 
+#define RESET_TURN_OFF 300;
+#define BUZZER_PIN WIO_BUZZER // WIO Buzzer
+
 LIS3DHTR<TwoWire> lis;
 
 // Update these with values suitable for your network:
@@ -14,15 +17,13 @@ const char *ssid = "Test";      // network SSID (Wifi)
 const char *password = "abcdefghi"; // your network password
 
 const char *ID = "Wio-Terminal-Client-meep";  // Name of our device, must be unique
-// c172.20.10.3 - local brocker
+// 172.20.10.3 - local brocker
 // broker.hivemq.com
 // test.mosquitto.org
-const char *server = "broker.hivemq.com"; // ONLINE SERVER
+const char *server = "broker.hivemq.com";
 const uint16_t port = 1883;
 
-
-String sub_topics[5] = { 
-  "carduino/lcd/print",
+String sub_topics[4] = { 
   "carduino/buzzer",
   "carduino/movement",
   "carduino/light",
@@ -36,20 +37,14 @@ const char* brakeTopic = "carduino/light";
 
 // For turning off
 bool running = true;
-
-// Brake Light turning on
-bool enabled = true;
+double turnOffTimer = RESET_TURN_OFF;
+bool stopLoop = false;
 
 // For Update Frequency
 double systemTime;
 double previousTime = millis();
 double updateIntervalMs = 1000;
 double deltaTime = 0;
-
-// TFT_eSPI lcd; // WIO LCD Display
-
-#define BUZZER_PIN WIO_BUZZER // WIO Buzzer
-#define LCD_BACKLIGHT (72Ul) // Control Pin of LCD
 
 WiFiClient wifiClient;
 PubSubClient client(wifiClient);
@@ -62,11 +57,6 @@ CarController wheels(brakeLight);
 // setup() runs once
 void setup()
 { 
-  
-  // to turn on WIO LCD
-  //lcd.begin();
-  //lcd.setRotation(3);
-  //lcd.fillScreen(TFT_BLACK);
 
   // turn on Buzzer
   pinMode(BUZZER_PIN, OUTPUT);
@@ -105,37 +95,42 @@ void loop()
   if ((!wheels.getDrivingStatus())  && abs(accelerometer.getTotalAcceleration(accelerometer.getXAcceleration(), accelerometer.getYAcceleration(), accelerometer.getZAcceleration())) < 0.25){ // None of the wheels are driving
     accelerometer.restartSpeed();
   } 
+  if(!stopLoop) {
+    
+    // reconnect if connection failed
+    if (!client.connected()) {
+      reconnect();
+    }
 
-  // reconnect if connection failed
-  if (!client.connected()) {
-    reconnect();
-  }
+    // Timer functionality
+    systemTime = millis();
+    deltaTime += (systemTime - previousTime) / updateIntervalMs;
+    previousTime = systemTime;
+    /* this if-statememnt runs every 1000 ms */
+    if (deltaTime >= 1){
 
-  // Timer functionality
-  systemTime = millis();
-  deltaTime += (systemTime - previousTime) / updateIntervalMs;
-  previousTime = systemTime;
+      deltaTime --;
+      turnOffTimer--;
 
-  // MQTT Updates should be done inside this if statement to avoid publishing to the different topics too often.
-  if (deltaTime >= 1){
+      accelerometer.publishMQTT(accelerometer.getSensorValue());
+      temperatureSensor.publishMQTT(temperatureSensor.getSensorValue());
 
-    deltaTime --;
+      // Need to add a function to check if the car is moving or not to restart the speed since it only accumulates...
+      accelerometer.publishMQTT(distanceTopic,accelerometer.getTravelledDistance());
+    }
 
-    accelerometer.publishMQTT(accelerometer.getSensorValue());
-    temperatureSensor.publishMQTT(temperatureSensor.getSensorValue());
+    client.loop();
 
-    // Need to add a function to check if the car is moving or not to restart the speed since it only accumulates...
-    accelerometer.publishMQTT(distanceTopic,accelerometer.getTravelledDistance());
-  }
-
-  client.loop();
+    // turn off the car
+    turnCarduinoOff();
+  }//stopLoop
 }
 
 void reconnect() {
   while (!client.connected()) // Loop until we reconnected
   {
     Serial.print("Attempting MQTT connection...");
-    // Connect:
+    // Connect
     if (client.connect(ID)) {
       Serial.println("connected");
       // Publish
@@ -145,10 +140,6 @@ void reconnect() {
       for(String topic : sub_topics){
          client.subscribe(topic.c_str());
       }
-      // client.subscribe("carduino/lcd/print");
-      // client.subscribe("carduino/buzzer/honk");
-      // client.subscribe("carduino/directions/live-control");
-      // client.subscribe("carduino/power/off");
       Serial.println("Subcribed to all topics");
     }
     else {
@@ -160,9 +151,10 @@ void reconnect() {
   }
 }
 
-// The callback function must be provided for PubSubClient (if we subscribe).
+// The callback function is set with "client.setCallback(callback);" .
 // This function is called when new messages arrive at the client. 
 void callback(char* topic, byte* payload, unsigned int length) {
+  turnOffTimer = RESET_TURN_OFF; // Auto-Turn-Off timer resets each time we recieve a message
   Serial.print("Message arrived [");
   Serial.print(topic);
   Serial.print("] ");
@@ -185,13 +177,6 @@ void reciever_actions(String topic, String message){
     if (message == "anthem") honk(2); //pass message as option
   }
 
-  // Print to WIO screen
-  if (topic == "carduino/lcd/print"){
-      // String text = "";
-      // text.concat(message);
-      // print_to_WIO(text);
-  }
-
   if (topic == "carduino/movement"){
      wheels.wheelsReceiver(message);
     
@@ -209,12 +194,24 @@ void reciever_actions(String topic, String message){
   }
 }
 
-/* Methods for WIO Terminal */
 
-void print_to_WIO(String message){
-  // lcd.fillScreen(TFT_BLACK);
-  // lcd.setTextSize(2);
-  // lcd.drawString(message, 0, 10);
+void turnCarduinoOff(){
+  if(!running || turnOffTimer <= 1) {
+    digitalWrite(2, LOW);// temperatureSensor.
+    digitalWrite(6, LOW);// wheels.
+    digitalWrite(5, LOW);
+    digitalWrite(7, LOW);
+    digitalWrite(8, LOW);
+    digitalWrite(1, LOW); // brakeLight. CLK_PIN(A0), DAT_PIN(A1)
+    digitalWrite(0, LOW); // brakeLight. CLK_PIN(A0), DAT_PIN(A1)
+    digitalWrite(3, LOW); 
+    digitalWrite(4, LOW); 
+    pinMode(A0, LOW);
+    pinMode(A2, LOW);
+    brakeLight.brakeLightOff();
+    stopLoop = true;
+    client.disconnect();
+  }
 }
 
 char notes_tune[] = "ccggaagffeeddc ";
@@ -235,7 +232,7 @@ void honk(int option){
     case 2: // anthem
       readMusicSheet(notes_anthem, beats_anthem, 19);
       break;
-    default: Serial.println("waa");
+    default: Serial.println("tune not found");
   }
 }
 
@@ -271,5 +268,3 @@ void playTone(int tone, int duration) {
     delayMicroseconds(tone);
   }
 }
-
-
