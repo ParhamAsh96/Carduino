@@ -103,13 +103,13 @@ void loop()
       reconnect();
     }
 
-  // Timer functionality
-  systemTime = millis();
-  deltaTime += (systemTime - previousTime) / updateIntervalMs;
-  previousTime = systemTime;
+    // Timer functionality
+    systemTime = millis();
+    deltaTime += (systemTime - previousTime) / updateIntervalMs;
+    previousTime = systemTime;
 
-  // MQTT Updates should be done inside this if statement to avoid publishing to the different topics too often.
-  if (deltaTime >= 1){
+    /* this if-statememnt runs every 1000 ms */
+    if (deltaTime >= 1){
 
       deltaTime --;
       turnOffTimer--;
@@ -189,7 +189,7 @@ void reciever_actions(String topic, String message){
   // Honk
   if (topic == "carduino/buzzer"){
     tunes.tuneReceiver(message);
-
+    wheels.wheelsReceiver(recMsg); // runs only when mqtt for wheels is recieved while the buzzer plays
   }
 
   if (topic == "carduino/movement"){
@@ -208,7 +208,6 @@ void reciever_actions(String topic, String message){
 
   }
 }
-
 
 void turnCarduinoOff(){
   digitalWrite(2, LOW);// temperatureSensor.
