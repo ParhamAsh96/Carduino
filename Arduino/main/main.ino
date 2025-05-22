@@ -96,10 +96,10 @@ void setup()
 // loop() runs forever
 void loop()
 {
+  if(!stopLoop) {
 
   // reconnect if connection failed
   if (!client.connected()) {
-    preventPins();
     reconnect();
   }
 
@@ -107,11 +107,11 @@ void loop()
   systemTime = millis();
   deltaTime += (systemTime - previousTime) / updateIntervalMs;
   previousTime = systemTime;
-
-  // MQTT Updates should be done inside this if statement to avoid publishing to the different topics too often.
+  /* this if-statememnt runs every 1000 ms */
   if (deltaTime >= 1){
 
     deltaTime --;
+    turnOffTimer--;
 
     accelerometer.publishMQTT(accelerometer.getSensorValue());
     temperatureSensor.publishMQTT(temperatureSensor.getSensorValue());
@@ -120,7 +120,12 @@ void loop()
     accelerometer.publishMQTT(distanceTopic,accelerometer.getTravelledDistance());
   }
 
-  client.loop();
+  if (client.connected()){
+    client.loop();
+  }
+
+  // turn off the car
+  if(!running || turnOffTimer <= 1) turnCarduinoOff();
 }
 
 void reconnect() {
@@ -165,6 +170,7 @@ void callback(char* topic, byte* payload, unsigned int length) {
   setRecTopic(topic);
   setMessage(message);
 
+  //IMPORTANT, prevents unnecessary recursion
   if (!tunes.checkWheels()) reciever_actions(topic, message);
 }
 
@@ -200,9 +206,20 @@ void reciever_actions(String topic, String message){
   }
 }
 
-void preventPins() {
-  digitalWrite(D5, LOW);
-  digitalWrite(D6, LOW);
-  digitalWrite(D7, LOW);
-  digitalWrite(D8, LOW);
+
+void turnCarduinoOff(){
+  digitalWrite(2, LOW);// temperatureSensor.
+  digitalWrite(6, LOW);// wheels.
+  digitalWrite(5, LOW);
+  digitalWrite(7, LOW);
+  digitalWrite(8, LOW);
+  digitalWrite(1, LOW); // brakeLight. CLK_PIN(A0), DAT_PIN(A1)
+  digitalWrite(0, LOW); // brakeLight. CLK_PIN(A0), DAT_PIN(A1)
+  digitalWrite(3, LOW); 
+  digitalWrite(4, LOW); 
+  pinMode(A0, LOW);
+  pinMode(A2, LOW);
+  brakeLight.brakeLightOff();
+  stopLoop = true;
+  client.disconnect();
 }
