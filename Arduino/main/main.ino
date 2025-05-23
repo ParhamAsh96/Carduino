@@ -103,6 +103,7 @@ void loop()
       preventPins();
       Serial.println("HALT");
       setup();
+      reconnect();
     } 
 
     // Update acceleration, speed and distance more frequently. Should lower drift.
