@@ -51,4 +51,27 @@ However, there are always certain risks with using public brokers, if you wish t
 
 ## Contributions
 
+This project has had 5 contributors. Their names are and contributions are:
+
+#### Makan Ajdadi Salekdeh
+
+Set up the motors and movement of the car.
+
+#### Ali Parham Ashrafzadeh
+
+Set up the lights and power preservation of the car.
+
+#### Dorin Calmis
+
+Set up the diagnostics history of the car and the music buzzer
+
+#### Sivert Bronebakk
+
+Set up the diagnostics sensors for the car
+
+#### Mobin Salehi
+
+Set up music buzzer and MQTT component in the Vue project
+
+
 ## Demo Video
