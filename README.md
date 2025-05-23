@@ -63,7 +63,7 @@ Set up the lights and power preservation of the car.
 
 #### Dorin Calmis
 
-Set up the diagnostics history of the car and the music buzzer
+Set up the diagnostics history of the car and the music buzzer. Set up MQTT connection for the Hardware.
 
 #### Sivert Bronebakk
 
