@@ -4,6 +4,38 @@
 
 ## Hardware and Software Architecture
 
+### Hardware Architecture
+
+The hardware is composed of the Wio Terminal which is the heart of the car. The Wio is connected to both sensors and actuators. The Wio is also connected to the internet to access the MQTT broker which lets it send sensor values and receive orders for the actuators.
+
+The Wio Terminal has the following sensors and actuators:
+
+#### Sensors
+
+Accelerometer (Built in)
+
+Temperature Sensor (Addon)
+
+#### Actuators
+
+4 x DC Motors (Addon)
+
+Buzzer (Built in)
+
+Chainable LED (Addon)
+
+### Software Architecture
+
+The Web App and Wio Terminal are connected through an online broker. The web app is subscribed to the sensor values that the Wio Terminal publishes and it will display it on the controls page.
+
+Likewise, the arduino is subscribed to changes to the actuators and when the control page of the web app is interacted with, the arduino will receive a command that will be executed by the Wio. The web app gives you a varying level of control, for example, the LEDs only give you the option of having brake lights enabled or not. The motors, however, let you control the direction of the car as you wish. Likewise, the buzzer allows you to play any tune in our list whenever you wish to do so.
+
+#### Diagram
+
+If you wish to view a detailed diagram of the architecture of the project, you can view it in our [wiki](https://git.chalmers.se/courses/dit113/2025/group-11/carduino/-/wikis/System-Architecture-Diagram)
+
+
+
 ## Setup Instructions
 
 To set up the carduino, you have to first plug in all the cables for the sensors as follows;
