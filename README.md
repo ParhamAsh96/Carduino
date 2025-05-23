@@ -2,6 +2,20 @@
 
 ## Purpose and Benefits
 
+### Purpose
+
+The Carduino is aimed at giving people an affordable option for a remote control car that does not require you to buy expensive car kits, while still keeping the core mechanics of a remote control car. Just like any other car, you can still view the speed, distance travelled and the temperature of your car. All of this will help you keep track of your car's wellbeing and ensure it's longevity. We have also integrated a few desirable features, such as brake lights and music which lets you drive the car while listening to some nice songs, alternatively, you can also honk if you wish to let someone know of your presence!
+
+### Benefits
+
+The benefits of this car can be summed up as follows;
+
+* Affordable Remote Control Car
+* Sensors to ensure the cars wellbeing and track its performance
+* Desirable additions such as lights that helps the car be seen in traffic
+* Power preservation through automatically turning off the car
+* Automatic stop upon losing internet to avoid losing your car
+
 ## Hardware and Software Architecture
 
 ### Hardware Architecture
@@ -107,3 +121,6 @@ Set up music buzzer and MQTT component in the Vue project
 
 
 ## Demo Video
+
+Our video demo can be viewed [here](https://youtube.com/shorts/KBUjil1v-F0?feature=share)
+
