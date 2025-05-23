@@ -14,6 +14,7 @@ class BrakeLight {
       void brakeLightOnRed();
       void brakeLightOnWhite();
       void brakeLightOff();
+      void brakeLightWarning();
       void lightReceiver(const String& message);
 
   private:

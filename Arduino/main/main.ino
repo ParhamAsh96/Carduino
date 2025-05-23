@@ -13,8 +13,8 @@
 LIS3DHTR<TwoWire> lis;
 
 // Update these with values suitable for your network:
-const char *ssid = "Test";      // network SSID (Wifi)
-const char *password = "abcdefghi"; // your network password
+const char *ssid = "Parham";      // network SSID (Wifi)
+const char *password = "Parham3000"; // your network password
 
 const char *ID = "Wio-Terminal-Client-meep";  // Name of our device, must be unique
 // 172.20.10.3 - local brocker
@@ -199,13 +199,14 @@ void reciever_actions(String topic, String message){
 
 void turnCarduinoOff(){
   if(!running || turnOffTimer <= 1) {
-    digitalWrite(2, LOW);// temperatureSensor.
-    digitalWrite(6, LOW);// wheels.
+    brakeLight.brakeLightWarning(); // Warning before power off
+    digitalWrite(2, LOW);           // TemperatureSensor.
+    digitalWrite(6, LOW);           // Wheels.
     digitalWrite(5, LOW);
     digitalWrite(7, LOW);
     digitalWrite(8, LOW);
-    digitalWrite(1, LOW); // brakeLight. CLK_PIN(A0), DAT_PIN(A1)
-    digitalWrite(0, LOW); // brakeLight. CLK_PIN(A0), DAT_PIN(A1)
+    digitalWrite(1, LOW);           // brakeLight. CLK_PIN(A0), DAT_PIN(A1)
+    digitalWrite(0, LOW);           // brakeLight. CLK_PIN(A0), DAT_PIN(A1)
     digitalWrite(3, LOW); 
     digitalWrite(4, LOW); 
     pinMode(A0, LOW);

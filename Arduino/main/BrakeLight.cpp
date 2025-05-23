@@ -37,6 +37,20 @@ void BrakeLight::brakeLightOnWhite() {
   }
 }
 
+void BrakeLight::brakeLightWarning() {
+  brakeLight.init();
+  Serial.println("Warning LEDs On");
+  for (int i = 0; i < 11; i++) {
+      brakeLight.setColorRGB(0, 255, 255, 0);
+      delay(100);
+      brakeLight.setColorRGB(1, 255, 255, 0);
+      brakeLight.setColorRGB(0, 0, 0, 0);
+      delay(100);
+      brakeLight.setColorRGB(1, 0, 0, 0);
+      delay(100);
+  }
+}
+
 void BrakeLight::brakeLightOff() {
   brakeLight.init();
   brakeLight.setColorRGB(0, 0, 0, 0);
