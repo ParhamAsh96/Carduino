@@ -48,7 +48,9 @@ double deltaTime = 0;
 
 // To check topics and messages inside other methods
 String recTopic = " ";
-String recMsg = " ";
+String recMsg = " "; 
+
+bool isWifiOn = true;
 
 WiFiClient wifiClient;
 PubSubClient client(wifiClient);
@@ -97,19 +99,19 @@ void loop()
   
   if(!stopLoop) {
 
-    if(WiFi.status() != WL_CONNECTED) {
+    if(!isWifiOn) {
       preventPins();
       Serial.println("HALT");
       setup();
-    }
+    } 
 
     // Update acceleration, speed and distance more frequently. Should lower drift.
     accelerometer.getSensorValue();
     if ((!wheels.getDrivingStatus())  && abs(accelerometer.getTotalAcceleration(accelerometer.getXAcceleration(), accelerometer.getYAcceleration(), accelerometer.getZAcceleration())) < 0.25){ // None of the wheels are driving
       accelerometer.restartSpeed();
     }
-    
-        // reconnect if connection failed
+
+    // reconnect if connection failed
     if (!client.connected()) {
       reconnect();
     }
@@ -124,6 +126,8 @@ void loop()
       deltaTime --;
       turnOffTimer--;
 
+      isWifiOn = WiFi.status() == WL_CONNECTED;
+
       accelerometer.publishMQTT(accelerometer.getSensorValue());
       temperatureSensor.publishMQTT(temperatureSensor.getSensorValue());
 
@@ -131,7 +135,7 @@ void loop()
       accelerometer.publishMQTT(distanceTopic,accelerometer.getTravelledDistance());
     }
 
-    if (client.connected() && WiFi.status() == WL_CONNECTED){
+    if (client.connected() && isWifiOn){
       client.loop();
     }
 
@@ -293,12 +297,8 @@ void playTone(int tone, int duration) {
 
 void preventPins() {
   reciever_actions(" "," ");
-  int leftForward = D6;
-  int leftBackward = D5;
-  int rightForward = D7;
-  int rightBackward = D8;
-  digitalWrite(leftForward, LOW);
-  digitalWrite(leftBackward, LOW);
-  digitalWrite(rightForward, LOW);
-  digitalWrite(rightBackward, LOW);
+  digitalWrite((int)D6, LOW);
+  digitalWrite((int)D5, LOW);
+  digitalWrite((int)D7, LOW);
+  digitalWrite((int)D8, LOW);
 }
