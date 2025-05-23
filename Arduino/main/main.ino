@@ -13,8 +13,8 @@
 LIS3DHTR<TwoWire> lis;
 
 // Update these with values suitable for your network:
-const char *ssid = "Test";      // network SSID (Wifi)
-const char *password = "abcdefghi"; // your network password
+const char *ssid = "Parham";      // network SSID (Wifi)
+const char *password = "Parham3000"; // your network password
 
 const char *ID = "Wio-Terminal-Client-meep";  // Name of our device, must be unique
 // 172.20.10.3 - local brocker
