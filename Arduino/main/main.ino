@@ -6,9 +6,9 @@
 #include "TemperatureSensor.h"
 #include "CarController.h"
 #include "BrakeLight.h"
+#include "Tunes.h"
 
 #define RESET_TURN_OFF 300;
-#define BUZZER_PIN WIO_BUZZER // WIO Buzzer
 
 LIS3DHTR<TwoWire> lis;
 
@@ -46,12 +46,17 @@ double previousTime = millis();
 double updateIntervalMs = 1000;
 double deltaTime = 0;
 
+// To check topics and messages inside other methods
+String recTopic = " ";
+String recMsg = " ";
+
 WiFiClient wifiClient;
 PubSubClient client(wifiClient);
 AccelerometerSensor accelerometer(client, speedTopic);
 TemperatureSensor temperatureSensor(client, temperatureTopic);
 BrakeLight brakeLight;
 CarController wheels(brakeLight);
+Tunes tunes(&client, &recTopic);
 
 // setup() and loop() are the main methods for the Arduino
 // setup() runs once
@@ -85,6 +90,7 @@ void setup()
   temperatureSensor.setup();
   wheels.setup();
   brakeLight.setup();
+  tunes.setup();
 }
 
 // loop() runs forever
@@ -108,6 +114,7 @@ void loop()
     systemTime = millis();
     deltaTime += (systemTime - previousTime) / updateIntervalMs;
     previousTime = systemTime;
+
     /* this if-statememnt runs every 1000 ms */
     if (deltaTime >= 1){
 
@@ -121,10 +128,12 @@ void loop()
       accelerometer.publishMQTT(distanceTopic,accelerometer.getTravelledDistance());
     }
 
-    client.loop();
+    if (client.connected()){
+      client.loop();
+    }
 
     // turn off the car
-    turnCarduinoOff();
+  if(!running || turnOffTimer <= 1) turnCarduinoOff();
   }//stopLoop
 }
 
@@ -168,15 +177,26 @@ void callback(char* topic, byte* payload, unsigned int length) {
   }
   Serial.println();
 
-  reciever_actions(topic, message);
+  setRecTopic(topic);
+  setMessage(message);
+
+  //IMPORTANT, prevents unnecessary recursion
+  if (!tunes.checkWheels()) reciever_actions(topic, message);
+}
+
+void setRecTopic(String topic){
+  recTopic = topic;
+}
+
+void setMessage(String msg){
+  recMsg = msg;
 }
 
 void reciever_actions(String topic, String message){
   // Honk
   if (topic == "carduino/buzzer"){
-    if (message == "honk") honk(0); //pass message as option
-    if (message == "tune") honk(1); //pass message as option
-    if (message == "anthem") honk(2); //pass message as option
+    tunes.tuneReceiver(message);
+    wheels.wheelsReceiver(recMsg); // runs only when mqtt for wheels is recieved while the buzzer plays
   }
 
   if (topic == "carduino/movement"){
@@ -195,7 +215,6 @@ void reciever_actions(String topic, String message){
 
   }
 }
-
 
 void turnCarduinoOff(){
   if(!running || turnOffTimer <= 1) {
