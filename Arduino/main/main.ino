@@ -13,8 +13,8 @@
 LIS3DHTR<TwoWire> lis;
 
 // Update these with values suitable for your network:
-const char *ssid = "Test";      // network SSID (Wifi)
-const char *password = "abcdefghi"; // your network password
+const char *ssid = "Parham";      // network SSID (Wifi)
+const char *password = "Parham3000"; // your network password
 
 const char *ID = "Wio-Terminal-Client-meep";  // Name of our device, must be unique
 // 172.20.10.3 - local brocker
@@ -217,18 +217,76 @@ void reciever_actions(String topic, String message){
 }
 
 void turnCarduinoOff(){
-  digitalWrite(2, LOW);// temperatureSensor.
-  digitalWrite(6, LOW);// wheels.
-  digitalWrite(5, LOW);
-  digitalWrite(7, LOW);
-  digitalWrite(8, LOW);
-  digitalWrite(1, LOW); // brakeLight. CLK_PIN(A0), DAT_PIN(A1)
-  digitalWrite(0, LOW); // brakeLight. CLK_PIN(A0), DAT_PIN(A1)
-  digitalWrite(3, LOW); 
-  digitalWrite(4, LOW); 
-  pinMode(A0, LOW);
-  pinMode(A2, LOW);
-  brakeLight.brakeLightOff();
-  stopLoop = true;
-  client.disconnect();
+  if(!running || turnOffTimer <= 1) {
+    brakeLight.brakeLightWarning(); // Warning before power off
+    digitalWrite(2, LOW);           // TemperatureSensor.
+    digitalWrite(6, LOW);           // Wheels.
+    digitalWrite(5, LOW);
+    digitalWrite(7, LOW);
+    digitalWrite(8, LOW);
+    digitalWrite(1, LOW);           // brakeLight. CLK_PIN(A0), DAT_PIN(A1)
+    digitalWrite(0, LOW);           // brakeLight. CLK_PIN(A0), DAT_PIN(A1)
+    digitalWrite(3, LOW); 
+    digitalWrite(4, LOW); 
+    pinMode(A0, LOW);
+    pinMode(A2, LOW);
+    brakeLight.brakeLightOff();
+    stopLoop = true;
+    client.disconnect();
+  }
+}
+
+char notes_tune[] = "ccggaagffeeddc ";
+int beats_tune[] = { 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 2, 4 };
+char notes_anthem[] = "ggecg edc ggecg fed ";
+int beats_anthem[] = {2,2,2,1,1,4, 2,2,4, 2,2,2,1,1,4, 2,2,4, 4};
+int tempo = 200;
+
+
+void honk(int option){
+  switch(option){
+    case 0: // honk
+      playTone(1519,1000);
+      break;
+    case 1: // tune
+      readMusicSheet(notes_tune, beats_tune, 15);
+      break;
+    case 2: // anthem
+      readMusicSheet(notes_anthem, beats_anthem, 19);
+      break;
+    default: Serial.println("tune not found");
+  }
+}
+
+void readMusicSheet(char notes[], int beats[], int length) {
+  for(int i = 0; i < length; i++) {
+    if(notes[i] == ' ') {
+        delay(beats[i] * tempo);
+    } else {
+        playNote(notes[i], beats[i] * tempo);
+    }
+    delay(tempo / 2); //delay between notes 
+  }
+  return;
+}
+
+void playNote(char note, int duration) {
+  char names[] = { 'c', 'd', 'e', 'f', 'g', 'a', 'b', 'C' };
+  int tones[] = { 1915, 1700, 1519, 1432, 1275, 1136, 1014, 956 };
+
+  // play the tone corresponding to the note name
+  for (int i = 0; i < 8; i++) {
+    if (names[i] == note) {
+      playTone(tones[i], duration);
+    }
+  }
+}
+
+void playTone(int tone, int duration) {
+  for (long i = 0; i < duration * 1000L; i += tone * 2) {
+    digitalWrite(BUZZER_PIN, HIGH);
+    delayMicroseconds(tone);
+    digitalWrite(BUZZER_PIN, LOW);
+    delayMicroseconds(tone);
+  }
 }
