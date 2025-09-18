@@ -1,5 +1,7 @@
-# Carduino
-<img src="Images/Carduino_Logo.png" alt="Carduino Logo" width="400"/>
+##
+<img src="assests/Carduino_Logo.png" alt="Carduino Logo" width="400"/>
+
+****
 
 ## Purpose and Benefits
 
