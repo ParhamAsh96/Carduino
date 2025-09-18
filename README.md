@@ -1,5 +1,5 @@
 ##
-<img src="assests/Carduino_Logo.png" alt="Carduino Logo" width="400"/>
+<img src="assets/Carduino_Logo.png" alt="Carduino Logo" width="400"/>
 
 ****
 
