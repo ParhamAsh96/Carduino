@@ -26,6 +26,7 @@ The benefits of this car can be summed up as follows;
 The hardware is composed of the Wio Terminal which is the heart of the car. The Wio is connected to both sensors and actuators. The Wio is also connected to the internet to access the MQTT broker which lets it send sensor values and receive orders for the actuators.
 
 ### Wio Terminal
+
 <img src="assets/Wio-Terminal.png" alt="Wio Terminal" width="300"/>
 
 The Wio Terminal has the following sensors and actuators:
@@ -35,6 +36,7 @@ The Wio Terminal has the following sensors and actuators:
 Accelerometer (Built-in)
 
 Temperature Sensor (Add-on)
+
 <img src="assets/Grove-Temperature-Sensor.png" alt="Temperature Sensor" width="200"/>
 
 #### Actuators
@@ -42,9 +44,11 @@ Temperature Sensor (Add-on)
 Buzzer (Built-in)
 
 4 x DC Motors (Add-on)
+
 <img src="assets/4-DC-Motors.png" alt="4 x DC Motors" width="200"/>
 
 Chainable LED (Add-on)
+
 <img src="assets/Grove-Chainable-RGB-LED.png" alt="Chainable LED" width="200"/>
 
 ### Software Architecture
