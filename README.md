@@ -137,4 +137,9 @@ Set up music buzzer and MQTT component in the Vue project
 
 Our video demo can be viewed [here](https://www.youtube.com/watch?v=xkcIwFoFTME)
 
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE.txt) file for details.
+
 ****
