@@ -25,21 +25,27 @@ The benefits of this car can be summed up as follows;
 
 The hardware is composed of the Wio Terminal which is the heart of the car. The Wio is connected to both sensors and actuators. The Wio is also connected to the internet to access the MQTT broker which lets it send sensor values and receive orders for the actuators.
 
+### Wio Terminal
+<img src="assets/Wio-Terminal.png" alt="Wio Terminal" width="300"/>
+
 The Wio Terminal has the following sensors and actuators:
 
 #### Sensors
 
-Accelerometer (Built in)
+Accelerometer (Built-in)
 
-Temperature Sensor (Addon)
+Temperature Sensor (Add-on)
+<img src="assets/Grove-Temperature-Sensor.png" alt="Temperature Sensor" width="200"/>
 
 #### Actuators
 
-4 x DC Motors (Addon)
+Buzzer (Built-in)
 
-Buzzer (Built in)
+4 x DC Motors (Add-on)
+<img src="assets/4-DC-Motors.png" alt="4 x DC Motors" width="200"/>
 
-Chainable LED (Addon)
+Chainable LED (Add-on)
+<img src="assets/Grove-Chainable-RGB-LED.png" alt="Chainable LED" width="200"/>
 
 ### Software Architecture
 
@@ -49,7 +55,7 @@ Likewise, the arduino is subscribed to changes to the actuators and when the con
 
 #### Diagram
 
-If you wish to view a detailed diagram of the architecture of the project, you can view it in our [wiki](https://git.chalmers.se/courses/dit113/2025/group-11/carduino/-/wikis/System-Architecture-Diagram)
+If you wish to view a detailed diagram of the architecture of the project, you can view it in our [wiki](https://github.com/ParhamAsh96/Carduino/wiki/System-Architecture-Diagram)
 
 
 
@@ -57,24 +63,24 @@ If you wish to view a detailed diagram of the architecture of the project, you c
 
 To set up the carduino, you have to first plug in all the cables for the sensors as follows;
 
-The LEDs need to be plugged into A0 and A1.
+The LEDs need to be plugged into **A0** and **A1**.
 
-The temperature sensor needs to be plugged into A2.
+The temperature sensor needs to be plugged into **A2**.
 
 The motors need to be set up as follows: 
 
-The left motor in the back needs to be hooked up to D5
+The left motor in the back needs to be hooked up to **D5**.
 
-The left motor in the front needs to be hooked up to D6
+The left motor in the front needs to be hooked up to **D6**.
 
-The right motor in the front needs to be hooked up to D7
+The right motor in the front needs to be hooked up to **D7**.
 
-The right motor in the back needs to be hooked up to D8
+The right motor in the back needs to be hooked up to **D8**.
 
 Afterwards you need to update the internet credentials in the arduino file main.ino on line 16 and 17. If you are using a public wifi and it does not work, try to change your wifi to a private one, or change to cellular.
 
-Then you need to download the dependencies for the arduino from the shellscript named setup-build-env.sh.
-Now you are ready to upload the code to the Wio Terminal! Simply open up the Arduino IDE, plug in the Wio Terminal and click on upload.
+Then you need to download the dependencies for the arduino from the shellscript named **setup-build-env.sh**.
+Now you are ready to upload the code to the **Wio Terminal**! Simply open up the Arduino IDE, plug in the Wio Terminal and click on upload.
 
 Now that the Wio Terminal is set up you should set up the web page.
 This is a short process compared to the hardware components. All you need to do is to open up cmd, navigate to the Web_App folder, and write:
@@ -100,13 +106,13 @@ However, there are always certain risks with using public brokers, if you wish t
 
 ## Contributions
 
-This project has had 5 contributors. Their names are and contributions are:
+This project had 5 contributors:
 
 #### Makan Ajdadi Salekdeh
 
 Set up the motors and movement of the car.
 
-#### Ali Parham Ashrafzadeh
+#### Ali 'Parham' Ashrafzadeh
 
 Set up the lights and power preservation of the car.
 
@@ -125,5 +131,6 @@ Set up music buzzer and MQTT component in the Vue project
 
 ## Demo Video
 
-Our video demo can be viewed [here](https://youtube.com/shorts/KBUjil1v-F0?feature=share)
+Our video demo can be viewed [here](https://www.youtube.com/watch?v=xkcIwFoFTME)
 
+****
